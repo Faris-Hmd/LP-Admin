@@ -2,9 +2,9 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "SPS Admin",
-    short_name: "SPS Admin",
-    description: "Enterprise Inventory & Analytics Management",
+    name: "Liper Admin",
+    short_name: "Liper Admin",
+    description: "Liper Inventory & Analytics Management",
     start_url: "/",
     display: "standalone",
     // Matches your Slate-950 dark theme background
