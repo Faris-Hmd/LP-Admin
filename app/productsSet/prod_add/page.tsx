@@ -111,18 +111,18 @@ export default function ProductImgUpload() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors pb-20">
+    <div className="min-h-screen bg-background transition-colors pb-20">
       {/* Sticky Header - Matches Update & Table style */}
-      <header className="sticky top-0 z-100 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm mb-6">
+      <header className="sticky top-0 z-100 bg-card/80 backdrop-blur-md border-b border-border shadow-sm mb-6">
         <div className="max-w-4xl mx-auto p-4 md:p-6">
           <div className="flex justify-between items-center">
             <div>
-              <div className="flex items-center gap-2 text-[9px] font-black text-blue-600 uppercase tracking-[0.2em] mb-0.5">
+              <div className="flex items-center gap-2 text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-0.5">
                 <ShieldCheck size={10} />
                 Creator Mode
               </div>
-              <h1 className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">
-                Add <span className="text-blue-600">New Product</span>
+              <h1 className="text-xl font-black text-foreground uppercase tracking-tight">
+                Add <span className="text-primary">New Product</span>
               </h1>
             </div>
           </div>
@@ -132,12 +132,12 @@ export default function ProductImgUpload() {
       <main className="px-4">
         <form
           onSubmit={handleProductImgsSubmit}
-          className="relative bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden max-w-xl mx-auto"
+          className="relative bg-card p-6 rounded-xl border border-border shadow-sm overflow-hidden max-w-xl mx-auto"
         >
           {/* Loading Overlay */}
           {pending && (
-            <div className="z-50 absolute inset-0 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm flex flex-col items-center justify-center">
-              <Loader className="animate-spin text-blue-600" size={28} />
+            <div className="z-50 absolute inset-0 bg-background/60 backdrop-blur-sm flex flex-col items-center justify-center">
+              <Loader className="animate-spin text-primary" size={28} />
             </div>
           )}
 
@@ -151,9 +151,9 @@ export default function ProductImgUpload() {
                 imgs={imgs}
               />
             ) : (
-              <div className="h-56 w-full bg-slate-50 dark:bg-slate-800/50 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-200 dark:border-slate-800">
-                <ImagePlus size={36} className="text-slate-300 mb-2" />
-                <p className="text-xs font-black uppercase text-slate-400 tracking-tighter">
+              <div className="h-56 w-full bg-muted/50 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-border">
+                <ImagePlus size={36} className="text-muted-foreground mb-2" />
+                <p className="text-xs font-black uppercase text-muted-foreground tracking-tighter">
                   Media Required
                 </p>
               </div>
@@ -161,7 +161,7 @@ export default function ProductImgUpload() {
 
             <div className="flex justify-end -mt-12 mr-3 relative z-10">
               <label
-                className="p-2.5 bg-blue-600 text-white rounded-lg cursor-pointer shadow-lg active:scale-95 transition-transform"
+                className="p-2.5 bg-primary text-primary-foreground rounded-lg cursor-pointer shadow-lg active:scale-95 transition-transform"
                 htmlFor="imgsInput"
               >
                 <Camera size={20} />
@@ -181,7 +181,7 @@ export default function ProductImgUpload() {
           {/* Input Fields */}
           <div className="space-y-5">
             <div>
-              <label className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider ml-1 mb-1.5 block">
+              <label className="text-[11px] font-black uppercase text-muted-foreground tracking-wider ml-1 mb-1.5 block">
                 Product Title
               </label>
               <input
@@ -190,12 +190,12 @@ export default function ProductImgUpload() {
                 required
                 placeholder="Enter item name..."
                 disabled={pending}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-bold text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-600 outline-none transition-all"
+                className="w-full px-4 py-2.5 bg-muted/50 border border-border rounded-lg text-sm font-bold text-foreground focus:ring-2 focus:ring-primary outline-none transition-all"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider ml-1 mb-1.5 block">
+              <label className="text-[11px] font-black uppercase text-muted-foreground tracking-wider ml-1 mb-1.5 block">
                 Product Specifications
               </label>
               <textarea
@@ -204,13 +204,13 @@ export default function ProductImgUpload() {
                 rows={3}
                 placeholder="List key features..."
                 disabled={pending}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-bold text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-600 outline-none resize-none transition-all"
+                className="w-full px-4 py-2.5 bg-muted/50 border border-border rounded-lg text-sm font-bold text-foreground focus:ring-2 focus:ring-primary outline-none resize-none transition-all"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider ml-1 mb-1.5 block">
+                <label className="text-[11px] font-black uppercase text-muted-foreground tracking-wider ml-1 mb-1.5 block">
                   Price (SDG)
                 </label>
                 <input
@@ -219,19 +219,19 @@ export default function ProductImgUpload() {
                   required
                   placeholder="0"
                   disabled={pending}
-                  className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-bold text-slate-900 dark:text-slate-100 outline-none transition-all"
+                  className="w-full px-4 py-2.5 bg-muted/50 border border-border rounded-lg text-sm font-bold text-foreground outline-none transition-all"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider ml-1 mb-1.5 block">
+                <label className="text-[11px] font-black uppercase text-muted-foreground tracking-wider ml-1 mb-1.5 block">
                   Category Tag
                 </label>
                 <Select name="p_cat" disabled={pending}>
-                  <SelectTrigger className="h-[44px] bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800 text-xs font-black uppercase rounded-lg">
+                  <SelectTrigger className="h-[44px] bg-muted/50 border-border text-xs font-black uppercase rounded-lg">
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
-                  <SelectContent className="dark:bg-slate-900 border-slate-800">
+                  <SelectContent className="bg-popover border-border">
                     {categories.map((cat) => (
                       <SelectItem
                         key={cat}
@@ -248,17 +248,17 @@ export default function ProductImgUpload() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3 mt-8 pt-5 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex gap-3 mt-8 pt-5 border-t border-border">
             <Link
               href={"/productsSet" as any}
-              className="flex-1 py-3 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-black uppercase text-center active:scale-95 transition-transform"
+              className="flex-1 py-3 rounded-lg bg-muted text-muted-foreground text-xs font-black uppercase text-center active:scale-95 transition-transform"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={pending}
-              className="flex-[1.5] flex items-center justify-center gap-2 py-3 rounded-lg bg-blue-600 text-white text-xs font-black uppercase shadow-lg shadow-blue-500/20 active:scale-95 transition-transform"
+              className="flex-[1.5] flex items-center justify-center gap-2 py-3 rounded-lg bg-primary text-primary-foreground text-xs font-black uppercase shadow-lg shadow-primary/20 active:scale-95 transition-transform"
             >
               {pending ? (
                 <Loader size={16} className="animate-spin" />

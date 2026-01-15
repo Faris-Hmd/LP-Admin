@@ -68,12 +68,12 @@ export default function ProductImgCarousel({
                       handleRemove(img.url);
                     }}
                     className="absolute top-3 right-3 z-50 pointer-events-auto flex items-center gap-2 px-3 py-1.5 
-                             bg-white/90 backdrop-blur-md text-red-600 border border-red-200
-                             rounded-full text-xs font-bold shadow-md hover:bg-white 
-                             hover:text-red-700 transition-all active:scale-90"
+                             bg-card/90 backdrop-blur-md text-destructive border border-destructive/20
+                             rounded-full text-xs font-bold shadow-md hover:bg-card 
+                             hover:text-destructive transition-all active:scale-90"
                   >
                     <Trash2 size={14} />
-                    <span>Delete</span>
+                    <span>حذف</span>
                   </button>
                 )}
 
@@ -97,8 +97,8 @@ export default function ProductImgCarousel({
       </Carousel>
 
       {/* Pagination Counter */}
-      <div className="mt-2 flex justify-center items-center gap-2 text-xs font-medium text-slate-500">
-        <span className="px-2 py-0.5 bg-slate-100 rounded-full">
+      <div className="mt-2 flex justify-center items-center gap-2 text-xs font-medium text-muted-foreground">
+        <span className="px-2 py-0.5 bg-muted rounded-full">
           {current} / {imgs.length}
         </span>
       </div>

@@ -10,16 +10,16 @@ export default function Loading() {
       <div className="relative flex items-center justify-center">
         {/* Loader2 is the standard spinning icon from Lucide */}
         <Loader2
-          className="animate-spin text-blue-600"
+          className="animate-spin text-primary"
           size={40}
           strokeWidth={2}
         />
         {/* Optional: Add a subtle pulse effect behind the loader */}
-        <div className="absolute h-10 w-10 animate-ping rounded-full bg-blue-400 opacity-20"></div>
+        <div className="absolute h-10 w-10 animate-ping rounded-full bg-primary opacity-20"></div>
       </div>
 
-      <p className="text-sm font-medium text-gray-500 animate-pulse">
-        Loading content...
+      <p className="text-sm font-medium text-muted-foreground animate-pulse">
+        جاري التحميل...
       </p>
     </div>
   );

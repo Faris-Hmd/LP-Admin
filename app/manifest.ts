@@ -13,13 +13,13 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#2563eb",
     icons: [
       {
-        src: "/apple-icon", // Ensure this path is correct or use /icon.png
+        src: "/logo.png", // Ensure this path is correct or use /icon.png
         sizes: "180x180",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/apple-icon", // Ideally a specific 512x512 icon
+        src: "/logo.png", // Ideally a specific 512x512 icon
         sizes: "512x512",
         type: "image/png",
         purpose: "maskable", // Allows Android to crop the icon shape

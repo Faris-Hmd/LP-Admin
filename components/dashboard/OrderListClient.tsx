@@ -30,25 +30,25 @@ export default function OrderListClient({
   };
 
   const handleDelete = async (orderId: string) => {
-    if (!window.confirm("Terminate this order protocol?")) return;
+    if (!window.confirm("هل تريد حذف هذا الطلب نهائياً؟")) return;
 
     startTransition(async () => {
       try {
         await delOrder(orderId);
-        toast.success("Order purged from registry");
+        toast.success("تم حذف الطلب بنجاح");
         router.refresh(); // Tells Next.js to re-run the server fetch
       } catch (err) {
-        toast.error("Operation failed");
+        toast.error("فشلت العملية");
       }
     });
   };
 
   if (!initialOrders || initialOrders.length === 0) {
     return (
-      <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800">
-        <Package size={40} className="mx-auto text-slate-300 mb-4" />
-        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">
-          Queue Empty
+      <div className="text-center py-20 bg-card rounded-3xl border-2 border-dashed border-border">
+        <Package size={40} className="mx-auto text-muted-foreground mb-4" />
+        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]">
+          قائمة الانتظار فارغة
         </p>
       </div>
     );
@@ -59,7 +59,7 @@ export default function OrderListClient({
       {/* Floating Refresh (Since we are in server mode) */}
       <button
         onClick={() => router.refresh()}
-        className="fixed bottom-20 right-10 z-50 p-4 bg-blue-600 text-white rounded-full shadow-2xl hover:scale-110 transition-transform active:rotate-180"
+        className="fixed bottom-20 right-10 z-50 p-4 bg-primary text-primary-foreground rounded-full shadow-2xl hover:scale-110 transition-transform active:rotate-180"
       >
         <RefreshCcw size={24} className={cn(isPending && "animate-spin")} />
       </button>
@@ -75,10 +75,10 @@ export default function OrderListClient({
           <div
             key={order.id}
             className={cn(
-              "bg-white dark:bg-slate-900 border rounded-2xl transition-all duration-200 overflow-hidden",
+              "bg-card border rounded-2xl transition-all duration-200 overflow-hidden",
               isExpanded
-                ? "ring-2 ring-blue-600/20 border-blue-600/50 shadow-xl"
-                : "border-slate-200 dark:border-slate-800",
+                ? "ring-2 ring-primary/20 border-primary/50 shadow-xl"
+                : "border-border",
             )}
           >
             <div
@@ -89,8 +89,8 @@ export default function OrderListClient({
                 className={cn(
                   "p-2.5 rounded-xl shrink-0",
                   isExpanded
-                    ? "bg-blue-600 text-white"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-400",
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground",
                 )}
               >
                 <Package size={20} />
@@ -102,71 +102,73 @@ export default function OrderListClient({
                     className={cn(
                       "text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md border",
                       order.status === "Delivered"
-                        ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                        : "bg-amber-50 text-amber-600 border-amber-100",
+                        ? "bg-success/10 text-success border-success/20"
+                        : "bg-warning/10 text-warning border-warning/20",
                     )}
                   >
-                    {order.status || "Pending"}
+                    {order.status === "Delivered"
+                      ? "تم التوصيل"
+                      : "قيد المعالجة"}
                   </span>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase">
                     ID: {order.id.slice(-6).toUpperCase()}
                   </span>
                 </div>
-                <p className="text-lg font-black text-slate-900 dark:text-white leading-none">
+                <p className="text-lg font-black text-foreground leading-none">
                   {order.totalAmount.toLocaleString()}{" "}
-                  <span className="text-[10px] text-blue-600">SDG</span>
+                  <span className="text-[10px] text-primary">SDG</span>
                 </p>
               </div>
 
               <div className="flex items-center gap-3">
                 <Link
                   href={`/manageOrder/${order.id}` as any}
-                  className="p-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 rounded-xl hover:bg-blue-600 hover:text-white transition-all"
+                  className="p-2.5 bg-muted text-muted-foreground rounded-xl hover:bg-primary hover:text-primary-foreground transition-all"
                 >
                   <Settings2 size={16} />
                 </Link>
                 {isExpanded ? (
-                  <ChevronUp size={20} className="text-slate-300" />
+                  <ChevronUp size={20} className="text-muted-foreground" />
                 ) : (
-                  <ChevronDown size={20} className="text-slate-300" />
+                  <ChevronDown size={20} className="text-muted-foreground" />
                 )}
               </div>
             </div>
 
             {isExpanded && (
-              <div className="px-4 pb-4 bg-slate-50/50 dark:bg-slate-950/50 border-t dark:border-slate-800">
+              <div className="px-4 pb-4 bg-muted/20 border-t border-border">
                 <div className="py-4 space-y-2">
                   {order.productsList.map((p: any) => (
                     <div
                       key={p.id}
-                      className="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-white/5 flex justify-between items-center shadow-sm"
+                      className="bg-card p-3 rounded-xl border border-border flex justify-between items-center shadow-sm"
                     >
                       <div className="min-w-0">
-                        <p className="text-xs font-black text-slate-800 dark:text-slate-100 uppercase truncate">
+                        <p className="text-xs font-black text-foreground uppercase truncate">
                           {p.p_name}
                         </p>
-                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">
-                          QTY: {p.p_qu} @ {Number(p.p_cost).toLocaleString()}
+                        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+                          الكمية: {p.p_qu} @ {Number(p.p_cost).toLocaleString()}
                         </p>
                       </div>
-                      <p className="text-xs font-black text-blue-600">
+                      <p className="text-xs font-black text-primary">
                         {(Number(p.p_cost) * Number(p.p_qu)).toLocaleString()}
                       </p>
                     </div>
                   ))}
                 </div>
-                <div className="flex items-center justify-between pt-3 border-t dark:border-slate-800">
+                <div className="flex items-center justify-between pt-3 border-t border-border">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDelete(order.id);
                     }}
-                    className="text-[10px] font-black uppercase tracking-[0.2em] text-rose-500 hover:scale-105 transition-transform"
+                    className="text-[10px] font-black uppercase tracking-[0.2em] text-destructive hover:scale-105 transition-transform"
                   >
-                    {isPending ? "Purging..." : "[ Terminate Order ]"}
+                    {isPending ? "جاري الحذف..." : "[ حذف الطلب ]"}
                   </button>
-                  <p className="text-[10px] font-black text-slate-400 uppercase">
-                    Authorized Transaction
+                  <p className="text-[10px] font-black text-muted-foreground uppercase">
+                    معاملة مصرح بها
                   </p>
                 </div>
               </div>

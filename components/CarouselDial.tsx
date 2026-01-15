@@ -23,10 +23,10 @@ export default function CarouselDial({ imgs }: CarouselDialProps) {
   return (
     <Dialog>
       <DialogTrigger
-        className="absolute top-2 left-2 flex items-center justify-center p-2 bg-white/80 hover:bg-white rounded-full shadow-sm backdrop-blur-md transition-all cursor-pointer z-10"
+        className="absolute top-2 left-2 flex items-center justify-center p-2 bg-card/80 hover:bg-card rounded-full shadow-sm backdrop-blur-md transition-all cursor-pointer z-10"
         aria-label="Zoom product images"
       >
-        <ZoomIn size={18} className="text-gray-700" />
+        <ZoomIn size={18} className="text-foreground" />
       </DialogTrigger>
 
       {/* aria-describedby={undefined} is standard for Dialogs with no description text */}

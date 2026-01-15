@@ -13,26 +13,26 @@ export default async function ProductTable({
   const products = await getProducts(key as any, value, 20);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors pb-20">
+    <div className="min-h-screen bg-background transition-colors pb-20">
       {/* Sticky Compact Header */}
-      <header className=" sticky top-0 z-100  bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
+      <header className=" sticky top-0 z-100  bg-card/80 backdrop-blur-md border-b border-border shadow-sm">
         <div className="max-w-4xl mx-auto p-4 md:p-6">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <div className="flex items-center gap-2 text-[9px] font-black text-blue-600 uppercase tracking-[0.2em] mb-0.5">
+              <div className="flex items-center gap-2 text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-0.5">
                 <ShieldCheck size={10} />
-                System Inventory
+                مخزون النظام
               </div>
-              <h1 className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">
-                Product <span className="text-blue-600">Catalog</span>
+              <h1 className="text-xl font-black text-foreground uppercase tracking-tight">
+                كتالوج <span className="text-primary">المنتجات</span>
               </h1>
             </div>
             <Link
               href={"/productsSet/prod_add" as any}
-              className="flex items-center gap-2 bg-blue-600 text-white font-black py-2 px-4 rounded-lg text-[10px] uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-blue-500/20"
+              className="flex items-center gap-2 bg-primary text-primary-foreground font-black py-2 px-4 rounded-lg text-[10px] uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-primary/20"
             >
               <Plus size={14} strokeWidth={3} />
-              Add
+              إضافة
             </Link>
           </div>
           <TableSearchForm />
@@ -46,15 +46,15 @@ export default async function ProductTable({
             products.map((row) => (
               <div
                 key={row.id}
-                className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-blue-500/50 transition-all shadow-sm"
+                className="group bg-card border border-border rounded-xl p-4 flex items-center justify-between hover:border-primary/50 transition-all shadow-sm"
               >
                 <div className="flex items-center gap-4 min-w-0">
                   {/* Item Icon */}
                   <div
                     className={`shrink-0 p-3 rounded-lg border ${
                       row.isFeatured
-                        ? "bg-amber-50 dark:bg-amber-900/10 border-amber-100 dark:border-amber-900/30 text-amber-500"
-                        : "bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400"
+                        ? "bg-warning/10 border-warning/30 text-warning"
+                        : "bg-muted border-border text-muted-foreground"
                     }`}
                   >
                     <Package size={18} />
@@ -67,23 +67,20 @@ export default async function ProductTable({
                         href={
                           "https://sudan-pc-shop.vercel.app/products/" + row.id
                         }
-                        className="text-sm font-black text-slate-900 dark:text-white truncate hover:text-blue-600 transition-colors"
+                        className="text-sm font-black text-foreground truncate hover:text-primary transition-colors"
                       >
                         {row.p_name}
                       </a>
                       {row.isFeatured && (
-                        <Star
-                          size={12}
-                          className="fill-amber-500 text-amber-500"
-                        />
+                        <Star size={12} className="fill-warning text-warning" />
                       )}
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-[9px] text-slate-400 font-black uppercase tracking-widest">
+                      <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">
                         {row.p_cat}
                       </span>
-                      <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
-                      <span className="text-[10px] font-black text-blue-600">
+                      <span className="w-1 h-1 rounded-full bg-border" />
+                      <span className="text-[10px] font-black text-primary">
                         {Number(row.p_cost).toLocaleString()}{" "}
                         <span className="text-[8px]">SDG</span>
                       </span>
@@ -98,9 +95,9 @@ export default async function ProductTable({
               </div>
             ))
           ) : (
-            <div className="py-20 text-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
-              <p className="text-[10px] font-black text-slate-300 dark:text-slate-700 uppercase tracking-[0.4em]">
-                Empty Catalog
+            <div className="py-20 text-center border-2 border-dashed border-border rounded-xl">
+              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em]">
+                الكتالوج فارغ
               </p>
             </div>
           )}
@@ -108,8 +105,8 @@ export default async function ProductTable({
 
         {/* Footer Meta */}
         <footer className="mt-12 text-center">
-          <p className="text-[8px] font-black text-slate-300 dark:text-slate-800 uppercase tracking-[0.5em]">
-            End of Database Row Transmission
+          <p className="text-[8px] font-black text-muted-foreground uppercase tracking-[0.5em]">
+            نهاية القائمة
           </p>
         </footer>
       </div>

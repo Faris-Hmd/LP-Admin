@@ -55,22 +55,22 @@ function TableSearchForm() {
       <div className="relative flex items-center grow group">
         <Search
           size={14}
-          className="absolute left-3 text-slate-400 group-focus-within:text-blue-500 transition-colors"
+          className="absolute right-3 text-muted-foreground group-focus-within:text-primary transition-colors"
         />
 
         <input
           type="text"
           name="p_name"
-          placeholder="Filter..."
+          placeholder="بحث سريع..."
           defaultValue={activeKey === "p_name" ? activeValue || "" : ""}
-          className="w-full pl-9 pr-8 py-1.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-lg text-[11px] font-bold text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-blue-500 outline-none transition-all h-[36px]"
+          className="w-full pr-9 pl-8 py-1.5 bg-muted/50 border border-border rounded-lg text-[11px] font-bold text-foreground placeholder:text-muted-foreground focus:border-primary outline-none transition-all h-[36px]"
         />
 
         {activeValue && (
           <button
             type="button"
             onClick={handleReset}
-            className="absolute right-2 p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 hover:text-rose-500 transition-all"
+            className="absolute left-2 p-1 rounded-md hover:bg-muted text-muted-foreground hover:text-destructive transition-all"
           >
             <X size={12} strokeWidth={3} />
           </button>
@@ -82,18 +82,18 @@ function TableSearchForm() {
           value={activeKey === "p_cat" ? activeValue || "" : ""}
           onValueChange={handleCatOnchange}
         >
-          <SelectTrigger className="w-[120px] h-[36px] rounded-lg bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-[10px] font-black uppercase tracking-tight shadow-none focus:ring-2 focus:ring-blue-500/10">
+          <SelectTrigger className="w-[120px] h-[36px] rounded-lg bg-card border-border text-foreground text-[10px] font-black uppercase tracking-tight shadow-none focus:ring-2 focus:ring-primary/10">
             <div className="flex items-center gap-2">
-              <Filter size={12} className="text-slate-400" />
-              <SelectValue placeholder="TAG" />
+              <Filter size={12} className="text-muted-foreground" />
+              <SelectValue placeholder="التصنيف" />
             </div>
           </SelectTrigger>
-          <SelectContent className="rounded-lg shadow-xl dark:bg-slate-900 dark:border-slate-800">
+          <SelectContent className="rounded-lg shadow-xl bg-card border-border">
             <SelectItem
               value="all"
-              className="text-[10px] font-black text-blue-600"
+              className="text-[10px] font-black text-primary"
             >
-              ALL ITEMS
+              الكل
             </SelectItem>
             {categories.map((cat) => (
               <SelectItem
@@ -109,7 +109,7 @@ function TableSearchForm() {
 
         <button
           type="submit"
-          className="flex items-center justify-center bg-slate-900 dark:bg-blue-600 hover:bg-slate-800 text-white w-[36px] h-[36px] rounded-lg transition-all active:scale-95 shadow-sm"
+          className="flex items-center justify-center bg-primary hover:bg-primary/90 text-primary-foreground w-[36px] h-[36px] rounded-lg transition-all active:scale-95 shadow-sm"
         >
           <Search size={16} strokeWidth={3} />
         </button>

@@ -15,14 +15,14 @@ export default async function EditDriverPage({
   if (!driver) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 p-20 text-center">
-        <div className="w-16 h-16 bg-rose-50 dark:bg-rose-900/20 rounded-full flex items-center justify-center mb-2">
-          <ShieldAlert className="text-rose-500" size={32} />
+        <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mb-2">
+          <ShieldAlert className="text-destructive" size={32} />
         </div>
-        <h2 className="font-black text-rose-500 uppercase tracking-widest text-lg">
-          Access Denied
+        <h2 className="font-black text-destructive uppercase tracking-widest text-lg">
+          تم رفض الوصول
         </h2>
-        <p className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px]">
-          Driver Credentials Not Found or Nullified
+        <p className="text-muted-foreground font-bold uppercase tracking-[0.2em] text-[10px]">
+          بيانات السائق غير موجودة أو ملغاة
         </p>
       </div>
     );

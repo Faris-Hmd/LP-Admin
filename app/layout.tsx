@@ -1,6 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
+import { Cairo } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -9,9 +9,9 @@ import { SessionProvider } from "next-auth/react";
 import BtmNav from "@/components/BtmNav";
 import ScrollTop from "@/components/ScrollTop";
 
-const roboto = Nunito({
-  weight: "400",
-  subsets: ["latin"],
+const cairo = Cairo({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "600", "700", "900"],
 });
 
 export const metadata: Metadata = {
@@ -25,9 +25,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="ar" dir="rtl" suppressHydrationWarning>
       <body
-        className={`${roboto.className} antialiased text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-300`}
+        className={`${cairo.className} antialiased flex flex-col transition-colors duration-300`}
       >
         <SessionProvider>
           <ThemeProvider

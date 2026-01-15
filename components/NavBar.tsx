@@ -3,7 +3,6 @@
 import { usePathname } from "next/navigation";
 import { BarChart3, Settings, Users, ClipboardList } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { Logo } from "@/components/Logo";
 import { ModeToggle } from "@/components/ModeToggle";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
@@ -13,33 +12,33 @@ const currentMonthSlug = new Date().toISOString().slice(0, 7);
 
 const ADMIN_LINKS = [
   {
-    title: "Analytics",
+    title: "التحليلات",
     href: "/analatic", // Base path for active check
     defaultSlug: `/${currentMonthSlug}`, // Default month to navigate to
     icon: BarChart3,
-    color: "text-purple-600",
-    bg: "bg-purple-50 dark:bg-purple-900/20",
+    color: "text-primary",
+    bg: "bg-primary/10",
   },
   {
-    title: "Orders",
+    title: "الطلبات",
     href: "/manageOrder",
     icon: ClipboardList,
-    color: "text-orange-600",
-    bg: "bg-orange-50 dark:bg-orange-900/20",
+    color: "text-primary",
+    bg: "bg-primary/10",
   },
   {
-    title: "Inventory",
+    title: "المخزون",
     href: "/productsSet",
     icon: Settings,
-    color: "text-blue-600",
-    bg: "bg-blue-50 dark:bg-blue-900/20",
+    color: "text-primary",
+    bg: "bg-primary/10",
   },
   {
-    title: "Drivers",
+    title: "السائقين",
     href: "/drivers",
     icon: Users,
-    color: "text-emerald-600",
-    bg: "bg-emerald-50 dark:bg-emerald-900/20",
+    color: "text-primary",
+    bg: "bg-primary/10",
   },
 ];
 
@@ -50,7 +49,7 @@ export default function Navbar() {
   if (!session?.user) return null;
 
   return (
-    <nav className="sticky top-0 z-50 transition-all duration-300 bg-white/80 dark:bg-slate-900/80 py-3 border-b border-slate-100 dark:border-slate-800 backdrop-blur-md">
+    <nav className="sticky top-0 z-50 transition-all duration-300 bg-card/80 py-3 border-b border-border backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
         {/* --- BRAND --- */}
         <div className="flex items-center gap-8">
@@ -58,22 +57,26 @@ export default function Navbar() {
             href={`/analatic/${currentMonthSlug}` as any}
             className="group flex items-center gap-2.5 transition-transform active:scale-95"
           >
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20 group-hover:rotate-12 transition-transform duration-300">
-              <Logo className="text-white w-6 h-6" />
+            <div className="rounded-full w-10 h-10 bg-primary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:rotate-12 transition-transform duration-300 rounded-full">
+              <img
+                src="/logo.png"
+                alt="Liper Pizza Logo"
+                className="w-full h-full object-cover rounded-full"
+              />
             </div>
             <div className="flex flex-col leading-none">
-              <span className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
-                SUDAN<span className="text-blue-600">PC</span>
+              <span className="text-xl font-black text-foreground tracking-tight">
+                SUDAN<span className="text-primary">PC</span>
               </span>
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mt-0.5">
-                Control Panel
+              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-0.5">
+                لوحة التحكم
               </span>
             </div>
           </Link>
 
           {/* --- ADMIN LINKS (Desktop) --- */}
           <div className="hidden lg:flex items-center gap-1">
-            <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2" />
+            <div className="h-6 w-px bg-border mx-2" />
             {ADMIN_LINKS.map((item) => {
               const Icon = item.icon;
 
@@ -92,7 +95,7 @@ export default function Navbar() {
                   className={`px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-2 ${
                     isActive
                       ? `${item.color} ${item.bg}`
-                      : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
+                      : "text-muted-foreground hover:bg-muted"
                   }`}
                 >
                   <Icon size={16} strokeWidth={isActive ? 2.5 : 2} />
@@ -107,25 +110,25 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           <ModeToggle />
 
-          <div className="h-8 w-px bg-slate-100 dark:bg-slate-800 mx-1 hidden sm:block" />
+          <div className="h-8 w-px bg-border mx-1 hidden sm:block" />
 
           {/* Admin Identity */}
           <div className="flex items-center gap-3">
             <div className="hidden md:flex flex-col items-end leading-none">
-              <span className="text-[10px] font-black uppercase text-slate-900 dark:text-white">
-                Administrator
+              <span className="text-[10px] font-black uppercase text-foreground">
+                المشرف
               </span>
-              <span className="text-[9px] font-bold text-emerald-500 uppercase">
-                System Online
+              <span className="text-[9px] font-bold text-success uppercase">
+                النظام متصل
               </span>
             </div>
             <Link href="/profile">
-              <Avatar className="h-9 w-9 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-center bg-white dark:bg-slate-800 transition-transform active:scale-90">
+              <Avatar className="h-9 w-9 overflow-hidden rounded-xl border border-border shadow-sm flex items-center justify-center bg-card transition-transform active:scale-90">
                 <AvatarImage
                   src={session?.user?.image || ""}
                   className="h-full w-full object-cover"
                 />
-                <AvatarFallback className="bg-blue-600 text-white font-black text-xs h-full w-full flex items-center justify-center">
+                <AvatarFallback className="bg-primary text-primary-foreground font-black text-xs h-full w-full flex items-center justify-center">
                   AD
                 </AvatarFallback>
               </Avatar>

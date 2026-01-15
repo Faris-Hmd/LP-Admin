@@ -31,7 +31,7 @@ const isDevelopment =
 //     console.warn("✘ Firestore Emulator connection failed:", err);
 //   }
 // }
-export const productsRef = collection(db, "products");
+export const productsRef = collection(db, "pizza_products");
 export const usersRef = collection(db, "users");
 export const driversRef = collection(db, "drivers");
 

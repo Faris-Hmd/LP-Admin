@@ -56,9 +56,9 @@ function Dropdown({ id, isFeatured }: { id: string; isFeatured: boolean }) {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all active:scale-95 outline-none">
+          <button className="p-2 rounded-xl hover:bg-muted text-muted-foreground hover:text-primary transition-all active:scale-95 outline-none">
             {isPending ? (
-              <Loader2 size={18} className="animate-spin text-blue-600" />
+              <Loader2 size={18} className="animate-spin text-primary" />
             ) : (
               <EllipsisVertical size={20} />
             )}
@@ -67,62 +67,60 @@ function Dropdown({ id, isFeatured }: { id: string; isFeatured: boolean }) {
 
         <DropdownMenuContent
           align="end"
-          className="rounded-2xl shadow-xl dark:bg-slate-900 dark:border-slate-800 min-w-[180px] p-1.5 border-slate-100 dark:border-slate-800"
+          className="rounded-2xl shadow-xl bg-card border-border min-w-[180px] p-1.5"
         >
           <DropdownMenuItem
             disabled={isPending}
             onClick={handleToggleFeature}
-            className="flex gap-3 items-center w-full px-3 py-2.5 rounded-xl cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/40 transition-colors"
+            className="flex gap-3 items-center w-full px-3 py-2.5 rounded-xl cursor-pointer text-sm font-bold text-foreground hover:text-warning hover:bg-warning/10 transition-colors"
           >
             <Star
               size={16}
               className={cn(
-                isFeatured ? "fill-amber-500 text-amber-500" : "text-slate-400",
+                isFeatured
+                  ? "fill-warning text-warning"
+                  : "text-muted-foreground",
               )}
             />
-            <span>{isFeatured ? "Unfeature Item" : "Feature Product"}</span>
+            <span>{isFeatured ? "إلغاء التمييز" : "تمييز المنتج"}</span>
           </DropdownMenuItem>
 
           <DropdownMenuItem asChild>
             <Link
               href={`/productsSet/${id}`}
-              className="flex gap-3 items-center w-full px-3 py-2.5 rounded-xl cursor-pointer text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/40 transition-colors"
+              className="flex gap-3 items-center w-full px-3 py-2.5 rounded-xl cursor-pointer text-sm font-bold text-foreground hover:text-primary hover:bg-primary/10 transition-colors"
             >
               <Edit size={16} />
-              <span>Edit Product</span>
+              <span>تعديل المنتج</span>
             </Link>
           </DropdownMenuItem>
 
-          <div className="h-px bg-slate-100 dark:bg-slate-800 my-1" />
+          <div className="h-px bg-border my-1" />
 
           <DropdownMenuItem
             disabled={isPending}
             onClick={() => setShowDeleteConfirm(true)}
-            className="flex gap-3 items-center w-full px-3 py-2.5 rounded-xl cursor-pointer text-sm font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/40 transition-colors"
+            className="flex gap-3 items-center w-full px-3 py-2.5 rounded-xl cursor-pointer text-sm font-bold text-destructive hover:bg-destructive/10 transition-colors"
           >
             <Trash2 size={16} />
-            <span>Remove Item</span>
+            <span>حذف المنتج</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
       {/* --- DELETE CONFIRMATION MODAL --- */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-slate-100 dark:border-slate-800 animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-card w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-border animate-in zoom-in-95 duration-200">
             <div className="flex flex-col items-center text-center">
-              <div className="w-14 h-14 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
-                <AlertTriangle
-                  className="text-red-600 dark:text-red-400"
-                  size={28}
-                />
+              <div className="w-14 h-14 bg-destructive/10 rounded-full flex items-center justify-center mb-4">
+                <AlertTriangle className="text-destructive" size={28} />
               </div>
-              <h3 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">
-                Delete Product?
+              <h3 className="text-lg font-black text-foreground uppercase tracking-tight">
+                حذف المنتج؟
               </h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 font-medium leading-relaxed">
-                Are you sure? This item will be removed from your store
-                inventory immediately.
+              <p className="text-sm text-muted-foreground mt-2 font-medium leading-relaxed">
+                هل أنت متأكد؟ سيتم إزالة هذا العنصر من مخزون المتجر نهائياً.
               </p>
             </div>
 
@@ -130,19 +128,19 @@ function Dropdown({ id, isFeatured }: { id: string; isFeatured: boolean }) {
               <button
                 disabled={isPending}
                 onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 px-4 py-3 rounded-2xl text-xs font-black uppercase text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="flex-1 px-4 py-3 rounded-2xl text-xs font-black uppercase text-muted-foreground hover:bg-muted transition-colors"
               >
-                Cancel
+                إلغاء
               </button>
               <button
                 disabled={isPending}
                 onClick={handleDelete}
-                className="flex-1 px-4 py-3 rounded-2xl text-xs font-black uppercase bg-red-600 text-white shadow-lg shadow-red-600/20 hover:bg-red-700 active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center"
+                className="flex-1 px-4 py-3 rounded-2xl text-xs font-black uppercase bg-destructive text-destructive-foreground shadow-lg shadow-destructive/20 hover:bg-destructive/90 active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center"
               >
                 {isPending ? (
                   <Loader2 size={16} className="animate-spin" />
                 ) : (
-                  "Confirm"
+                  "تأكيد الحذف"
                 )}
               </button>
             </div>

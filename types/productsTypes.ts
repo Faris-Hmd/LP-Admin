@@ -41,6 +41,8 @@ export type OrderData = {
   deleveratstamp?: any;
   totalAmount: number;
   driverId?: string;
+  paymentMethod?: string;
+  transactionReference?: string;
 };
 
 export interface CategoryDistribution {

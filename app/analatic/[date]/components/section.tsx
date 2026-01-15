@@ -19,8 +19,8 @@ export default function SectionCards() {
 
   if (error)
     return (
-      <div className="p-4 text-xs text-red-500 font-mono">
-        ERR: FETCH_FAILED
+      <div className="p-4 text-xs text-destructive font-mono">
+        خطأ: فشل الجلب
       </div>
     );
 
@@ -30,7 +30,7 @@ export default function SectionCards() {
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       <MetricCard
         icon={<DollarSign size={18} />}
-        label="Total Revenue"
+        label="إجمالي الإيرادات"
         value={stats.revenue}
         isCurrency={true}
         color="text-amber-600 dark:text-amber-400"
@@ -39,15 +39,15 @@ export default function SectionCards() {
       />
       <MetricCard
         icon={<Package size={18} />}
-        label="Digital Assets"
+        label="الأصول الرقمية"
         value={stats.products}
-        color="text-blue-600 dark:text-blue-400"
-        bg="bg-blue-50 dark:bg-blue-900/20"
+        color="text-primary"
+        bg="bg-primary/10"
         loading={isLoading && !data}
       />
       <MetricCard
         icon={<ShoppingCart size={18} />}
-        label="Total Orders"
+        label="إجمالي الطلبات"
         value={stats.orders}
         color="text-emerald-600 dark:text-emerald-400"
         bg="bg-emerald-50 dark:bg-emerald-900/20"
@@ -55,7 +55,7 @@ export default function SectionCards() {
       />
       <MetricCard
         icon={<Users size={18} />}
-        label="Active Customers"
+        label="العملاء النشطين"
         value={stats.customers}
         color="text-violet-600 dark:text-violet-400"
         bg="bg-violet-50 dark:bg-violet-900/20"
@@ -86,7 +86,7 @@ function MetricCard({
       : 0;
 
   return (
-    <div className="flex items-center gap-4 p-3 border-b sm:border-b-0 sm:border-r border-slate-100 dark:border-slate-800 last:border-0">
+    <div className="flex items-center gap-4 p-3 border-b sm:border-b-0 sm:border-r border-border last:border-0">
       <div
         className={`p-3 rounded-xl transition-all duration-300 ${bg} ${color}`}
       >
@@ -94,11 +94,11 @@ function MetricCard({
       </div>
 
       <div className="min-w-0">
-        <p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] truncate">
+        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] truncate">
           {label}
         </p>
         <h4
-          className={`text-xl font-black text-slate-800 dark:text-white font-mono tracking-tighter transition-opacity ${loading ? "opacity-30" : "opacity-100"}`}
+          className={`text-xl font-black text-foreground font-mono tracking-tighter transition-opacity ${loading ? "opacity-30" : "opacity-100"}`}
         >
           {formattedValue}
         </h4>

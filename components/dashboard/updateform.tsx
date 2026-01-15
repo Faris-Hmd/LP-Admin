@@ -42,14 +42,14 @@ export default function UpdateForm({ product }: { product: ProductType }) {
   async function handleProductImgsSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (imgs.length === 0)
-      return toast.error("Product must have at least one image");
+      return toast.error("يجب أن يحتوي المنتج على صورة واحدة على الأقل");
 
     const formElement = e.currentTarget;
     const formData = new FormData(formElement);
 
     // Start loading state
     setPending(true);
-    const toastId = toast.loading("Updating product and images...");
+    const toastId = toast.loading("جاري تحديث المنتج والصور...");
 
     try {
       // 1. Filter existing vs new images
@@ -64,7 +64,7 @@ export default function UpdateForm({ product }: { product: ProductType }) {
         upload(img.productImgFile.name, img.productImgFile, {
           access: "public",
           handleUploadUrl: "/api/uploadImgs",
-        })
+        }),
       );
 
       const uploadedBlobs = await Promise.all(uploadTasks);
@@ -79,17 +79,17 @@ export default function UpdateForm({ product }: { product: ProductType }) {
       await product_update(formData);
 
       // 5. Success
-      toast.success("Product updated successfully!", { id: toastId });
+      toast.success("تم تحديث المنتج بنجاح!", { id: toastId });
       setPending(false);
     } catch (error: any) {
       // Critical Fix: Ignore Next.js redirect "errors"
       if (error.message === "NEXT_REDIRECT") {
-        toast.success("Redirecting...", { id: toastId });
+        toast.success("جاري إعادة التوجيه...", { id: toastId });
         return;
       }
 
       console.error("Update Error:", error);
-      toast.error(error.message || "Failed to update product", { id: toastId });
+      toast.error(error.message || "فشل تحديث المنتج", { id: toastId });
       setPending(false);
     }
   }
@@ -97,19 +97,18 @@ export default function UpdateForm({ product }: { product: ProductType }) {
     // Use a light gray background for contrast
     <div className="bg-transparent lg:min-h-screen p-2">
       {/* Header Card (White background, black text/border) */}
-  
 
       {/* Main Form Container (White background, subtle shadow) */}
       <form
         onSubmit={handleProductImgsSubmit}
-        className="relative bg-white dark:bg-slate-900 p-6 md:p-8 rounded-xl shadow-lg border border-slate-100 dark:border-slate-800 max-w-2xl mx-auto transition-colors"
+        className="relative bg-card p-6 md:p-8 rounded-xl shadow-lg border border-border max-w-2xl mx-auto transition-colors"
       >
         {/* Loading Overlay */}
         {pending && (
-          <div className="z-50 cursor-wait w-full h-full backdrop-blur-[2px] absolute top-0 left-0 bg-white/60 dark:bg-slate-900/60 flex flex-col items-center justify-center rounded-xl transition-all">
-            <Loader className="animate-spin h-10 w-10 text-blue-600 dark:text-blue-400" />
-            <p className="text-blue-600 dark:text-blue-400 font-black mt-4 uppercase tracking-widest text-xs">
-              Syncing changes...
+          <div className="z-50 cursor-wait w-full h-full backdrop-blur-[2px] absolute top-0 left-0 bg-background/60 flex flex-col items-center justify-center rounded-xl transition-all">
+            <Loader className="animate-spin h-10 w-10 text-primary" />
+            <p className="text-primary font-black mt-4 uppercase tracking-widest text-xs">
+              جاري حفظ التغييرات...
             </p>
           </div>
         )}
@@ -125,12 +124,16 @@ export default function UpdateForm({ product }: { product: ProductType }) {
                 imgs={imgs}
               />
             ) : (
-              <div className="h-64 w-full bg-slate-50 dark:bg-slate-800/50 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 transition-colors">
-                <div className="p-4 bg-white dark:bg-slate-900 rounded-full shadow-md mb-3 border border-slate-100 dark:border-slate-800">
-                  <ImagePlus size={40} className="text-slate-400 dark:text-slate-600" />
+              <div className="h-64 w-full bg-muted/50 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border transition-colors">
+                <div className="p-4 bg-card rounded-full shadow-md mb-3 border border-border">
+                  <ImagePlus size={40} className="text-muted-foreground" />
                 </div>
-                <p className="text-slate-600 dark:text-slate-400 font-bold">No product images</p>
-                <p className="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">Add JPEGs or PNGs</p>
+                <p className="text-muted-foreground font-bold">
+                  لا توجد صور للمنتج
+                </p>
+                <p className="text-muted-foreground/70 text-[10px] font-bold uppercase tracking-widest mt-1">
+                  أضف صور JPEG أو PNG
+                </p>
               </div>
             )}
 
@@ -141,14 +144,14 @@ export default function UpdateForm({ product }: { product: ProductType }) {
                   flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer shadow-sm
                   ${
                     pending
-                      ? "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600"
-                      : "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 border border-blue-200 dark:border-blue-900/50"
+                      ? "bg-muted text-muted-foreground"
+                      : "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20"
                   }
                 `}
                 htmlFor="imgsInput"
               >
                 <Camera size={18} />
-                {pending ? "Uploading..." : "Select Images"}
+                {pending ? "جاري الرفع..." : "اختر صور"}
               </label>
               <input
                 className="hidden"
@@ -167,8 +170,8 @@ export default function UpdateForm({ product }: { product: ProductType }) {
         {/* Form Fields - Black/Slate text and borders */}
         <div className="space-y-5">
           <div>
-            <label className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 block mb-1.5">
-              Product Name
+            <label className="text-xs font-black uppercase tracking-widest text-muted-foreground block mb-1.5">
+              اسم المنتج
             </label>
             <input
               name="p_name"
@@ -176,14 +179,14 @@ export default function UpdateForm({ product }: { product: ProductType }) {
               required
               defaultValue={product.p_name}
               disabled={pending}
-              className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-600 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
-              placeholder="e.g. Mechanical Keyboard"
+              className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-sm font-semibold text-foreground focus:ring-2 focus:ring-primary outline-none transition-all placeholder:text-muted-foreground"
+              placeholder="مثال: لوحة مفاتيح ميكانيكية"
             />
           </div>
 
           <div>
-            <label className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 block mb-1.5">
-              Details
+            <label className="text-xs font-black uppercase tracking-widest text-muted-foreground block mb-1.5">
+              التفاصيل
             </label>
             <textarea
               name="p_details"
@@ -191,15 +194,15 @@ export default function UpdateForm({ product }: { product: ProductType }) {
               rows={3}
               defaultValue={product.p_details}
               disabled={pending}
-              className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-600 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none"
-              placeholder="Full specifications and features..."
+              className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-sm font-semibold text-foreground focus:ring-2 focus:ring-primary outline-none transition-all placeholder:text-muted-foreground resize-none"
+              placeholder="المواصفات والمميزات الكاملة..."
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-              <label className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 block mb-1.5">
-                Cost (SDG)
+              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground block mb-1.5">
+                التكلفة (SDG)
               </label>
               <input
                 name="p_cost"
@@ -207,29 +210,29 @@ export default function UpdateForm({ product }: { product: ProductType }) {
                 required
                 defaultValue={product.p_cost}
                 disabled={pending}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-600 outline-none placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-sm font-semibold text-foreground focus:ring-2 focus:ring-primary outline-none placeholder:text-muted-foreground"
                 placeholder="0.00"
               />
             </div>
 
             <div>
-              <label className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 block mb-1.5">
-                Category
+              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground block mb-1.5">
+                التصنيف
               </label>
               <Select
                 name="p_cat"
                 defaultValue={product.p_cat}
                 disabled={pending}
               >
-                <SelectTrigger className="w-full h-[42px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-semibold text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-600">
-                  <SelectValue placeholder="Select Category" />
+                <SelectTrigger className="w-full h-[42px] bg-background border border-border text-sm font-semibold text-foreground rounded-lg focus:ring-2 focus:ring-primary">
+                  <SelectValue placeholder="اختر التصنيف" />
                 </SelectTrigger>
-                <SelectContent className="dark:bg-slate-900 dark:border-slate-800">
+                <SelectContent className="bg-popover border-border">
                   {categories.map((cat) => (
                     <SelectItem
                       key={cat}
                       value={cat}
-                      className="text-gray-900 dark:text-slate-100 focus:bg-gray-100 dark:focus:bg-slate-800 font-semibold text-xs uppercase tracking-wider"
+                      className="text-foreground focus:bg-muted font-semibold text-xs uppercase tracking-wider"
                     >
                       {cat.replace(/_/g, " ")}
                     </SelectItem>
@@ -241,26 +244,26 @@ export default function UpdateForm({ product }: { product: ProductType }) {
         </div>
 
         {/* Action Buttons - Blue primary, gray secondary */}
-        <div className="flex items-center gap-4 mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
+        <div className="flex items-center gap-4 mt-8 pt-6 border-t border-border">
           <Link
             href="/productsSet"
-            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 text-sm font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg border border-border bg-muted/50 text-muted-foreground text-sm font-bold hover:bg-muted transition-colors"
           >
-            <CircleX size={18} /> Cancel
+            <CircleX size={18} /> إلغاء
           </Link>
           <button
             type="submit"
             disabled={pending}
-            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-black shadow-lg shadow-blue-500/20 transition-all disabled:opacity-50 
-            bg-blue-600 text-white hover:bg-blue-700 active:scale-[0.98]"
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-black shadow-lg shadow-primary/20 transition-all disabled:opacity-50 
+            bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98]"
           >
             {pending ? (
               <>
-                <Loader size={18} className="animate-spin" /> Saving...
+                <Loader size={18} className="animate-spin" /> جاري الحفظ...
               </>
             ) : (
               <>
-                <Edit2 size={18} /> Update Product
+                <Edit2 size={18} /> تحديث المنتج
               </>
             )}
           </button>

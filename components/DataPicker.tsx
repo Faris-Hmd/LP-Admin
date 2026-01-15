@@ -41,7 +41,7 @@ export default function DateSelector({
   const formatLabel = (val: string) => {
     const [y, m] = val.split("-");
     const date = new Date(parseInt(y), parseInt(m) - 1);
-    return date.toLocaleString("en-US", { month: "long", year: "numeric" });
+    return date.toLocaleString("ar-EG", { month: "long", year: "numeric" });
   };
 
   return (
@@ -50,16 +50,20 @@ export default function DateSelector({
         value={currentMonth}
         onValueChange={(value) => router.push(value as any)}
       >
-        <SelectTrigger className="w-[180px] h-10 rounded-xl bg-blue-50 border-blue-100 text-blue-700 font-bold dark:bg-slate-900 dark:border-slate-800 dark:text-blue-400">
+        <SelectTrigger className="w-[180px] h-10 rounded-xl bg-card border-border text-foreground font-bold focus:ring-primary">
           <div className="flex items-center gap-2">
-            <CalendarDays size={16} className="opacity-70" />
+            <CalendarDays size={16} className="opacity-70 text-primary" />
             <SelectValue>{formatLabel(currentMonth)}</SelectValue>
           </div>
         </SelectTrigger>
 
-        <SelectContent className="max-h-[300px] rounded-xl">
+        <SelectContent className="max-h-[300px] rounded-xl bg-popover border-border">
           {dateOptions.map((opt) => (
-            <SelectItem key={opt} value={opt} className="font-semibold">
+            <SelectItem
+              key={opt}
+              value={opt}
+              className="font-semibold text-foreground focus:bg-muted"
+            >
               <span className="font-mono mr-2 opacity-50 text-xs">{opt}</span>
               {formatLabel(opt)}
             </SelectItem>

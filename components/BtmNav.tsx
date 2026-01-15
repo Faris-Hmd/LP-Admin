@@ -12,14 +12,14 @@ const currentMonthSlug = new Date().toISOString().slice(0, 7); // "2026-01"
 
 const ADMIN_NAV = [
   {
-    title: "Analytics",
+    title: "التحليلات",
     href: "/analatic",
     defaultSlug: `/${currentMonthSlug}`,
     icon: BarChart3,
   },
-  { title: "Orders", href: "/manageOrder", icon: ClipboardList },
-  { title: "Inventory", href: "/productsSet", icon: Settings },
-  { title: "Drivers", href: "/drivers", icon: Users },
+  { title: "الطلبات", href: "/manageOrder", icon: ClipboardList },
+  { title: "المخزون", href: "/productsSet", icon: Settings },
+  { title: "السائقين", href: "/drivers", icon: Users },
 ];
 
 export default function AdminBtmNav() {
@@ -29,7 +29,7 @@ export default function AdminBtmNav() {
   if (!session.data?.user) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-slate-100 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl pb-safe md:hidden h-16 px-2 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.05)]">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-card/95 backdrop-blur-xl pb-safe md:hidden h-16 px-2 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.05)]">
       {ADMIN_NAV.map((item) => {
         const Icon = item.icon;
 
@@ -48,17 +48,13 @@ export default function AdminBtmNav() {
             href={destination as any}
             className={cn(
               "flex flex-1 flex-col items-center justify-center gap-1 transition-all duration-300",
-              isActive
-                ? "text-blue-600 dark:text-blue-400"
-                : "text-slate-400 dark:text-slate-500",
+              isActive ? "text-primary" : "text-muted-foreground",
             )}
           >
             <div
               className={cn(
                 "relative flex items-center justify-center rounded-2xl py-1.5 px-4 transition-all duration-300",
-                isActive
-                  ? "bg-blue-50 dark:bg-blue-900/30 shadow-sm"
-                  : "bg-transparent",
+                isActive ? "bg-primary/10 shadow-sm" : "bg-transparent",
               )}
             >
               <Icon

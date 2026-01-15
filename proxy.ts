@@ -28,6 +28,6 @@ export const config = {
    * - public (public folder assets like logo.png)
    */
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|manifest.webmanifest|icon-|apple-icon).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|manifest.webmanifest|icon-|apple-icon).*)",
   ],
 };

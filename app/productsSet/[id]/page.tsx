@@ -9,27 +9,27 @@ export async function UpdateFormPage({ params }: { params: { id: string } }) {
   if (!product) return null;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors pb-20">
+    <div className="min-h-screen bg-transparent transition-colors pb-20">
       {/* Sticky Compact Header - Matching Product Table Style */}
-      <header className="sticky top-0 z-100 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm mb-6">
+      <header className="sticky top-0 z-100 bg-card/80 backdrop-blur-md border-b border-border shadow-sm mb-6">
         <div className="max-w-4xl mx-auto p-4 md:p-6">
           <div className="flex justify-between items-center">
             <div>
-              <div className="flex items-center gap-2 text-[9px] font-black text-blue-600 uppercase tracking-[0.2em] mb-0.5">
+              <div className="flex items-center gap-2 text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-0.5">
                 <ShieldCheck size={10} />
-                Editor Mode
+                وضع المحرر
               </div>
-              <h1 className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">
-                Modify <span className="text-blue-600">Product</span>
+              <h1 className="text-xl font-black text-foreground uppercase tracking-tight">
+                تعديل <span className="text-primary">المنتج</span>
               </h1>
             </div>
 
             {/* Visual Indicator of Current Product ID */}
             <div className="hidden md:flex flex-col items-end">
-              <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">
-                Database ID
+              <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
+                معرف قاعدة البيانات
               </span>
-              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 font-mono">
+              <span className="text-[10px] font-bold text-muted-foreground font-mono">
                 {id.slice(0, 8)}...
               </span>
             </div>
@@ -44,8 +44,8 @@ export async function UpdateFormPage({ params }: { params: { id: string } }) {
 
       {/* Background Subtle Label */}
       <footer className="mt-12 text-center">
-        <p className="text-[8px] font-black text-slate-200 dark:text-slate-800 uppercase tracking-[0.5em] select-none">
-          Secure Modification Channel
+        <p className="text-[8px] font-black text-muted-foreground/20 uppercase tracking-[0.5em] select-none">
+          قناة التعديل الآمنة
         </p>
       </footer>
     </div>
