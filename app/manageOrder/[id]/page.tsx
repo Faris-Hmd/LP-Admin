@@ -19,6 +19,8 @@ import {
   ShoppingBag,
   Loader2,
   MessageSquare,
+  Copy,
+  Check,
   ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -27,7 +29,8 @@ export default function OrderDetailsPage() {
   const { id } = useParams();
   const router = useRouter();
   const [updating, setUpdating] = useState(false);
-  const [isCustomerInfoOpen, setIsCustomerInfoOpen] = useState(false);
+  const [copiedId, setCopiedId] = useState(false);
+  const [copiedRef, setCopiedRef] = useState(false);
 
   const {
     data: order,
@@ -38,6 +41,18 @@ export default function OrderDetailsPage() {
     "drivers",
     getDrivers,
   );
+
+  const handleCopy = (text: string, type: "id" | "ref") => {
+    navigator.clipboard.writeText(text);
+    if (type === "id") {
+      setCopiedId(true);
+      setTimeout(() => setCopiedId(false), 2000);
+    } else {
+      setCopiedRef(true);
+      setTimeout(() => setCopiedRef(false), 2000);
+    }
+    toast.success("تم النسخ للمحافظة");
+  };
 
   const statusConfig = {
     Processing: {
@@ -123,28 +138,38 @@ export default function OrderDetailsPage() {
     <div className="min-h-screen bg-transparent pb-32">
       {/* Header */}
       <header className="bg-card border-b border-border sticky top-0 z-100">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-4">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-2.5">
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.back()}
-              className="p-2 hover:bg-muted rounded-lg transition-colors text-muted-foreground border border-border"
+              className="p-1.5 hover:bg-muted rounded transition-colors text-muted-foreground border border-border"
             >
-              <ChevronLeft size={20} />
+              <ChevronLeft size={18} />
             </button>
             <div className="flex-1">
-              <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-0.5">
+              <div className="flex items-center gap-2 text-[9px] font-black text-primary uppercase tracking-[0.2em]">
                 <Hash size={10} />
-                الطلب {order.id.slice(-6).toUpperCase()}
+                الطلب {order.id.slice(-8).toUpperCase()}
+                <button
+                  onClick={() => handleCopy(order.id, "id")}
+                  className="p-1 hover:bg-primary/10 rounded transition-colors"
+                >
+                  {copiedId ? (
+                    <Check size={10} className="text-success" />
+                  ) : (
+                    <Copy size={10} className="text-muted-foreground" />
+                  )}
+                </button>
               </div>
-              <h1 className="text-xl font-black text-foreground uppercase tracking-tight">
+              <h1 className="text-lg font-black text-foreground uppercase tracking-tight leading-tight">
                 تفاصيل <span className="text-primary">الطلب</span>
               </h1>
             </div>
             <div
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-md ${currentStatus.bg} ${currentStatus.color} border ${currentStatus.border}`}
+              className={`flex items-center gap-1.5 px-2 py-1 rounded ${currentStatus.bg} ${currentStatus.color} border ${currentStatus.border}`}
             >
-              <StatusIcon size={14} />
-              <span className="text-[10px] font-black uppercase tracking-widest">
+              <StatusIcon size={12} />
+              <span className="text-[9px] font-black uppercase tracking-widest">
                 {currentStatus.label}
               </span>
             </div>
@@ -152,46 +177,46 @@ export default function OrderDetailsPage() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-4">
             {/* Manifest */}
-            <section className="bg-card rounded-xl border border-border overflow-hidden shadow-sm">
-              <div className="p-4 border-b border-border flex items-center justify-between bg-muted/30">
+            <section className="bg-card rounded border border-border overflow-hidden shadow-sm">
+              <div className="px-3 py-1.5 border-b border-border flex items-center justify-between bg-muted/10">
                 <div className="flex items-center gap-2">
-                  <ShoppingBag size={16} className="text-primary" />
-                  <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest">
+                  <ShoppingBag size={14} className="text-primary" />
+                  <h2 className="text-[9px] font-black text-foreground uppercase tracking-widest">
                     محتويات الطلب
                   </h2>
                 </div>
-                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-2 py-0.5 bg-muted rounded">
                   {order.productsList.length} منتجات
                 </span>
               </div>
 
-              <div className="divide-y divide-border">
+              <div className="divide-y divide-border/50">
                 {order.productsList.map((product, idx) => (
                   <div
                     key={idx}
-                    className="p-4 hover:bg-muted/30 transition-colors"
+                    className="px-4 py-2.5 hover:bg-muted/10 transition-colors"
                   >
                     <div className="flex items-center justify-between gap-4">
                       <div className="min-w-0">
-                        <h4 className="text-sm font-black text-foreground uppercase truncate">
+                        <h4 className="text-xs font-black text-foreground uppercase truncate">
                           {product.p_name}
                         </h4>
-                        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">
+                        <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">
                           {product.p_cat}
                         </p>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-sm font-black text-foreground">
+                        <p className="text-xs font-black text-foreground">
                           {Number(product.p_cost).toLocaleString()}{" "}
-                          <span className="text-[10px] text-primary">ج.س</span>
+                          <span className="text-[9px] text-primary">ج.س</span>
                         </p>
-                        <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">
-                          الكمية: {product.p_qu || 1}
+                        <p className="text-[8px] text-muted-foreground font-black uppercase tracking-tighter">
+                          QTY: {product.p_qu || 1}
                         </p>
                       </div>
                     </div>
@@ -199,148 +224,162 @@ export default function OrderDetailsPage() {
                 ))}
               </div>
 
-              <div className="p-5 bg-muted/20 border-t border-border">
+              <div className="px-3 py-2 bg-muted/20 border-t border-border">
                 <div className="flex justify-between items-center">
-                  <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                  <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
                     الإجمالي الصافي
                   </span>
-                  <span className="text-xl font-black text-primary tracking-tighter">
+                  <span className="text-lg font-black text-primary tracking-tighter">
                     {order.totalAmount.toLocaleString()}{" "}
-                    <span className="text-xs">ج.س</span>
+                    <span className="text-[10px]">ج.س</span>
                   </span>
                 </div>
               </div>
             </section>
 
-            {/* Client Data & Transaction Info */}
-            <section className="bg-card rounded-xl border border-border overflow-hidden shadow-sm">
-              <button
-                onClick={() => setIsCustomerInfoOpen(!isCustomerInfoOpen)}
-                className="w-full p-4 flex items-center justify-between hover:bg-muted/30 transition-colors"
-              >
+            {/* Client Data & Transaction Info - Now Uncollapsible */}
+            <section className="bg-card rounded border border-border overflow-hidden shadow-sm">
+              <div className="px-3 py-1.5 border-b border-border bg-muted/10">
                 <div className="flex items-center gap-2">
-                  <User size={16} className="text-foreground" />
-                  <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest">
+                  <User size={14} className="text-foreground" />
+                  <h2 className="text-[9px] font-black text-foreground uppercase tracking-widest">
                     بيانات العميل والمعادلة
                   </h2>
                 </div>
-                <ChevronDown
-                  size={18}
-                  className={`text-muted-foreground transition-transform ${isCustomerInfoOpen ? "rotate-180" : ""}`}
-                />
-              </button>
+              </div>
 
-              {isCustomerInfoOpen && (
-                <div className="px-4 pb-5 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-3 bg-muted/30 rounded-lg border border-border">
-                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1">
-                        الاسم الكامل
+              <div className="p-2 space-y-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div className="flex items-center justify-between py-1.5 px-2 bg-muted/30 rounded border border-border">
+                    <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
+                      الاسم الكامل
+                    </span>
+                    <span className="text-[10px] font-black text-foreground uppercase truncate ml-2">
+                      {order.customer_name || "N/A"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-1.5 px-2 bg-muted/30 rounded border border-border">
+                    <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
+                      رقم التواصل
+                    </span>
+                    <span className="text-[10px] font-black text-foreground ml-2">
+                      {order.shippingInfo?.phone || "N/A"}
+                    </span>
+                  </div>
+                </div>
+
+                {order.shippingInfo && (
+                  <div className="p-2 bg-primary/5 border border-primary/10 rounded flex gap-2.5">
+                    <MapPin
+                      size={14}
+                      className="text-primary mt-0.5 shrink-0"
+                    />
+                    <div>
+                      <p className="text-[8px] font-black text-primary uppercase tracking-widest mb-0.5">
+                        عنوان التوصيل
                       </p>
-                      <p className="text-xs font-black text-foreground uppercase">
-                        {order.customer_name || "غير متوفر"}
-                      </p>
-                    </div>
-                    <div className="p-3 bg-muted/30 rounded-lg border border-border">
-                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1">
-                        رقم التواصل
-                      </p>
-                      <p className="text-xs font-black text-foreground">
-                        {order.shippingInfo?.phone || "غير متوفر"}
+                      <p className="text-[10px] font-bold text-foreground leading-tight">
+                        {order.shippingInfo.address}, {order.shippingInfo.city}
                       </p>
                     </div>
                   </div>
-                  {order.shippingInfo && (
-                    <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg flex gap-3">
-                      <MapPin
-                        size={16}
-                        className="text-primary mt-1 shrink-0"
-                      />
-                      <div>
-                        <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-1">
-                          عنوان التوصيل
-                        </p>
-                        <p className="text-xs font-bold text-foreground leading-relaxed">
-                          {order.shippingInfo.address},{" "}
-                          {order.shippingInfo.city}
-                        </p>
-                      </div>
-                    </div>
-                  )}
+                )}
 
-                  {/* Transaction Info */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-dashed border-border">
-                    <div className="p-3 bg-card rounded-lg border border-border">
-                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1">
-                        طريقة الدفع
-                      </p>
-                      <p className="text-xs font-black text-foreground uppercase">
-                        {order.paymentMethod || "الدفع عند الاستلام"}
-                      </p>
-                    </div>
-                    <div className="p-3 bg-card rounded-lg border border-border">
-                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1">
-                        المرجع
-                      </p>
-                      <p className="text-xs font-mono font-bold text-foreground">
+                {/* Transaction Info Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2 border-t border-dashed border-border">
+                  <div className="flex items-center justify-between py-1.5 px-2 bg-card rounded border border-border">
+                    <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
+                      طريقة الدفع
+                    </span>
+                    <span className="text-[10px] font-black text-foreground uppercase ml-2">
+                      {order.paymentMethod || "COD"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-1.5 px-2 bg-card rounded border border-border relative group">
+                    <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
+                      المرجع
+                    </span>
+                    <div className="flex items-center gap-1.5 ml-2 min-w-0">
+                      <span className="text-[10px] font-mono font-bold text-foreground truncate">
                         {order.transactionReference || "N/A"}
-                      </p>
+                      </span>
+                      {order.transactionReference && (
+                        <button
+                          onClick={() =>
+                            handleCopy(
+                              order.transactionReference as string,
+                              "ref",
+                            )
+                          }
+                          className="p-1 hover:bg-muted rounded transition-colors"
+                          title="Copy reference"
+                        >
+                          {copiedRef ? (
+                            <Check size={12} className="text-success" />
+                          ) : (
+                            <Copy size={12} className="text-muted-foreground" />
+                          )}
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
             </section>
           </div>
 
           {/* Sidebar */}
           <div className="space-y-4">
-            <section className="bg-card rounded-xl border border-border overflow-hidden shadow-sm">
-              <div className="p-4 border-b border-border bg-muted/30">
-                <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest">
-                  تحديث الحالة
+            <section className="bg-card rounded border border-border overflow-hidden shadow-sm">
+              <div className="px-3 py-1.5 border-b border-border bg-muted/10">
+                <h2 className="text-[9px] font-black text-foreground uppercase tracking-widest">
+                  حالة الطلب
                 </h2>
               </div>
-              <div className="p-3 grid gap-1.5">
-                {[
-                  { key: "Processing", label: "قيد المعالجة" },
-                  { key: "Shipped", label: "تم الشحن" },
-                  { key: "Delivered", label: "تم التوصيل" },
-                  { key: "Cancelled", label: "ملغي" },
-                ].map((statusItem) => (
-                  <button
-                    key={statusItem.key}
-                    onClick={() => handleUpdateStatus(statusItem.key)}
-                    disabled={updating || order.status === statusItem.key}
-                    className={`w-full py-2.5 px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
-                      order.status === statusItem.key
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-card text-muted-foreground border border-border hover:border-primary"
-                    } disabled:opacity-50`}
+              <div className="p-2">
+                <div className="relative">
+                  <select
+                    value={order.status}
+                    onChange={(e) => handleUpdateStatus(e.target.value)}
+                    disabled={updating}
+                    className="w-full appearance-none px-3 py-2 bg-muted/50 border border-border rounded text-foreground text-[9px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
                   >
-                    {statusItem.label}
-                  </button>
-                ))}
+                    {[
+                      { key: "Processing", label: "قيد المعالجة" },
+                      { key: "Shipped", label: "تم الشحن" },
+                      { key: "Delivered", label: "تم التوصيل" },
+                      { key: "Cancelled", label: "ملغي" },
+                    ].map((statusItem) => (
+                      <option key={statusItem.key} value={statusItem.key}>
+                        {statusItem.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                    <ChevronDown size={12} className="text-muted-foreground" />
+                  </div>
+                </div>
               </div>
             </section>
 
-            <section className="bg-card rounded-xl border border-border overflow-hidden shadow-sm">
-              <div className="p-4 border-b border-border bg-muted/30">
-                <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest">
-                  اللوجستيات
+            <section className="bg-card rounded border border-border overflow-hidden shadow-sm">
+              <div className="px-4 py-3 border-b border-border bg-muted/10">
+                <h2 className="text-[9px] font-black text-foreground uppercase tracking-widest">
+                  اللوجستيات والعمليات
                 </h2>
               </div>
-              <div className="p-4 space-y-3">
+              <div className="p-3 space-y-3">
                 {assignedDriver && (
-                  <div className="p-3 bg-success/10 rounded-lg border border-success/20">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-8 h-8 bg-success rounded-md flex items-center justify-center text-success-foreground shrink-0">
-                        <Truck size={16} />
+                  <div className="p-2.5 bg-success/5 rounded border border-success/10">
+                    <div className="flex items-center gap-2 mb-2.5">
+                      <div className="w-7 h-7 bg-success rounded flex items-center justify-center text-success-foreground shrink-0 shadow-sm">
+                        <Truck size={14} />
                       </div>
                       <div className="min-w-0">
                         <p className="text-[10px] font-black text-foreground uppercase truncate">
                           {assignedDriver.name}
                         </p>
-                        <p className="text-[9px] text-success font-bold uppercase">
+                        <p className="text-[8px] text-success font-bold uppercase tracking-tighter">
                           {assignedDriver.vehicle}
                         </p>
                       </div>
@@ -348,35 +387,44 @@ export default function OrderDetailsPage() {
                     <div className="grid grid-cols-2 gap-1.5">
                       <a
                         href={`tel:${assignedDriver.phone}`}
-                        className="flex items-center justify-center gap-2 py-2 bg-card rounded-md text-[9px] font-black uppercase text-foreground border border-border hover:bg-muted transition-colors"
+                        className="flex items-center justify-center gap-1.5 py-1.5 bg-card rounded text-[8px] font-black uppercase text-foreground border border-border hover:bg-muted transition-colors"
                       >
-                        <Phone size={12} /> اتصال
+                        <Phone size={10} /> اتصال
                       </a>
-                      <a
-                        href={`https://wa.me/${assignedDriver.phone.replace(/[^0-9]/g, "")}`}
-                        target="_blank"
-                        className="flex items-center justify-center gap-2 py-2 bg-success rounded-md text-[9px] font-black uppercase text-success-foreground hover:bg-success/90 transition-colors"
+                      <button
+                        onClick={() =>
+                          window.open(
+                            `https://wa.me/${assignedDriver.phone.replace(/[^0-9]/g, "")}`,
+                            "_blank",
+                          )
+                        }
+                        className="flex items-center justify-center gap-1.5 py-1.5 bg-success rounded text-[8px] font-black uppercase text-success-foreground hover:bg-success/90 transition-colors"
                       >
-                        <MessageSquare size={12} /> محادثة
-                      </a>
+                        <MessageSquare size={10} /> محادثة
+                      </button>
                     </div>
                   </div>
                 )}
 
-                <select
-                  value={order.driverId || ""}
-                  onChange={(e) => handleAssignDriver(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-muted/50 border border-border rounded-lg text-foreground text-[10px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-primary/20"
-                >
-                  <option value="">[ اختر سائق ]</option>
-                  {drivers
-                    ?.filter((d) => d.status === "Active")
-                    .map((driver) => (
-                      <option key={driver.id} value={driver.id}>
-                        {driver.name.toUpperCase()}
-                      </option>
-                    ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={order.driverId || ""}
+                    onChange={(e) => handleAssignDriver(e.target.value)}
+                    className="w-full appearance-none px-3 py-2 bg-muted/50 border border-border rounded text-foreground text-[9px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
+                  >
+                    <option value="">[ تعيين سائق ]</option>
+                    {drivers
+                      ?.filter((d) => d.status === "Active")
+                      .map((driver) => (
+                        <option key={driver.id} value={driver.id}>
+                          {driver.name.toUpperCase()}
+                        </option>
+                      ))}
+                  </select>
+                  <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                    <ChevronDown size={12} className="text-muted-foreground" />
+                  </div>
+                </div>
               </div>
             </section>
           </div>

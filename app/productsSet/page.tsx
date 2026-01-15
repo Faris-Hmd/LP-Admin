@@ -16,7 +16,7 @@ export default async function ProductTable({
   return (
     <div className="min-h-screen bg-background transition-colors pb-20">
       {/* Sticky Compact Header */}
-      <header className=" sticky top-0 z-100  bg-card/80 backdrop-blur-md border-b border-border shadow-sm">
+      <header className=" sticky top-0 z-100 bg-card md:bg-card/80 md:backdrop-blur-md border-b border-border shadow-sm">
         <div className="max-w-4xl mx-auto p-3 md:p-4">
           <div className="flex justify-between items-center mb-4">
             <div>
@@ -28,14 +28,14 @@ export default async function ProductTable({
                 <h1 className="text-xl font-black text-foreground uppercase tracking-tight">
                   كتالوج <span className="text-primary">المنتجات</span>
                 </h1>
-                <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-black border border-primary/20">
+                <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-black border border-primary/20">
                   {products?.length || 0}
                 </span>
               </div>
             </div>
             <Link
               href={"/productsSet/prod_add" as any}
-              className="flex items-center gap-2 bg-primary text-primary-foreground font-black py-2 px-4 rounded-lg text-[10px] uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-primary/20"
+              className="flex items-center gap-2 bg-primary text-primary-foreground font-black py-2 px-4 rounded text-[10px] uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-primary/20"
             >
               <Plus size={14} strokeWidth={3} />
               إضافة
@@ -52,12 +52,12 @@ export default async function ProductTable({
             products.map((row) => (
               <div
                 key={row.id}
-                className="group bg-card border border-border rounded-xl p-4 flex items-center justify-between hover:border-primary/50 transition-all shadow-sm"
+                className="group bg-card border border-border rounded p-4 flex items-center justify-between hover:border-primary/50 transition-all shadow-sm"
               >
                 <div className="flex items-center gap-4 min-w-0">
                   {/* Item Icon */}
                   <div
-                    className={`shrink-0 p-3 rounded-lg border ${
+                    className={`shrink-0 p-3 rounded border ${
                       row.isFeatured
                         ? "bg-warning/10 border-warning/30 text-warning"
                         : "bg-muted border-border text-muted-foreground"
@@ -85,7 +85,7 @@ export default async function ProductTable({
                       <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">
                         {getCategoryLabel(row.p_cat)}
                       </span>
-                      <span className="w-1 h-1 rounded-full bg-border" />
+                      <span className="w-1 h-1 rounded bg-border" />
                       <span className="text-[10px] font-black text-primary">
                         {Number(row.p_cost).toLocaleString()}{" "}
                         <span className="text-[8px]">SDG</span>
@@ -101,7 +101,7 @@ export default async function ProductTable({
               </div>
             ))
           ) : (
-            <div className="py-20 text-center border-2 border-dashed border-border rounded-xl">
+            <div className="py-20 text-center border-2 border-dashed border-border rounded">
               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em]">
                 الكتالوج فارغ
               </p>

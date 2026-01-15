@@ -49,7 +49,7 @@ export default function Navbar() {
   if (!session?.user) return null;
 
   return (
-    <nav className="sticky top-0 z-50 transition-all duration-300 bg-card/80 py-3 border-b border-border backdrop-blur-md">
+    <nav className="sticky top-0 z-50 transition-all duration-300 bg-card md:bg-card/80 py-3 border-b border-border md:backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
         {/* --- BRAND --- */}
         <div className="flex items-center gap-8">
@@ -57,11 +57,11 @@ export default function Navbar() {
             href={`/analatic/${currentMonthSlug}` as any}
             className="group flex items-center gap-2.5 transition-transform active:scale-95"
           >
-            <div className="rounded-full w-10 h-10 bg-primary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:rotate-12 transition-transform duration-300 rounded-full">
+            <div className="rounded w-10 h-10 bg-primary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:rotate-12 transition-transform duration-300">
               <img
                 src="/logo.png"
                 alt="Liper Pizza Logo"
-                className="w-full h-full object-cover rounded-full"
+                className="w-full h-full object-cover rounded"
               />
             </div>
             <div className="flex flex-col leading-none">
@@ -92,7 +92,7 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={destination as any}
-                  className={`px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-2 ${
+                  className={`px-4 py-2 rounded text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-2 ${
                     isActive
                       ? `${item.color} ${item.bg}`
                       : "text-muted-foreground hover:bg-muted"
@@ -123,7 +123,7 @@ export default function Navbar() {
               </span>
             </div>
             <Link href="/profile">
-              <Avatar className="h-9 w-9 overflow-hidden rounded-xl border border-border shadow-sm flex items-center justify-center bg-card transition-transform active:scale-90">
+              <Avatar className="h-9 w-9 overflow-hidden rounded border border-border shadow-sm flex items-center justify-center bg-card transition-transform active:scale-90">
                 <AvatarImage
                   src={session?.user?.image || ""}
                   className="h-full w-full object-cover"

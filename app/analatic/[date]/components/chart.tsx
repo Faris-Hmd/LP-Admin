@@ -131,7 +131,7 @@ export default function RevenueAnalytics({
                   content={
                     <ChartTooltipContent
                       indicator="dot"
-                      className="rounded-xl border-border shadow-2xl bg-card/95 backdrop-blur-md"
+                      className="rounded-xl border-border shadow-2xl bg-card md:bg-card/95 md:backdrop-blur-md"
                     />
                   }
                 />

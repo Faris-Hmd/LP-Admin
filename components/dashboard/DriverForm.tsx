@@ -85,7 +85,7 @@ export function DriverForm({ initialData, isEdit }: DriverFormProps) {
 
   return (
     <div className="min-h-screen bg-transparent pb-32">
-      <header className="bg-card/80 backdrop-blur-md border-b border-border sticky top-0 z-30">
+      <header className="bg-card md:bg-card/80 md:backdrop-blur-md border-b border-border sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -239,7 +239,7 @@ export function DriverForm({ initialData, isEdit }: DriverFormProps) {
 
       {/* Delete Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 md:backdrop-blur-sm">
           <div className="bg-card w-full max-w-sm rounded-3xl p-6 border border-border shadow-2xl">
             <div className="text-center space-y-4">
               <div className="w-16 h-16 bg-destructive/10 text-destructive rounded-full flex items-center justify-center mx-auto">

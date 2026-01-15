@@ -105,7 +105,7 @@ export default function UpdateForm({ product }: { product: ProductType }) {
       >
         {/* Loading Overlay */}
         {pending && (
-          <div className="z-50 cursor-wait w-full h-full backdrop-blur-[2px] absolute top-0 left-0 bg-background/60 flex flex-col items-center justify-center rounded-xl transition-all">
+          <div className="z-50 cursor-wait w-full h-full md:backdrop-blur-[2px] absolute top-0 left-0 bg-background/60 flex flex-col items-center justify-center rounded-xl transition-all">
             <Loader className="animate-spin h-10 w-10 text-primary" />
             <p className="text-primary font-black mt-4 uppercase tracking-widest text-xs">
               جاري حفظ التغييرات...

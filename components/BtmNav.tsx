@@ -29,7 +29,7 @@ export default function AdminBtmNav() {
   if (!session.data?.user) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-card/95 backdrop-blur-xl pb-safe md:hidden h-16 px-2 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.05)]">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-card pb-safe md:hidden h-16 px-2 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.05)]">
       {ADMIN_NAV.map((item) => {
         const Icon = item.icon;
 
@@ -53,7 +53,7 @@ export default function AdminBtmNav() {
           >
             <div
               className={cn(
-                "relative flex items-center justify-center rounded-2xl py-1.5 px-4 transition-all duration-300",
+                "relative flex items-center justify-center rounded py-1.5 px-4 transition-all duration-300",
                 isActive ? "bg-primary/10 shadow-sm" : "bg-transparent",
               )}
             >

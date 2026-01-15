@@ -27,9 +27,9 @@ export default function SectionCards() {
   const stats = data || { orders: 0, products: 0, customers: 0, revenue: 0 };
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
       <MetricCard
-        icon={<DollarSign size={18} />}
+        icon={<DollarSign size={16} />}
         label="إجمالي الإيرادات"
         value={stats.revenue}
         isCurrency={true}
@@ -38,7 +38,7 @@ export default function SectionCards() {
         loading={isLoading && !data}
       />
       <MetricCard
-        icon={<Package size={18} />}
+        icon={<Package size={16} />}
         label="الأصول الرقمية"
         value={stats.products}
         color="text-primary"
@@ -46,7 +46,7 @@ export default function SectionCards() {
         loading={isLoading && !data}
       />
       <MetricCard
-        icon={<ShoppingCart size={18} />}
+        icon={<ShoppingCart size={16} />}
         label="إجمالي الطلبات"
         value={stats.orders}
         color="text-emerald-600 dark:text-emerald-400"
@@ -54,7 +54,7 @@ export default function SectionCards() {
         loading={isLoading && !data}
       />
       <MetricCard
-        icon={<Users size={18} />}
+        icon={<Users size={16} />}
         label="العملاء النشطين"
         value={stats.customers}
         color="text-violet-600 dark:text-violet-400"
@@ -86,19 +86,19 @@ function MetricCard({
       : 0;
 
   return (
-    <div className="flex items-center gap-4 p-3 border-b sm:border-b-0 sm:border-r border-border last:border-0">
+    <div className="flex items-center gap-2 p-1.5 border-b sm:border-b-0 sm:border-r border-border last:border-0">
       <div
-        className={`p-3 rounded-xl transition-all duration-300 ${bg} ${color}`}
+        className={`p-1 rounded-md transition-all duration-300 ${bg} ${color}`}
       >
-        {loading ? <Loader2 size={18} className="animate-spin" /> : icon}
+        {loading ? <Loader2 size={14} className="animate-spin" /> : icon}
       </div>
 
       <div className="min-w-0">
-        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] truncate">
+        <p className="text-[7px] font-black text-muted-foreground uppercase tracking-[0.1em] truncate">
           {label}
         </p>
         <h4
-          className={`text-xl font-black text-foreground font-mono tracking-tighter transition-opacity ${loading ? "opacity-30" : "opacity-100"}`}
+          className={`text-base font-black text-foreground font-mono tracking-tighter transition-opacity ${loading ? "opacity-30" : "opacity-100"}`}
         >
           {formattedValue}
         </h4>

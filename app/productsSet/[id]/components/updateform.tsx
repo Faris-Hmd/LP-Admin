@@ -118,7 +118,7 @@ export default function UpdateForm({ product }: { product: ProductType }) {
       >
         {/* Loading Overlay */}
         {pending && (
-          <div className="z-50 absolute inset-0 bg-background/60 backdrop-blur-sm flex flex-col items-center justify-center">
+          <div className="z-50 absolute inset-0 bg-background/60 md:backdrop-blur-sm flex flex-col items-center justify-center">
             <Loader className="animate-spin text-primary" size={28} />
           </div>
         )}

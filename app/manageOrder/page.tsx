@@ -27,7 +27,7 @@ export default async function ManageOrdersPage() {
                 href={
                   `/manageOrder/shipped/${new Date().toISOString().slice(0, 7)}` as any
                 }
-                className="flex items-center gap-2 px-4 py-2.5 bg-primary/10 text-primary rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all border border-primary/20"
+                className="flex items-center gap-2 px-4 py-2.5 bg-primary/10 text-primary rounded text-[11px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all border border-primary/20"
               >
                 <History size={16} />
                 <span className="hidden md:inline">السجلات</span>

@@ -110,7 +110,7 @@ function Dropdown({ id, isFeatured }: { id: string; isFeatured: boolean }) {
 
       {/* --- DELETE CONFIRMATION MODAL --- */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/60 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/60 md:backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-card w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-border animate-in zoom-in-95 duration-200">
             <div className="flex flex-col items-center text-center">
               <div className="w-14 h-14 bg-destructive/10 rounded-full flex items-center justify-center mb-4">

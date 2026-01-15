@@ -28,22 +28,22 @@ import {
 import { categoryLabels } from "@/data/categoryMapping";
 
 const chartConfig = {
-  PC: { label: categoryLabels.PC, color: "#cbd5e1" },
-  LAPTOP: { label: categoryLabels.LAPTOP, color: "#94a3b8" },
-  WEBCAMS: { label: categoryLabels.WEBCAMS, color: "#64748b" },
-  HARD_DRIVES: { label: categoryLabels.HARD_DRIVES, color: "#475569" },
-  HEADSETS: { label: categoryLabels.HEADSETS, color: "#334155" },
-  KEYBOARDS: { label: categoryLabels.KEYBOARDS, color: "#1e293b" },
-  SPEAKERS: { label: categoryLabels.SPEAKERS, color: "#0f172a" },
-  PRINTERS: { label: categoryLabels.PRINTERS, color: "#020617" },
-  MICROPHONES: { label: categoryLabels.MICROPHONES, color: "#cbd5e1" },
-  MONITORS: { label: categoryLabels.MONITORS, color: "#94a3b8" },
-  TABLETS: { label: categoryLabels.TABLETS, color: "#64748b" },
-  PROJECTORS: { label: categoryLabels.PROJECTORS, color: "#475569" },
-  SCANNERS: { label: categoryLabels.SCANNERS, color: "#334155" },
-  SSD: { label: categoryLabels.SSD, color: "#1e293b" },
-  MOUSES: { label: categoryLabels.MOUSES, color: "#0f172a" },
-  DESKTOP: { label: categoryLabels.DESKTOP, color: "#3b82f6" },
+  PC: { label: categoryLabels.PC, color: "#ef4444" }, // Red
+  LAPTOP: { label: categoryLabels.LAPTOP, color: "#f97316" }, // Orange
+  WEBCAMS: { label: categoryLabels.WEBCAMS, color: "#f59e0b" }, // Amber
+  HARD_DRIVES: { label: categoryLabels.HARD_DRIVES, color: "#3b82f6" }, // Blue
+  HEADSETS: { label: categoryLabels.HEADSETS, color: "#78350f" }, // Coffee
+  KEYBOARDS: { label: categoryLabels.KEYBOARDS, color: "#ec4899" }, // Pink
+  SPEAKERS: { label: categoryLabels.SPEAKERS, color: "#22c55e" }, // Green
+  PRINTERS: { label: categoryLabels.PRINTERS, color: "#8b5cf6" }, // Purple
+  MICROPHONES: { label: categoryLabels.MICROPHONES, color: "#6366f1" }, // Indigo
+  MONITORS: { label: categoryLabels.MONITORS, color: "#dc2626" }, // Deep Red
+  TABLETS: { label: categoryLabels.TABLETS, color: "#06b6d4" }, // Cyan
+  PROJECTORS: { label: categoryLabels.PROJECTORS, color: "#14b8a6" }, // Teal
+  SCANNERS: { label: categoryLabels.SCANNERS, color: "#84cc16" }, // Lime
+  SSD: { label: categoryLabels.SSD, color: "#ea580c" }, // Dark Orange
+  MOUSES: { label: categoryLabels.MOUSES, color: "#eab308" }, // Yellow
+  DESKTOP: { label: categoryLabels.DESKTOP, color: "#0ea5e9" }, // Sky
 } satisfies ChartConfig;
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -84,8 +84,8 @@ export default function ChartPieInteractive() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-[350px] w-full gap-4">
-        <div className="h-40 w-40 rounded-full border-8 border-border border-t-primary animate-spin" />
+      <div className="flex flex-col items-center justify-center h-[200px] w-full gap-4">
+        <div className="h-32 w-32 rounded-full border-8 border-border border-t-primary animate-spin" />
         <p className="text-[10px] font-black uppercase text-muted-foreground animate-pulse">
           جاري تحليل المخزون...
         </p>
@@ -120,7 +120,7 @@ export default function ChartPieInteractive() {
         <ChartContainer
           id={id}
           config={chartConfig}
-          className="aspect-square h-[220px]"
+          className="aspect-square h-[160px]"
         >
           <PieChart>
             <ChartTooltip
@@ -131,7 +131,7 @@ export default function ChartPieInteractive() {
               data={data}
               dataKey="quantity"
               nameKey="category"
-              innerRadius={75}
+              innerRadius={55}
               strokeWidth={8}
               stroke="transparent"
               activeIndex={activeIndex}
@@ -165,13 +165,13 @@ export default function ChartPieInteractive() {
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-3xl font-black"
+                          className="fill-foreground text-2xl font-black"
                         >
                           {data[activeIndex]?.quantity.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 22}
+                          y={(viewBox.cy || 0) + 18}
                           className="fill-muted-foreground text-[10px] font-black uppercase tracking-[0.2em]"
                         >
                           وحدات

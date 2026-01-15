@@ -11,7 +11,7 @@ export async function UpdateFormPage({ params }: { params: { id: string } }) {
   return (
     <div className="min-h-screen bg-transparent transition-colors pb-20">
       {/* Sticky Compact Header - Matching Product Table Style */}
-      <header className="sticky top-0 z-100 bg-card/80 backdrop-blur-md border-b border-border shadow-sm mb-6">
+      <header className="sticky top-0 z-100 bg-card md:bg-card/80 md:backdrop-blur-md border-b border-border shadow-sm mb-6">
         <div className="max-w-4xl mx-auto p-3 md:p-4">
           <div className="flex justify-between items-center">
             <div>

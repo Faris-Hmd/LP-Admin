@@ -114,7 +114,7 @@ export default function ProductImgUpload() {
   return (
     <div className="min-h-screen bg-background transition-colors pb-20">
       {/* Sticky Header - Matches Update & Table style */}
-      <header className="sticky top-0 z-100 bg-card/80 backdrop-blur-md border-b border-border shadow-sm mb-6">
+      <header className="sticky top-0 z-100 bg-card md:bg-card/80 md:backdrop-blur-md border-b border-border shadow-sm mb-6">
         <div className="max-w-4xl mx-auto p-3 md:p-4">
           <div className="flex justify-between items-center">
             <div>
@@ -137,7 +137,7 @@ export default function ProductImgUpload() {
         >
           {/* Loading Overlay */}
           {pending && (
-            <div className="z-50 absolute inset-0 bg-background/60 backdrop-blur-sm flex flex-col items-center justify-center">
+            <div className="z-50 absolute inset-0 bg-background/60 md:backdrop-blur-sm flex flex-col items-center justify-center">
               <Loader className="animate-spin text-primary" size={28} />
             </div>
           )}
