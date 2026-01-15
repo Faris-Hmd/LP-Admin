@@ -15,8 +15,8 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
-  title: "SPS-Admin",
-  description: "SPS-Admin",
+  title: "لوحة التحكم",
+  description: "لوحة التحكم",
 };
 
 export default function RootLayout({

@@ -66,7 +66,7 @@ export default function Navbar() {
             </div>
             <div className="flex flex-col leading-none">
               <span className="text-xl font-black text-foreground tracking-tight">
-                SUDAN<span className="text-primary">PC</span>
+                ليبر<span className="text-primary">بيتزا</span>
               </span>
               <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-0.5">
                 لوحة التحكم

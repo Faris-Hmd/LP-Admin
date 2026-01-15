@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { categories } from "@/data/categories";
+import { getCategoryLabel } from "@/data/categoryMapping";
 import { useRef } from "react";
 
 function TableSearchForm() {
@@ -101,7 +102,7 @@ function TableSearchForm() {
                 value={cat}
                 className="text-[10px] font-bold uppercase"
               >
-                {cat.replace(/_/g, " ")}
+                {getCategoryLabel(cat)}
               </SelectItem>
             ))}
           </SelectContent>

@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { categories } from "@/data/categories";
+import { getCategoryLabel } from "@/data/categoryMapping";
 import {
   Camera,
   CircleX,
@@ -53,7 +54,7 @@ export default function ProductImgUpload() {
 
       setImgs((prev) => [...prev, ...compressedFiles]);
     } catch (error) {
-      toast.error("Image compression failed");
+      toast.error("فشل ضغط الصور");
     } finally {
       setPending(false);
     }
@@ -66,7 +67,7 @@ export default function ProductImgUpload() {
 
   async function handleProductImgsSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (imgs.length === 0) return toast.error("Please add images!");
+    if (imgs.length === 0) return toast.error("يرجى إضافة صور!");
 
     const formElement = e.currentTarget;
     const formData = new FormData(formElement);
@@ -104,7 +105,7 @@ export default function ProductImgUpload() {
     };
 
     toast.promise(uploadAndSubmit(), {
-      loading: "Syncing with database...",
+      loading: "جاري المزامنة مع قاعدة البيانات...",
       success: (data: string) => data,
       error: (err: Error) => err.message,
     });
@@ -114,15 +115,15 @@ export default function ProductImgUpload() {
     <div className="min-h-screen bg-background transition-colors pb-20">
       {/* Sticky Header - Matches Update & Table style */}
       <header className="sticky top-0 z-100 bg-card/80 backdrop-blur-md border-b border-border shadow-sm mb-6">
-        <div className="max-w-4xl mx-auto p-4 md:p-6">
+        <div className="max-w-4xl mx-auto p-3 md:p-4">
           <div className="flex justify-between items-center">
             <div>
               <div className="flex items-center gap-2 text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-0.5">
                 <ShieldCheck size={10} />
-                Creator Mode
+                وضع المنشئ
               </div>
               <h1 className="text-xl font-black text-foreground uppercase tracking-tight">
-                Add <span className="text-primary">New Product</span>
+                إضافة <span className="text-primary">منتج جديد</span>
               </h1>
             </div>
           </div>
@@ -154,7 +155,7 @@ export default function ProductImgUpload() {
               <div className="h-56 w-full bg-muted/50 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-border">
                 <ImagePlus size={36} className="text-muted-foreground mb-2" />
                 <p className="text-xs font-black uppercase text-muted-foreground tracking-tighter">
-                  Media Required
+                  الوسائط مطلوبة
                 </p>
               </div>
             )}
@@ -182,13 +183,13 @@ export default function ProductImgUpload() {
           <div className="space-y-5">
             <div>
               <label className="text-[11px] font-black uppercase text-muted-foreground tracking-wider ml-1 mb-1.5 block">
-                Product Title
+                اسم المنتج
               </label>
               <input
                 name="p_name"
                 type="text"
                 required
-                placeholder="Enter item name..."
+                placeholder="أدخل اسم العنصر..."
                 disabled={pending}
                 className="w-full px-4 py-2.5 bg-muted/50 border border-border rounded-lg text-sm font-bold text-foreground focus:ring-2 focus:ring-primary outline-none transition-all"
               />
@@ -196,13 +197,13 @@ export default function ProductImgUpload() {
 
             <div>
               <label className="text-[11px] font-black uppercase text-muted-foreground tracking-wider ml-1 mb-1.5 block">
-                Product Specifications
+                مواصفات المنتج
               </label>
               <textarea
                 name="p_details"
                 required
                 rows={3}
-                placeholder="List key features..."
+                placeholder="أدرج الميزات الأساسية..."
                 disabled={pending}
                 className="w-full px-4 py-2.5 bg-muted/50 border border-border rounded-lg text-sm font-bold text-foreground focus:ring-2 focus:ring-primary outline-none resize-none transition-all"
               />
@@ -211,7 +212,7 @@ export default function ProductImgUpload() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-[11px] font-black uppercase text-muted-foreground tracking-wider ml-1 mb-1.5 block">
-                  Price (SDG)
+                  السعر (ج.س)
                 </label>
                 <input
                   name="p_cost"
@@ -225,11 +226,11 @@ export default function ProductImgUpload() {
 
               <div>
                 <label className="text-[11px] font-black uppercase text-muted-foreground tracking-wider ml-1 mb-1.5 block">
-                  Category Tag
+                  تصنيف المنتج
                 </label>
                 <Select name="p_cat" disabled={pending}>
                   <SelectTrigger className="h-[44px] bg-muted/50 border-border text-xs font-black uppercase rounded-lg">
-                    <SelectValue placeholder="Select" />
+                    <SelectValue placeholder="اختر" />
                   </SelectTrigger>
                   <SelectContent className="bg-popover border-border">
                     {categories.map((cat) => (
@@ -238,7 +239,7 @@ export default function ProductImgUpload() {
                         value={cat}
                         className="text-xs font-bold uppercase py-2"
                       >
-                        {cat.replace(/_/g, " ")}
+                        {getCategoryLabel(cat)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -253,7 +254,7 @@ export default function ProductImgUpload() {
               href={"/productsSet" as any}
               className="flex-1 py-3 rounded-lg bg-muted text-muted-foreground text-xs font-black uppercase text-center active:scale-95 transition-transform"
             >
-              Cancel
+              إلغاء
             </Link>
             <button
               type="submit"
@@ -265,7 +266,7 @@ export default function ProductImgUpload() {
               ) : (
                 <Upload size={16} />
               )}
-              Publish Product
+              نشر المنتج
             </button>
           </div>
         </form>

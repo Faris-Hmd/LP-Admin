@@ -113,6 +113,15 @@ export default function OrderListClient({
                   <span className="text-[10px] font-bold text-muted-foreground uppercase">
                     ID: {order.id.slice(-6).toUpperCase()}
                   </span>
+                  <span className="w-1 h-1 rounded-full bg-border" />
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">
+                    {new Date(order.createdAt).toLocaleDateString("ar-EG", {
+                      day: "numeric",
+                      month: "short",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
                 </div>
                 <p className="text-lg font-black text-foreground leading-none">
                   {order.totalAmount.toLocaleString()}{" "}

@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { categories } from "@/data/categories";
+import { getCategoryLabel } from "@/data/categoryMapping";
 import { Camera, Edit2, ImagePlus, Loader } from "lucide-react";
 import { useState } from "react";
 import ProductImgCarousel from "@/components/carousel";
@@ -47,7 +48,7 @@ export default function UpdateForm({ product }: { product: ProductType }) {
 
       setImgs((prev) => [...prev, ...compressedFiles]);
     } catch (error) {
-      toast.error("Image compression failed");
+      toast.error("فشل ضغط الصور");
     } finally {
       setPending(false);
     }
@@ -65,10 +66,10 @@ export default function UpdateForm({ product }: { product: ProductType }) {
     const formElement = e.currentTarget;
     const formData = new FormData(formElement);
 
-    if (imgs.length === 0) return toast.error("Image required");
+    if (imgs.length === 0) return toast.error("الصور مطلوبة");
 
     setPending(true);
-    const toastId = toast.loading("Syncing...");
+    const toastId = toast.loading("جاري المزامنة...");
 
     try {
       // 2. Filter existing vs new images
@@ -96,7 +97,7 @@ export default function UpdateForm({ product }: { product: ProductType }) {
       // 5. Execute Action
       const result = await product_update(formData);
 
-      toast.success("Updated successfully", { id: toastId });
+      toast.success("تم التحديث بنجاح", { id: toastId });
       setPending(false);
       redirect("/productsSet" as any);
     } catch (error: any) {
@@ -104,7 +105,7 @@ export default function UpdateForm({ product }: { product: ProductType }) {
       if (error.message?.includes("NEXT_REDIRECT")) return;
 
       console.error("Submission error:", error);
-      toast.error(error.message || "Update failed", { id: toastId });
+      toast.error(error.message || "فشل التحديث", { id: toastId });
       setPending(false);
     }
   }
@@ -135,7 +136,7 @@ export default function UpdateForm({ product }: { product: ProductType }) {
             <div className="h-56 w-full bg-muted/50 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-border">
               <ImagePlus size={36} className="text-muted-foreground mb-2" />
               <p className="text-xs font-black uppercase text-muted-foreground tracking-tighter">
-                Media Required
+                الوسائط مطلوبة
               </p>
             </div>
           )}
@@ -163,14 +164,14 @@ export default function UpdateForm({ product }: { product: ProductType }) {
         <div className="space-y-5">
           <div>
             <label className="text-[11px] font-black uppercase text-muted-foreground tracking-wider ml-1 mb-1.5 block">
-              Product Title
+              اسم المنتج
             </label>
             <input
               name="p_name"
               defaultValue={product.p_name}
               type="text"
               required
-              placeholder="Enter item name..."
+              placeholder="أدخل اسم العنصر..."
               disabled={pending}
               className="w-full px-4 py-2.5 bg-muted/50 border border-border rounded-lg text-sm font-bold text-foreground focus:ring-2 focus:ring-primary outline-none transition-all"
             />
@@ -178,14 +179,14 @@ export default function UpdateForm({ product }: { product: ProductType }) {
 
           <div>
             <label className="text-[11px] font-black uppercase text-muted-foreground tracking-wider ml-1 mb-1.5 block">
-              Product Specifications
+              مواصفات المنتج
             </label>
             <textarea
               name="p_details"
               defaultValue={product.p_details}
               required
               rows={3}
-              placeholder="List key features..."
+              placeholder="أدرج الميزات الأساسية..."
               disabled={pending}
               className="w-full px-4 py-2.5 bg-muted/50 border border-border rounded-lg text-sm font-bold text-foreground focus:ring-2 focus:ring-primary outline-none resize-none transition-all"
             />
@@ -194,7 +195,7 @@ export default function UpdateForm({ product }: { product: ProductType }) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-[11px] font-black uppercase text-muted-foreground tracking-wider ml-1 mb-1.5 block">
-                Price (SDG)
+                السعر (ج.س)
               </label>
               <input
                 name="p_cost"
@@ -209,7 +210,7 @@ export default function UpdateForm({ product }: { product: ProductType }) {
 
             <div>
               <label className="text-[11px] font-black uppercase text-muted-foreground tracking-wider ml-1 mb-1.5 block">
-                Category Tag
+                تصنيف المنتج
               </label>
               <Select
                 name="p_cat"
@@ -217,7 +218,7 @@ export default function UpdateForm({ product }: { product: ProductType }) {
                 disabled={pending}
               >
                 <SelectTrigger className="h-[44px] bg-muted/50 border-border text-xs font-black uppercase rounded-lg">
-                  <SelectValue placeholder="Select" />
+                  <SelectValue placeholder="اختر" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover border-border">
                   {categories.map((cat) => (
@@ -226,7 +227,7 @@ export default function UpdateForm({ product }: { product: ProductType }) {
                       value={cat}
                       className="text-xs font-bold uppercase py-2"
                     >
-                      {cat.replace(/_/g, " ")}
+                      {getCategoryLabel(cat)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -241,7 +242,7 @@ export default function UpdateForm({ product }: { product: ProductType }) {
             href={"/productsSet" as any}
             className="flex-1 py-3 rounded-lg bg-muted text-muted-foreground text-xs font-black uppercase text-center active:scale-95 transition-transform"
           >
-            Cancel
+            إلغاء
           </Link>
           <button
             type="submit"
@@ -253,7 +254,7 @@ export default function UpdateForm({ product }: { product: ProductType }) {
             ) : (
               <Edit2 size={16} />
             )}
-            Update Product
+            تحديث المنتج
           </button>
         </div>
       </form>

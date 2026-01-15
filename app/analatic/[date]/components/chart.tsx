@@ -48,24 +48,24 @@ export default function RevenueAnalytics({
   return (
     /* min-w-0 is critical here to prevent flex-basis overgrowth */
     <Card className="w-full border-none shadow-none bg-transparent min-w-0 overflow-visible">
-      <div className="flex items-center w-full justify-between gap-2 px-1 mb-3">
-        <div className="space-y-0.5 w-full">
-          <CardTitle className="text-base font-black text-foreground tracking-tight uppercase">
+      <div className="flex items-center w-full justify-between gap-2 px-2 mb-6">
+        <div className="space-y-1 w-full">
+          <CardTitle className="text-xl font-black text-foreground tracking-tight uppercase">
             تحليلات <span className="text-primary">الإيرادات</span>
           </CardTitle>
-          <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-black text-[8px] uppercase tracking-[0.15em]">
-            <span className="flex h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-            <TrendingUp className="w-2.5 h-2.5" />
+          <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-black text-[10px] uppercase tracking-[0.2em]">
+            <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <TrendingUp className="w-3 h-3" />
             {totalOrders.toLocaleString()} تم تنفيذها بنجاح
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="flex items-baseline gap-1 bg-primary text-primary-foreground font-black px-3 py-1 rounded-lg shadow shadow-primary/20">
-            <span className="text-sm font-mono">
+        <div className="flex items-center gap-3">
+          <div className="flex items-baseline gap-1 bg-primary text-primary-foreground font-black px-5 py-1.5 rounded-xl shadow shadow-primary/20">
+            <span className="text-lg font-mono">
               {totalSales.toLocaleString()}
             </span>
-            <span className="text-[8px] opacity-70 uppercase tracking-tighter">
+            <span className="text-[10px] opacity-70 uppercase tracking-tighter">
               SDG
             </span>
           </div>
@@ -73,11 +73,11 @@ export default function RevenueAnalytics({
       </div>
 
       {/* CHART WRAPPER: Fixed height and relative positioning */}
-      <div className="relative w-full h-[120px] sm:h-[200px] px-0 overflow-hidden">
+      <div className="relative w-full h-[150px] sm:h-[250px] px-0 overflow-hidden">
         {salesData.length === 0 ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center border-2 border-dashed border-border rounded-2xl">
-            <Activity className="text-muted-foreground mb-1.5" size={16} />
-            <span className="text-[8px] font-black uppercase text-muted-foreground">
+          <div className="absolute inset-0 flex flex-col items-center justify-center border-2 border-dashed border-border rounded-3xl">
+            <Activity className="text-muted-foreground mb-2" />
+            <span className="text-[10px] font-black uppercase text-muted-foreground">
               بانتظار البيانات...
             </span>
           </div>
@@ -116,9 +116,9 @@ export default function RevenueAnalytics({
                   dataKey="day"
                   axisLine={false}
                   tickLine={false}
-                  tickMargin={8}
+                  tickMargin={12}
                   minTickGap={30}
-                  className="text-[8px] font-black text-muted-foreground uppercase"
+                  className="text-[10px] font-black text-muted-foreground uppercase"
                 />
                 <YAxis hide domain={["auto", "auto"]} />
 
@@ -141,10 +141,10 @@ export default function RevenueAnalytics({
                   type="monotone"
                   dataKey="sales"
                   stroke="#ef4444"
-                  strokeWidth={3}
+                  strokeWidth={4}
                   fill="url(#salesGrad)"
                   animationDuration={1500}
-                  activeDot={{ r: 5, strokeWidth: 0, fill: "#ef4444" }}
+                  activeDot={{ r: 6, strokeWidth: 0, fill: "#ef4444" }}
                 />
 
                 {/* Hidden Orders Area - This makes it show in the Tooltip only */}

@@ -71,17 +71,17 @@ export default async function OverviewPage({ params }: PageProps) {
   const [salesData] = await Promise.all([getSalesData()]);
 
   return (
-    <div className="min-h-screen bg-background transition-colors duration-500 pb-16">
+    <div className="min-h-screen bg-background transition-colors duration-500 pb-20">
       {/* Sticky Compact Header - Consistent with Add/Update forms */}
       <header className="sticky top-0 z-100 bg-card/80 backdrop-blur-md border-b border-border shadow-sm">
-        <div className="max-w-7xl mx-auto px-3 md:px-6 py-2.5">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-2">
           <div className="flex justify-between items-center">
             <div>
-              <div className="flex items-center gap-1.5 text-[8px] font-black text-primary uppercase tracking-[0.2em] mb-0.5">
-                <ShieldCheck size={9} />
+              <div className="flex items-center gap-2 text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-0.5">
+                <ShieldCheck size={10} />
                 تحليلات النظام
               </div>
-              <h1 className="text-base font-black text-foreground uppercase tracking-tight">
+              <h1 className="text-xl font-black text-foreground uppercase tracking-tight">
                 نظرة عامة على <span className="text-primary">المتجر</span>
               </h1>
             </div>
@@ -91,12 +91,12 @@ export default async function OverviewPage({ params }: PageProps) {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto p-3 md:p-5 space-y-4">
+      <main className="max-w-7xl mx-auto p-4 md:p-8 space-y-8">
         {/* Top Summary Section */}
-        <section className="bg-card p-3 md:p-4 rounded-xl shadow-sm border border-border">
-          <div className="flex items-center gap-1.5 mb-3">
-            <LayoutDashboard size={12} className="text-primary" />
-            <h2 className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
+        <section className="bg-card p-6 rounded-2xl shadow-sm border border-border">
+          <div className="flex items-center gap-2 mb-6">
+            <LayoutDashboard size={14} className="text-primary" />
+            <h2 className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">
               مؤشرات الأداء الرئيسية
             </h2>
           </div>
@@ -104,17 +104,17 @@ export default async function OverviewPage({ params }: PageProps) {
         </section>
 
         {/* Charts Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Revenue Chart - Dominant Panel */}
-          <div className="bg-card p-3 md:p-4 rounded-xl shadow-sm border border-border lg:col-span-2">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-1.5">
-                <div className="w-0.5 h-3 bg-primary rounded-full" />
-                <h3 className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
+          <div className="bg-card p-6 rounded-2xl shadow-sm border border-border lg:col-span-2">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-2">
+                <div className="w-1 h-4 bg-primary rounded-full" />
+                <h3 className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">
                   مقاييس الإيرادات
                 </h3>
               </div>
-              <span className="text-[8px] font-bold text-muted-foreground font-mono tracking-tighter">
+              <span className="text-[10px] font-bold text-muted-foreground font-mono tracking-tighter">
                 {date}
               </span>
             </div>
@@ -124,12 +124,12 @@ export default async function OverviewPage({ params }: PageProps) {
           </div>
 
           {/* Inventory Distribution - Secondary Panel */}
-          <div className="bg-card p-3 md:p-4 rounded-xl shadow-sm border border-border lg:col-span-1">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
+          <div className="bg-card p-6 rounded-2xl shadow-sm border border-border lg:col-span-1">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">
                 توزيع المخزون
               </h3>
-              <div className="px-1.5 py-0.5 rounded bg-muted text-[8px] font-black text-muted-foreground uppercase tracking-tighter">
+              <div className="px-2 py-0.5 rounded bg-muted text-[9px] font-black text-muted-foreground uppercase tracking-tighter">
                 كلي
               </div>
             </div>
@@ -141,8 +141,8 @@ export default async function OverviewPage({ params }: PageProps) {
       </main>
 
       {/* Decorative System Footer */}
-      <footer className="mt-8 text-center">
-        <p className="text-[7px] font-black text-muted-foreground/30 uppercase tracking-[0.5em] select-none">
+      <footer className="mt-12 text-center">
+        <p className="text-[8px] font-black text-muted-foreground/30 uppercase tracking-[0.5em] select-none">
           نظام التحليل المؤسسي الإصدار 2.0
         </p>
       </footer>

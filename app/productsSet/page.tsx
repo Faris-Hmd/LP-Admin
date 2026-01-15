@@ -3,6 +3,7 @@ import { Plus, Package, Star, ShieldCheck } from "lucide-react";
 import Dropdown from "./components/dropdown";
 import TableSearchForm from "./components/tableSearchForm";
 import { getProducts } from "@/data/productsData";
+import { getCategoryLabel } from "@/data/categoryMapping";
 
 export default async function ProductTable({
   searchParams,
@@ -16,16 +17,21 @@ export default async function ProductTable({
     <div className="min-h-screen bg-background transition-colors pb-20">
       {/* Sticky Compact Header */}
       <header className=" sticky top-0 z-100  bg-card/80 backdrop-blur-md border-b border-border shadow-sm">
-        <div className="max-w-4xl mx-auto p-4 md:p-6">
+        <div className="max-w-4xl mx-auto p-3 md:p-4">
           <div className="flex justify-between items-center mb-4">
             <div>
               <div className="flex items-center gap-2 text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-0.5">
                 <ShieldCheck size={10} />
                 مخزون النظام
               </div>
-              <h1 className="text-xl font-black text-foreground uppercase tracking-tight">
-                كتالوج <span className="text-primary">المنتجات</span>
-              </h1>
+              <div className="flex items-center gap-3">
+                <h1 className="text-xl font-black text-foreground uppercase tracking-tight">
+                  كتالوج <span className="text-primary">المنتجات</span>
+                </h1>
+                <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-black border border-primary/20">
+                  {products?.length || 0}
+                </span>
+              </div>
             </div>
             <Link
               href={"/productsSet/prod_add" as any}
@@ -77,7 +83,7 @@ export default async function ProductTable({
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
                       <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">
-                        {row.p_cat}
+                        {getCategoryLabel(row.p_cat)}
                       </span>
                       <span className="w-1 h-1 rounded-full bg-border" />
                       <span className="text-[10px] font-black text-primary">
