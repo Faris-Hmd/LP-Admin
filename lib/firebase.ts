@@ -36,3 +36,4 @@ export const usersRef = collection(db, "users");
 export const driversRef = collection(db, "drivers");
 
 export const ordersRef = collection(db, "orders");
+export const offersRef = collection(db, "offers");

@@ -125,12 +125,12 @@ export default function OrderDetailsPage() {
 
   if (!order)
     return (
-      <div className="p-20 text-center font-black text-destructive uppercase tracking-widest text-xs">
+      <div className="p-20 text-center font-black text-destructive uppercase tracking-widest text-sm">
         الطلب غير موجود
       </div>
     );
 
-  const assignedDriver = drivers?.find((d) => d.id === order.driverId);
+  const assignedDriver = drivers?.find((d: any) => d.id === order.driverId);
   const currentStatus = statusConfig[order.status as keyof typeof statusConfig];
   const StatusIcon = currentStatus.icon;
 
@@ -147,7 +147,7 @@ export default function OrderDetailsPage() {
               <ChevronLeft size={18} />
             </button>
             <div className="flex-1">
-              <div className="flex items-center gap-2 text-[9px] font-black text-primary uppercase tracking-[0.2em]">
+              <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase tracking-[0.2em]">
                 <Hash size={10} />
                 الطلب {order.id.slice(-8).toUpperCase()}
                 <button
@@ -161,15 +161,15 @@ export default function OrderDetailsPage() {
                   )}
                 </button>
               </div>
-              <h1 className="text-lg font-black text-foreground uppercase tracking-tight leading-tight">
+              <h1 className="text-xl font-black text-foreground uppercase tracking-tight leading-tight">
                 تفاصيل <span className="text-primary">الطلب</span>
               </h1>
             </div>
             <div
-              className={`flex items-center gap-1.5 px-2 py-1 rounded ${currentStatus.bg} ${currentStatus.color} border ${currentStatus.border}`}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded ${currentStatus.bg} ${currentStatus.color} border ${currentStatus.border}`}
             >
-              <StatusIcon size={12} />
-              <span className="text-[9px] font-black uppercase tracking-widest">
+              <StatusIcon size={14} />
+              <span className="text-[10px] font-black uppercase tracking-widest">
                 {currentStatus.label}
               </span>
             </div>
@@ -185,12 +185,12 @@ export default function OrderDetailsPage() {
             <section className="bg-card rounded border border-border overflow-hidden shadow-sm">
               <div className="px-3 py-1.5 border-b border-border flex items-center justify-between bg-muted/10">
                 <div className="flex items-center gap-2">
-                  <ShoppingBag size={14} className="text-primary" />
-                  <h2 className="text-[9px] font-black text-foreground uppercase tracking-widest">
+                  <ShoppingBag size={16} className="text-primary" />
+                  <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest">
                     محتويات الطلب
                   </h2>
                 </div>
-                <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-2 py-0.5 bg-muted rounded">
+                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest px-3 py-1 bg-muted rounded">
                   {order.productsList.length} منتجات
                 </span>
               </div>
@@ -203,19 +203,19 @@ export default function OrderDetailsPage() {
                   >
                     <div className="flex items-center justify-between gap-4">
                       <div className="min-w-0">
-                        <h4 className="text-xs font-black text-foreground uppercase truncate">
+                        <h4 className="text-sm font-black text-foreground uppercase truncate">
                           {product.p_name}
                         </h4>
-                        <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">
+                        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
                           {product.p_cat}
                         </p>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-xs font-black text-foreground">
+                        <p className="text-sm font-black text-foreground">
                           {Number(product.p_cost).toLocaleString()}{" "}
-                          <span className="text-[9px] text-primary">ج.س</span>
+                          <span className="text-[10px] text-primary">ج.س</span>
                         </p>
-                        <p className="text-[8px] text-muted-foreground font-black uppercase tracking-tighter">
+                        <p className="text-[9px] text-muted-foreground font-black uppercase tracking-tighter">
                           QTY: {product.p_qu || 1}
                         </p>
                       </div>
@@ -226,7 +226,7 @@ export default function OrderDetailsPage() {
 
               <div className="px-3 py-2 bg-muted/20 border-t border-border">
                 <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
+                  <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
                     الإجمالي الصافي
                   </span>
                   <span className="text-lg font-black text-primary tracking-tighter">
@@ -241,8 +241,8 @@ export default function OrderDetailsPage() {
             <section className="bg-card rounded border border-border overflow-hidden shadow-sm">
               <div className="px-3 py-1.5 border-b border-border bg-muted/10">
                 <div className="flex items-center gap-2">
-                  <User size={14} className="text-foreground" />
-                  <h2 className="text-[9px] font-black text-foreground uppercase tracking-widest">
+                  <User size={16} className="text-foreground" />
+                  <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest">
                     بيانات العميل والمعادلة
                   </h2>
                 </div>
@@ -251,18 +251,18 @@ export default function OrderDetailsPage() {
               <div className="p-2 space-y-2">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   <div className="flex items-center justify-between py-1.5 px-2 bg-muted/30 rounded border border-border">
-                    <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
+                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
                       الاسم الكامل
                     </span>
-                    <span className="text-[10px] font-black text-foreground uppercase truncate ml-2">
+                    <span className="text-[11px] font-black text-foreground uppercase truncate ml-2">
                       {order.customer_name || "N/A"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-1.5 px-2 bg-muted/30 rounded border border-border">
-                    <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
+                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
                       رقم التواصل
                     </span>
-                    <span className="text-[10px] font-black text-foreground ml-2">
+                    <span className="text-[11px] font-black text-foreground ml-2">
                       {order.shippingInfo?.phone || "N/A"}
                     </span>
                   </div>
@@ -275,10 +275,10 @@ export default function OrderDetailsPage() {
                       className="text-primary mt-0.5 shrink-0"
                     />
                     <div>
-                      <p className="text-[8px] font-black text-primary uppercase tracking-widest mb-0.5">
+                      <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-0.5">
                         عنوان التوصيل
                       </p>
-                      <p className="text-[10px] font-bold text-foreground leading-tight">
+                      <p className="text-[11px] font-bold text-foreground leading-tight">
                         {order.shippingInfo.address}, {order.shippingInfo.city}
                       </p>
                     </div>
@@ -288,19 +288,19 @@ export default function OrderDetailsPage() {
                 {/* Transaction Info Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2 border-t border-dashed border-border">
                   <div className="flex items-center justify-between py-1.5 px-2 bg-card rounded border border-border">
-                    <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
+                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
                       طريقة الدفع
                     </span>
-                    <span className="text-[10px] font-black text-foreground uppercase ml-2">
+                    <span className="text-[11px] font-black text-foreground uppercase ml-2">
                       {order.paymentMethod || "COD"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-1.5 px-2 bg-card rounded border border-border relative group">
-                    <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
+                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
                       المرجع
                     </span>
                     <div className="flex items-center gap-1.5 ml-2 min-w-0">
-                      <span className="text-[10px] font-mono font-bold text-foreground truncate">
+                      <span className="text-[11px] font-mono font-bold text-foreground truncate">
                         {order.transactionReference || "N/A"}
                       </span>
                       {order.transactionReference && (
@@ -315,9 +315,9 @@ export default function OrderDetailsPage() {
                           title="Copy reference"
                         >
                           {copiedRef ? (
-                            <Check size={12} className="text-success" />
+                            <Check size={14} className="text-success" />
                           ) : (
-                            <Copy size={12} className="text-muted-foreground" />
+                            <Copy size={14} className="text-muted-foreground" />
                           )}
                         </button>
                       )}
@@ -332,7 +332,7 @@ export default function OrderDetailsPage() {
           <div className="space-y-4">
             <section className="bg-card rounded border border-border overflow-hidden shadow-sm">
               <div className="px-3 py-1.5 border-b border-border bg-muted/10">
-                <h2 className="text-[9px] font-black text-foreground uppercase tracking-widest">
+                <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest">
                   حالة الطلب
                 </h2>
               </div>
@@ -342,7 +342,7 @@ export default function OrderDetailsPage() {
                     value={order.status}
                     onChange={(e) => handleUpdateStatus(e.target.value)}
                     disabled={updating}
-                    className="w-full appearance-none px-3 py-2 bg-muted/50 border border-border rounded text-foreground text-[9px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
+                    className="w-full appearance-none px-4 py-2.5 bg-muted/50 border border-border rounded text-foreground text-[10px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
                   >
                     {[
                       { key: "Processing", label: "قيد المعالجة" },
@@ -364,7 +364,7 @@ export default function OrderDetailsPage() {
 
             <section className="bg-card rounded border border-border overflow-hidden shadow-sm">
               <div className="px-4 py-3 border-b border-border bg-muted/10">
-                <h2 className="text-[9px] font-black text-foreground uppercase tracking-widest">
+                <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest">
                   اللوجستيات والعمليات
                 </h2>
               </div>
@@ -376,10 +376,10 @@ export default function OrderDetailsPage() {
                         <Truck size={14} />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-[10px] font-black text-foreground uppercase truncate">
+                        <p className="text-[11px] font-black text-foreground uppercase truncate">
                           {assignedDriver.name}
                         </p>
-                        <p className="text-[8px] text-success font-bold uppercase tracking-tighter">
+                        <p className="text-[9px] text-success font-bold uppercase tracking-tighter">
                           {assignedDriver.vehicle}
                         </p>
                       </div>
@@ -387,9 +387,9 @@ export default function OrderDetailsPage() {
                     <div className="grid grid-cols-2 gap-1.5">
                       <a
                         href={`tel:${assignedDriver.phone}`}
-                        className="flex items-center justify-center gap-1.5 py-1.5 bg-card rounded text-[8px] font-black uppercase text-foreground border border-border hover:bg-muted transition-colors"
+                        className="flex items-center justify-center gap-1.5 py-2 bg-card rounded text-[9px] font-black uppercase text-foreground border border-border hover:bg-muted transition-colors"
                       >
-                        <Phone size={10} /> اتصال
+                        <Phone size={12} /> اتصال
                       </a>
                       <button
                         onClick={() =>
@@ -398,9 +398,9 @@ export default function OrderDetailsPage() {
                             "_blank",
                           )
                         }
-                        className="flex items-center justify-center gap-1.5 py-1.5 bg-success rounded text-[8px] font-black uppercase text-success-foreground hover:bg-success/90 transition-colors"
+                        className="flex items-center justify-center gap-1.5 py-2 bg-success rounded text-[9px] font-black uppercase text-success-foreground hover:bg-success/90 transition-colors"
                       >
-                        <MessageSquare size={10} /> محادثة
+                        <MessageSquare size={12} /> محادثة
                       </button>
                     </div>
                   </div>
@@ -410,7 +410,7 @@ export default function OrderDetailsPage() {
                   <select
                     value={order.driverId || ""}
                     onChange={(e) => handleAssignDriver(e.target.value)}
-                    className="w-full appearance-none px-3 py-2 bg-muted/50 border border-border rounded text-foreground text-[9px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
+                    className="w-full appearance-none px-4 py-2.5 bg-muted/50 border border-border rounded text-foreground text-[10px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
                   >
                     <option value="">[ تعيين سائق ]</option>
                     {drivers

@@ -37,7 +37,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <ScrollTop />
-            <main className="w-full grow min-h-screen mb-8">
+            <main className="w-full grow min-h-screen lg:mb-0 mb-20">
               <NavBar />
               <Toaster position="top-center" expand />
               <div className="pt-0.5"></div>

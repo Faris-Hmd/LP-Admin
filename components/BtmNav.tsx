@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, ClipboardList, Settings, Users } from "lucide-react";
+import { BarChart3, ClipboardList, Settings, Users, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 
@@ -19,6 +19,7 @@ const ADMIN_NAV = [
   },
   { title: "الطلبات", href: "/manageOrder", icon: ClipboardList },
   { title: "المخزون", href: "/productsSet", icon: Settings },
+  { title: "العروض", href: "/offersSet", icon: Tag },
   { title: "السائقين", href: "/drivers", icon: Users },
 ];
 
@@ -29,7 +30,7 @@ export default function AdminBtmNav() {
   if (!session.data?.user) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-card pb-safe md:hidden h-16 px-2 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.05)]">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-card pb-safe lg:hidden h-16 px-2 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.05)]">
       {ADMIN_NAV.map((item) => {
         const Icon = item.icon;
 
