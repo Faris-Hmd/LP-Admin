@@ -1,8 +1,7 @@
-import { Timestamp } from "firebase/firestore";
 import { Package, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import DateSelector from "@/components/DataPicker";
-import { getOrdersWhOrdered } from "@/services/ordersServices";
+import { getOrdersWh } from "@/services/ordersServices";
 import ShippedOrdersList from "@/components/dashboard/shippedOrdersList";
 
 export const revalidate = 20;
@@ -19,15 +18,21 @@ export async function generateStaticParams() {
 }
 
 async function getMonthlyDeliveredOrders(dateStr: string) {
-  const [year, month] = dateStr.split("-").map(Number);
+  // Support both 2026-01 and 2026/01 formats
+  const normalizedDate = dateStr.replace("/", "-");
+  const [year, month] = normalizedDate.split("-").map(Number);
 
   const startDate = new Date(year, month - 1, 1);
   const endDate = new Date(year, month, 0, 23, 59, 59);
 
-  return await getOrdersWhOrdered([
+  // Convert to milliseconds for comparison
+  const startMillis = startDate.getTime();
+  const endMillis = endDate.getTime();
+
+  return await getOrdersWh([
     { field: "status", op: "==", val: "Delivered" },
-    { field: "deleveratstamp", op: ">=", val: Timestamp.fromDate(startDate) },
-    { field: "deleveratstamp", op: "<=", val: Timestamp.fromDate(endDate) },
+    { field: "deliveredAt", op: ">=", val: startMillis },
+    { field: "deliveredAt", op: "<=", val: endMillis },
   ]);
 }
 
@@ -40,7 +45,10 @@ export default async function ShippedOrdersPage({
   console.log(" date", date);
   const orders = await getMonthlyDeliveredOrders(date);
 
-  const [year, month] = date.split("-");
+  /* const orders = await getMonthlyDeliveredOrders(date); */
+  // Fix: Move fetching logic or reuse parsing
+  const normalizedDate = date.replace("/", "-");
+  const [year, month] = normalizedDate.split("-");
   const monthName = new Date(Number(year), Number(month) - 1).toLocaleString(
     "default",
     { month: "long" },
@@ -69,7 +77,7 @@ export default async function ShippedOrdersPage({
               </div>
               <Link
                 href={`/manageOrder` as any}
-                className="flex items-center gap-2 px-4 py-2.5 bg-primary/10 text-primary rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all border border-primary/20 whitespace-nowrap"
+                className="flex items-center gap-2 px-4 py-2.5 bg-primary/10 text-primary rounded-xl text-small font-black uppercase tracking-widest hover:bg-primary/20 transition-all border border-primary/20 whitespace-nowrap"
               >
                 <Package size={16} />
                 <span className="hidden md:inline">قائمة الانتظار</span>
@@ -81,30 +89,79 @@ export default async function ShippedOrdersPage({
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
         {/* --- SUMMARY STATS --- */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 md:gap-6 mb-8">
-          <div className="bg-primary p-8 rounded-[2rem] shadow-xl shadow-primary/20 text-primary-foreground relative overflow-hidden group">
-            <div className="relative z-10">
-              <p className="text-[10px] font-black uppercase opacity-70 tracking-[0.2em] mb-2">
-                الإيرادات الشهرية
-              </p>
-              <p className="text-2xl md:text-3xl font-black tracking-tighter">
-                {totalSalesVolume.toLocaleString()}{" "}
-                <span className="text-sm font-bold opacity-60">ج.س</span>
-              </p>
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-2 mb-4">
+          {/* Revenue Card */}
+          <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary/80 rounded-lg blur-md opacity-20 group-hover:opacity-30 transition-opacity" />
+            <div className="relative bg-gradient-to-br from-primary to-primary/90 p-2.5 rounded-lg shadow-lg border border-primary/20 overflow-hidden">
+              {/* Background Pattern */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-0 right-0 w-16 h-16 bg-white rounded-full -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-white rounded-full translate-y-1/2 -translate-x-1/2" />
+              </div>
+
+              <div className="relative z-10">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <div className="flex items-center gap-1.5">
+                    <div className="p-1 bg-white/10 backdrop-blur-sm rounded-md">
+                      <CheckCircle2 size={12} className="text-white" />
+                    </div>
+                    <p className="text-tiny font-black uppercase text-white/70 tracking-[0.1em]">
+                      الإيرادات الشهرية
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-0">
+                  <p className="text-xl md:text-2xl font-black text-white tracking-tight leading-none">
+                    {totalSalesVolume.toLocaleString()}
+                  </p>
+                  <p className="text-tiny font-bold text-white/60 mt-0.5">
+                    جنيه سوداني
+                  </p>
+                </div>
+              </div>
+
+              {/* Decorative Icon */}
+              <CheckCircle2 className="absolute right-2 bottom-2 size-12 text-white/5 group-hover:scale-110 transition-transform duration-500" />
             </div>
-            <CheckCircle2 className="absolute right-[-10px] bottom-[-10px] size-32 opacity-10 -rotate-12 group-hover:rotate-0 transition-transform duration-500" />
           </div>
 
-          <div className="bg-card border border-border p-8 rounded-[2rem] shadow-sm relative overflow-hidden">
-            <p className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em] mb-2">
-              إجمالي الشحنات
-            </p>
-            <p className="text-xl md:text-2xl font-black text-foreground tracking-tighter">
-              {totalOrderCount}{" "}
-              <span className="text-sm font-bold text-muted-foreground">
-                طلبات
-              </span>
-            </p>
+          {/* Orders Count Card */}
+          <div className="relative group">
+            <div className="absolute inset-0 bg-muted rounded-lg blur-md opacity-50 group-hover:opacity-70 transition-opacity" />
+            <div className="relative bg-card border-2 border-border p-2.5 rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden">
+              {/* Background Pattern */}
+              <div className="absolute inset-0 opacity-5">
+                <div className="absolute top-0 right-0 w-16 h-16 bg-primary rounded-full -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-primary rounded-full translate-y-1/2 -translate-x-1/2" />
+              </div>
+
+              <div className="relative z-10">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <div className="flex items-center gap-1.5">
+                    <div className="p-1 bg-primary/10 rounded-md">
+                      <Package size={12} className="text-primary" />
+                    </div>
+                    <p className="text-tiny font-black uppercase text-muted-foreground tracking-[0.1em]">
+                      إجمالي الشحنات
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-0">
+                  <p className="text-xl md:text-2xl font-black text-foreground tracking-tight leading-none">
+                    {totalOrderCount}
+                  </p>
+                  <p className="text-tiny font-bold text-muted-foreground mt-0.5">
+                    طلب مكتمل
+                  </p>
+                </div>
+              </div>
+
+              {/* Decorative Icon */}
+              <Package className="absolute right-2 bottom-2 size-12 text-muted-foreground/5 group-hover:scale-110 transition-transform duration-500" />
+            </div>
           </div>
         </div>
 

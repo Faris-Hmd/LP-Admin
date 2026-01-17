@@ -36,13 +36,17 @@ export type OrderData = {
   shippingInfo?: ShippingInfo;
   productsList: ProductType[];
   status: "Processing" | "Shipped" | "Delivered" | "Cancelled";
-  deliveredAt: string;
-  createdAt: string;
-  deleveratstamp?: any;
+  createdAt: number; // Milliseconds
+  deliveredAt?: number; // Milliseconds - delivery timestamp
   totalAmount: number;
   driverId?: string;
   paymentMethod?: string;
   transactionReference?: string;
+  // Offer fields
+  isOffer?: boolean;
+  offerId?: string;
+  offerTitle?: string;
+  offerImage?: string;
 };
 
 export interface CategoryDistribution {

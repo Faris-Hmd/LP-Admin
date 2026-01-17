@@ -6,34 +6,73 @@ import {
   sum,
 } from "firebase/firestore";
 
+export const revalidate = 60; // Cache for 60 seconds
+
 export async function GET() {
   try {
-    // We add the aggregate call to the Promise.all array
-    const [ordersSnap, productsSnap, usersSnap, revenueSnap] =
-      await Promise.all([
-        getCountFromServer(ordersRef),
-        getCountFromServer(productsRef),
-        getCountFromServer(usersRef),
-        getAggregateFromServer(ordersRef, {
-          totalRevenue: sum("totalAmount"), // Aggregating the 'totalAmount' field
-        }),
-      ]);
-
+    // Fetch counts with individual error handling
     const stats = {
-      orders: ordersSnap.data().count,
-      products: productsSnap.data().count,
-      customers: usersSnap.data().count,
-      revenue: revenueSnap.data().totalRevenue, // Extracting the sum
+      orders: 0,
+      products: 0,
+      customers: 0,
+      revenue: 0,
     };
 
+    // Try to get orders count
+    try {
+      const ordersSnap = await getCountFromServer(ordersRef);
+      stats.orders = ordersSnap.data().count;
+    } catch (err) {
+      console.error("Error fetching orders count:", err);
+    }
+
+    // Try to get products count
+    try {
+      const productsSnap = await getCountFromServer(productsRef);
+      stats.products = productsSnap.data().count;
+    } catch (err) {
+      console.error("Error fetching products count:", err);
+    }
+
+    // Try to get customers count
+    try {
+      const usersSnap = await getCountFromServer(usersRef);
+      stats.customers = usersSnap.data().count;
+    } catch (err) {
+      console.error("Error fetching customers count:", err);
+    }
+
+    // Try to get revenue sum
+    try {
+      const revenueSnap = await getAggregateFromServer(ordersRef, {
+        totalRevenue: sum("totalAmount"),
+      });
+      stats.revenue = revenueSnap.data().totalRevenue || 0;
+    } catch (err) {
+      console.error("Error fetching revenue:", err);
+    }
+
     return NextResponse.json(stats, {
-      status: 200,
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",
+      },
     });
   } catch (error) {
     console.error("Stats API Error:", error);
+    // Return default values instead of error
     return NextResponse.json(
-      { error: "Failed to fetch stats" },
-      { status: 500 },
+      {
+        orders: 0,
+        products: 0,
+        customers: 0,
+        revenue: 0,
+      },
+      {
+        status: 200, // Return 200 with zeros instead of 500
+        headers: {
+          "Cache-Control": "public, s-maxage=10, stale-while-revalidate=30",
+        },
+      },
     );
   }
 }

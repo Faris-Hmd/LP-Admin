@@ -9,13 +9,18 @@ export default async function ManageOrdersPage() {
     { field: "status", op: "!=", val: "Delivered" },
   ]);
 
+  // Sort orders by Date Descending (Newest First)
+  orders.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+
   return (
     <div className="min-h-screen bg-background pb-32">
       <header className="bg-card border-b border-border sticky top-0 z-[60]">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-3">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-1.5">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h1 className="text-xl md:text-2xl font-black text-foreground tracking-tight">
+              <h1 className="text-xl md:text-2xl font-black text-foreground tracking-tight pt-1">
                 إدارة <span className="text-primary">الطلبات</span>
               </h1>
               <p className="text-[11px] text-muted-foreground mt-1 font-bold uppercase tracking-wider">
@@ -38,7 +43,6 @@ export default async function ManageOrdersPage() {
       </header>
 
       <div className="max-w-5xl mx-auto px-2 py-8">
-        {/* Pass server data to the Client Component for interactivity */}
         <OrderListClient initialOrders={orders} />
       </div>
     </div>

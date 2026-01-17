@@ -1,12 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    staleTimes: {
-      dynamic: 30, // Keeps the page in memory for 30 seconds
-      static: 180,
-    },
-  },
+  // experimental: {
+  //   staleTimes: {
+  //     dynamic: 30, // Keeps the page in memory for 30 seconds
+  //     static: 180,
+  //   },
+  // },
   images: {
     remotePatterns: [
       {

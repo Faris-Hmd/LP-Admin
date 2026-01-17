@@ -7,8 +7,9 @@ import {
   ChevronUp,
   Settings2,
   RefreshCcw,
+  BadgePercent,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -24,6 +25,10 @@ export default function OrderListClient({
   const [expandedOrders, setExpandedOrders] = useState<Record<string, boolean>>(
     {},
   );
+
+  const sortedOrders = [...initialOrders].sort((a, b) => {
+    return (b.createdAt || 0) - (a.createdAt || 0);
+  });
 
   const toggleOrder = (orderId: string) => {
     setExpandedOrders((prev) => ({ ...prev, [orderId]: !prev[orderId] }));
@@ -64,7 +69,7 @@ export default function OrderListClient({
         <RefreshCcw size={24} className={cn(isPending && "animate-spin")} />
       </button>
 
-      {initialOrders.map((order) => {
+      {sortedOrders.map((order) => {
         const isExpanded = expandedOrders[order.id];
         const totalItems = order.productsList.reduce(
           (sum: number, p: any) => sum + (Number(p.p_qu) || 0),
@@ -81,10 +86,7 @@ export default function OrderListClient({
                 : "border-border",
             )}
           >
-            <div
-              onClick={() => toggleOrder(order.id)}
-              className="p-4 cursor-pointer flex items-center gap-4"
-            >
+            <div className="p-4 flex items-center gap-4">
               <div
                 className={cn(
                   "p-2.5 rounded-xl shrink-0",
@@ -96,37 +98,45 @@ export default function OrderListClient({
                 <Package size={20} />
               </div>
 
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
+              <div className="flex-1 min-w-0">
+                {/* Top Row: Badges */}
+                <div className="flex flex-wrap items-center gap-2 mb-2">
                   <span
                     className={cn(
-                      "text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md border",
-                      order.status === "Delivered"
-                        ? "bg-success/10 text-success border-success/20"
+                      "text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md border",
+                      order.status === "Processing"
+                        ? "bg-blue-500/10 text-blue-500 border-blue-500/20"
                         : "bg-warning/10 text-warning border-warning/20",
                     )}
                   >
-                    {order.status === "Delivered"
-                      ? "تم التوصيل"
-                      : "قيد المعالجة"}
+                    {order.status === "Processing"
+                      ? "قيد المعالجة"
+                      : "تم الشحن"}
                   </span>
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase">
-                    ID: {order.id.slice(-6).toUpperCase()}
-                  </span>
-                  <span className="w-1 h-1 rounded-full bg-border" />
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">
-                    {new Date(order.createdAt).toLocaleDateString("ar-EG", {
-                      day: "numeric",
-                      month: "short",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
+                  {order.isOffer && (
+                    <span className="text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md border bg-primary/10 text-primary border-primary/20 flex items-center gap-1">
+                      <BadgePercent size={12} />
+                      عرض خاص
+                    </span>
+                  )}
                 </div>
-                <p className="text-lg font-black text-foreground leading-none">
+
+                {/* Middle: Amount */}
+                <p className="text-xl font-black text-foreground mb-1 leading-none">
                   {order.totalAmount.toLocaleString()}{" "}
                   <span className="text-[10px] text-primary">SDG</span>
                 </p>
+
+                {/* Bottom Row: Metadata (ID & Date) */}
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <span className="text-[10px] font-bold uppercase tracking-wider bg-muted/50 px-1.5 py-0.5 rounded">
+                    #{order.id.slice(-6).toUpperCase()}
+                  </span>
+                  <span className="w-1 h-1 rounded-full bg-border" />
+                  <span className="text-[10px] font-bold uppercase tracking-tight">
+                    {formatDate(order.createdAt)}
+                  </span>
+                </div>
               </div>
 
               <div className="flex items-center gap-3">
@@ -136,35 +146,66 @@ export default function OrderListClient({
                 >
                   <Settings2 size={16} />
                 </Link>
-                {isExpanded ? (
-                  <ChevronUp size={20} className="text-muted-foreground" />
-                ) : (
-                  <ChevronDown size={20} className="text-muted-foreground" />
-                )}
+                <button
+                  onClick={() => toggleOrder(order.id)}
+                  className="p-2 hover:bg-muted rounded-full transition-colors cursor-pointer"
+                >
+                  {isExpanded ? (
+                    <ChevronUp size={20} className="text-muted-foreground" />
+                  ) : (
+                    <ChevronDown size={20} className="text-muted-foreground" />
+                  )}
+                </button>
               </div>
             </div>
 
             {isExpanded && (
               <div className="px-4 pb-4 bg-muted/20 border-t border-border">
                 <div className="py-4 space-y-2">
-                  {order.productsList.map((p: any) => (
-                    <div
-                      key={p.id}
-                      className="bg-card p-3 rounded-xl border border-border flex justify-between items-center shadow-sm"
-                    >
-                      <div className="min-w-0">
-                        <p className="text-xs font-black text-foreground uppercase truncate">
-                          {p.p_name}
-                        </p>
-                        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
-                          الكمية: {p.p_qu} @ {Number(p.p_cost).toLocaleString()}
+                  {order.isOffer ? (
+                    <div className="bg-card p-3 rounded-xl border border-primary/20 bg-primary/5 flex justify-between items-center shadow-sm">
+                      <div className="flex items-center gap-3">
+                        {order.offerImage && (
+                          <div className="w-10 h-10 rounded-md overflow-hidden bg-muted relative">
+                            <img
+                              src={order.offerImage}
+                              alt={order.offerTitle}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="text-xs font-black text-foreground uppercase truncate">
+                            {order.offerTitle}
+                          </p>
+                          <p className="text-[10px] text-primary/80 font-bold uppercase tracking-widest flex items-center gap-1">
+                            <BadgePercent size={10} />
+                            عرض توفير خاص
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    order.productsList.map((p: any) => (
+                      <div
+                        key={p.id}
+                        className="bg-card p-3 rounded-xl border border-border flex justify-between items-center shadow-sm"
+                      >
+                        <div className="min-w-0">
+                          <p className="text-xs font-black text-foreground uppercase truncate">
+                            {p.p_name}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+                            الكمية: {p.p_qu} @{" "}
+                            {Number(p.p_cost).toLocaleString()}
+                          </p>
+                        </div>
+                        <p className="text-xs font-black text-primary">
+                          {(Number(p.p_cost) * Number(p.p_qu)).toLocaleString()}
                         </p>
                       </div>
-                      <p className="text-xs font-black text-primary">
-                        {(Number(p.p_cost) * Number(p.p_qu)).toLocaleString()}
-                      </p>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
                 <div className="flex items-center justify-between pt-3 border-t border-border">
                   <button

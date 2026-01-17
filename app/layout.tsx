@@ -17,6 +17,9 @@ const cairo = Cairo({
 export const metadata: Metadata = {
   title: "لوحة التحكم",
   description: "لوحة التحكم",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({

@@ -15,7 +15,7 @@ export async function UpdateFormPage({ params }: { params: { id: string } }) {
         <div className="max-w-4xl mx-auto p-3 md:p-4">
           <div className="flex justify-between items-center">
             <div>
-              <div className="flex items-center gap-2 text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-0.5">
+              <div className="flex items-center gap-2 text-tiny font-black text-primary uppercase tracking-[0.2em] mb-0.5">
                 <ShieldCheck size={10} />
                 وضع المحرر
               </div>
@@ -26,10 +26,10 @@ export async function UpdateFormPage({ params }: { params: { id: string } }) {
 
             {/* Visual Indicator of Current Product ID */}
             <div className="hidden md:flex flex-col items-end">
-              <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
+              <span className="text-tiny font-black text-muted-foreground uppercase tracking-widest">
                 معرف قاعدة البيانات
               </span>
-              <span className="text-[10px] font-bold text-muted-foreground font-mono">
+              <span className="text-tiny font-bold text-muted-foreground font-mono">
                 {id.slice(0, 8)}...
               </span>
             </div>
@@ -44,7 +44,7 @@ export async function UpdateFormPage({ params }: { params: { id: string } }) {
 
       {/* Background Subtle Label */}
       <footer className="mt-12 text-center">
-        <p className="text-[8px] font-black text-muted-foreground/20 uppercase tracking-[0.5em] select-none">
+        <p className="text-tiny font-black text-muted-foreground/20 uppercase tracking-[0.5em] select-none">
           قناة التعديل الآمنة
         </p>
       </footer>

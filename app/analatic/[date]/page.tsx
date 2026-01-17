@@ -1,10 +1,9 @@
 import Chart from "./components/chart";
-import { Timestamp } from "firebase/firestore";
 import ChartPieInteractive from "./components/pie";
 import SectionCards from "./components/section";
 import { DailySalesData } from "@/types/productsTypes";
-import { getOrdersWhOrdered } from "@/services/ordersServices";
-import { LayoutDashboard, ShieldCheck } from "lucide-react";
+import { getOrdersWh } from "@/services/ordersServices";
+import { ShieldCheck } from "lucide-react";
 import DateSelector from "@/components/DataPicker";
 
 export const revalidate = 60;
@@ -19,25 +18,37 @@ interface PageProps {
 
 export default async function OverviewPage({ params }: PageProps) {
   const { date } = await params;
-  const [year, month] = date.split("-").map(Number);
+  const normalizedDate = date.replace("/", "-");
+  const [year, month] = normalizedDate.split("-").map(Number);
 
   const startDate = new Date(year, month - 1, 1);
   const endDate = new Date(year, month, 0, 23, 59, 59);
+
+  // Convert to milliseconds for comparison
+  const startMillis = startDate.getTime();
+  const endMillis = endDate.getTime();
+
+  console.log("Date range (millis):", startMillis, endMillis);
 
   // 1. Fetch Global Counts
 
   // 3. Typed Fetch for Sales Data
   async function getSalesData(): Promise<DailySalesData[]> {
-    const deliveredOrders = await getOrdersWhOrdered([
+    const deliveredOrders = await getOrdersWh([
       { field: "status", op: "==", val: "Delivered" },
-      { field: "deleveratstamp", op: ">=", val: Timestamp.fromDate(startDate) },
-      { field: "deleveratstamp", op: "<=", val: Timestamp.fromDate(endDate) },
+      { field: "deliveredAt", op: ">=", val: startMillis },
+      { field: "deliveredAt", op: "<=", val: endMillis },
     ]);
 
     const statsMap: Record<number, { sales: number; orders: number }> = {};
     deliveredOrders.forEach((order) => {
-      if (!order.deliveredAt) return;
-      const d = new Date(order.deliveredAt);
+      let d: Date | null = null;
+      if (order.deliveredAt) {
+        // Now it's a number (millis)
+        d = new Date(order.deliveredAt);
+      }
+
+      if (!d) return;
       const day = d.getDate();
 
       const orderTotal = (order.productsList || []).reduce(

@@ -58,6 +58,17 @@ export default function OfferForm({
     initialData?.products || [],
   );
 
+  // Track quantities for each product
+  const [productQuantities, setProductQuantities] = useState<
+    Record<string, number>
+  >(() => {
+    const quantities: Record<string, number> = {};
+    initialData?.products?.forEach((p) => {
+      quantities[p.id] = p.p_qu || 1;
+    });
+    return quantities;
+  });
+
   const [price, setPrice] = useState<number>(initialData?.price || 0);
 
   const [offerImage, setOfferImage] = useState<{
@@ -65,14 +76,14 @@ export default function OfferForm({
     file?: File;
   } | null>(initialData?.image ? { url: initialData.image } : null);
 
-  // Auto-calculate price when products change
+  // Auto-calculate price when products or quantities change
   useEffect(() => {
     const total = selectedProducts.reduce(
-      (sum, p) => sum + Number(p.p_cost || 0),
+      (sum, p) => sum + Number(p.p_cost || 0) * (productQuantities[p.id] || 1),
       0,
     );
     setPrice(total);
-  }, [selectedProducts]);
+  }, [selectedProducts, productQuantities]);
 
   const filteredProducts = availableProducts.filter((p) => {
     const nameMatch = p.p_name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -88,15 +99,33 @@ export default function OfferForm({
     setSelectedProducts((prev) => {
       const isSelected = prev.some((p) => p.id === product.id);
       if (isSelected) {
+        // Remove product and its quantity
+        setProductQuantities((q) => {
+          const newQ = { ...q };
+          delete newQ[product.id];
+          return newQ;
+        });
         return prev.filter((p) => p.id !== product.id);
       } else {
+        // Add product with default quantity of 1
+        setProductQuantities((q) => ({ ...q, [product.id]: 1 }));
         return [...prev, product];
       }
     });
   };
 
+  const updateQuantity = (productId: string, quantity: number) => {
+    if (quantity < 1) return;
+    setProductQuantities((prev) => ({ ...prev, [productId]: quantity }));
+  };
+
   const removeProduct = (productId: string) => {
     setSelectedProducts((prev) => prev.filter((p) => p.id !== productId));
+    setProductQuantities((q) => {
+      const newQ = { ...q };
+      delete newQ[productId];
+      return newQ;
+    });
   };
 
   async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -153,7 +182,10 @@ export default function OfferForm({
         price,
         badge,
         image: imageUrl,
-        products: selectedProducts,
+        products: selectedProducts.map((p) => ({
+          ...p,
+          p_qu: productQuantities[p.id] || 1,
+        })),
       };
 
       if (initialData?.id) {
@@ -180,8 +212,8 @@ export default function OfferForm({
       className="min-h-screen bg-background relative"
     >
       {/* Optimized Header */}
-      <header className="sticky top-0 z-50 bg-card/90 backdrop-blur-md border-b border-border shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
+      <header className="sticky top-0 z-50 bg-card  border-b border-border shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link
               href="/offersSet"
@@ -190,7 +222,7 @@ export default function OfferForm({
               <ArrowRight size={18} />
             </Link>
             <div>
-              <div className="flex items-center gap-2 text-[8px] font-black text-primary uppercase tracking-[0.2em]">
+              <div className="flex items-center gap-2 text-tiny font-black text-primary uppercase tracking-[0.2em]">
                 <ShieldCheck size={10} />
                 بوابة الإدارة
               </div>
@@ -207,14 +239,14 @@ export default function OfferForm({
             <button
               type="button"
               onClick={() => router.push("/offersSet")}
-              className="px-3 py-1.5 rounded-lg bg-muted text-muted-foreground text-[9px] font-black uppercase tracking-widest hover:bg-muted/80 active:scale-95 transition-all outline-none"
+              className="px-3 py-2 rounded-lg bg-muted text-muted-foreground text-small font-black uppercase tracking-widest hover:bg-muted/80 active:scale-95 transition-all outline-none"
             >
               إلغاء
             </button>
             <button
               type="submit"
               disabled={pending}
-              className="flex items-center justify-center gap-2 px-4 py-1.5 rounded-lg bg-primary text-primary-foreground text-[9px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all outline-none"
+              className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-small font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all outline-none"
             >
               {pending ? (
                 <Loader className="animate-spin" size={12} />
@@ -232,7 +264,7 @@ export default function OfferForm({
           <div className="bg-card border border-border rounded-2xl p-5 shadow-sm space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex items-center gap-2">
               <Sparkles size={16} className="text-primary" />
-              <h2 className="text-[10px] font-black uppercase tracking-widest text-foreground">
+              <h2 className="text-tiny font-black uppercase tracking-widest text-foreground">
                 المعلومات الأساسية
               </h2>
             </div>
@@ -246,6 +278,7 @@ export default function OfferForm({
                       src={offerImage.url}
                       alt="Offer preview"
                       fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -266,7 +299,7 @@ export default function OfferForm({
                       size={32}
                       className="text-muted-foreground mb-1"
                     />
-                    <span className="text-[9px] font-black uppercase text-muted-foreground tracking-tighter">
+                    <span className="text-small font-black uppercase text-muted-foreground tracking-tighter">
                       صورة العرض المميزة
                     </span>
                   </label>
@@ -284,7 +317,7 @@ export default function OfferForm({
               {/* Right Side: Fields */}
               <div className="grid grid-cols-1 gap-4">
                 <div>
-                  <label className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1 block">
+                  <label className="text-small font-black uppercase text-muted-foreground tracking-wider mb-1 block">
                     عنوان العرض
                   </label>
                   <input
@@ -296,7 +329,7 @@ export default function OfferForm({
                   />
                 </div>
                 <div>
-                  <label className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1 block">
+                  <label className="text-small font-black uppercase text-muted-foreground tracking-wider mb-1 block">
                     شارة العرض
                   </label>
                   <input
@@ -307,7 +340,7 @@ export default function OfferForm({
                   />
                 </div>
                 <div className="relative">
-                  <label className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1 block">
+                  <label className="text-small font-black uppercase text-muted-foreground tracking-wider mb-1 block">
                     سعر العرض
                     <span className="text-primary/60 mr-1">
                       (محسوب تلقائياً)
@@ -332,7 +365,7 @@ export default function OfferForm({
             </div>
 
             <div>
-              <label className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1 block">
+              <label className="text-small font-black uppercase text-muted-foreground tracking-wider mb-1 block">
                 وصف محتويات العرض والمزايا
               </label>
               <textarea
@@ -351,17 +384,17 @@ export default function OfferForm({
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Package size={16} className="text-primary" />
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-foreground">
+                <h3 className="text-tiny font-black uppercase tracking-widest text-foreground">
                   مكونات العرض
                 </h3>
-                <span className="px-2 py-0.5 bg-primary/10 text-primary text-[9px] font-black rounded-full border border-primary/10">
+                <span className="px-2 py-0.5 bg-primary/10 text-primary text-small font-black rounded-full border border-primary/10">
                   {selectedProducts.length} عناصر
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(true)}
-                className="flex items-center gap-2 px-3 py-2 bg-primary text-primary-foreground text-[9px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20"
+                className="flex items-center gap-2 px-3 py-2 bg-primary text-primary-foreground text-small font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20"
               >
                 <PlusCircle size={14} />
                 إضافة منتجات
@@ -372,7 +405,7 @@ export default function OfferForm({
               {selectedProducts.length === 0 ? (
                 <div className="col-span-full text-center py-10 border-2 border-dashed border-border rounded-2xl bg-muted/5 opacity-50 flex flex-col items-center gap-2">
                   <Package size={24} className="text-muted-foreground" />
-                  <p className="text-[10px] font-black uppercase tracking-widest">
+                  <p className="text-tiny font-black uppercase tracking-widest">
                     لم يتم اختيار منتجات بعد
                   </p>
                 </div>
@@ -387,17 +420,69 @@ export default function OfferForm({
                         src={p.p_imgs[0]?.url || "/placeholder.png"}
                         alt={p.p_name}
                         fill
+                        sizes="48px"
                         className="object-cover transition-transform group-hover:scale-110"
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-[11px] font-black text-foreground truncate">
+                      <h4 className="text-small font-black text-foreground truncate">
                         {p.p_name}
                       </h4>
-                      <p className="text-[9px] text-primary font-bold">
+                      <p className="text-small text-primary font-bold">
                         {Number(p.p_cost).toLocaleString()} ج.س
                       </p>
                     </div>
+
+                    {/* Quantity Controls */}
+                    <div className="flex items-center gap-1 bg-muted rounded-lg border border-border p-1">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          updateQuantity(
+                            p.id,
+                            (productQuantities[p.id] || 1) - 1,
+                          )
+                        }
+                        className="p-1 hover:bg-background rounded transition-colors"
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
+                          <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                      </button>
+                      <span className="text-small font-black min-w-[20px] text-center">
+                        {productQuantities[p.id] || 1}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          updateQuantity(
+                            p.id,
+                            (productQuantities[p.id] || 1) + 1,
+                          )
+                        }
+                        className="p-1 hover:bg-background rounded transition-colors"
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
+                          <line x1="12" y1="5" x2="12" y2="19" />
+                          <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                      </button>
+                    </div>
+
                     <button
                       type="button"
                       onClick={() => removeProduct(p.id)}
@@ -434,7 +519,7 @@ export default function OfferForm({
                   <h2 className="text-base font-black text-foreground uppercase tracking-tight">
                     اختيار المنتجات
                   </h2>
-                  <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">
+                  <p className="text-small font-black text-muted-foreground uppercase tracking-widest mt-0.5">
                     تصفح كتالوج المنتجات لإضافتها للعرض
                   </p>
                 </div>
@@ -459,7 +544,7 @@ export default function OfferForm({
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="ابحث بالاسم أو التصنيف..."
-                  className="w-full pr-9 pl-4 py-2 bg-muted/20 border border-border rounded-xl text-[11px] font-bold outline-none focus:ring-2 focus:ring-primary/20 transition-all shadow-inner h-9"
+                  className="w-full pr-9 pl-4 py-2 bg-muted/20 border border-border rounded-xl text-small font-bold outline-none focus:ring-2 focus:ring-primary/20 transition-all shadow-inner h-9"
                 />
               </div>
 
@@ -468,21 +553,21 @@ export default function OfferForm({
                   value={selectedCategory}
                   onValueChange={setSelectedCategory}
                 >
-                  <SelectTrigger className="h-9 bg-muted/20 border-border text-[11px] font-black rounded-xl px-3 shadow-inner">
+                  <SelectTrigger className="h-9 bg-muted/20 border-border text-small font-black rounded-xl px-3 shadow-inner">
                     <div className="flex items-center gap-2">
                       <Filter size={12} className="text-primary" />
                       <SelectValue placeholder="التصنيف" />
                     </div>
                   </SelectTrigger>
                   <SelectContent className="bg-popover border-border rounded-xl">
-                    <SelectItem value="all" className="text-[11px] font-bold">
+                    <SelectItem value="all" className="text-small font-bold">
                       جميع الأصناف
                     </SelectItem>
                     {categories.map((cat) => (
                       <SelectItem
                         key={cat}
                         value={cat}
-                        className="text-[11px] font-bold"
+                        className="text-small font-bold"
                       >
                         {getCategoryLabel(cat)}
                       </SelectItem>
@@ -504,39 +589,29 @@ export default function OfferForm({
                       <div
                         key={product.id}
                         onClick={() => toggleProduct(product)}
-                        className={`group flex items-center gap-4 p-2 bg-card rounded-xl border transition-all duration-300 cursor-pointer ${
+                        className={`group flex items-center gap-3 p-2 bg-card rounded-xl border transition-all duration-300 cursor-pointer ${
                           isSelected
                             ? "border-primary ring-1 ring-primary/20 bg-primary/5 shadow-sm"
                             : "border-border hover:border-primary/40 hover:bg-muted/10 animate-in fade-in"
                         }`}
                       >
-                        {/* Compact Thumbnail */}
-                        <div className="relative h-12 w-12 rounded-lg overflow-hidden border border-border bg-muted flex-shrink-0 shadow-sm">
-                          <Image
-                            src={product.p_imgs[0]?.url || "/placeholder.png"}
-                            alt={product.p_name}
-                            fill
-                            className="object-cover transition-transform group-hover:scale-110"
-                          />
-                        </div>
-
                         {/* Name & Category Info */}
                         <div className="flex-1 min-w-0 text-right">
                           <h4
-                            className={`text-[11px] font-black truncate leading-none ${isSelected ? "text-primary" : "text-foreground"}`}
+                            className={`text-small font-black truncate leading-none ${isSelected ? "text-primary" : "text-foreground"}`}
                           >
                             {product.p_name}
                           </h4>
-                          <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest bg-muted/80 px-1.5 py-0.5 rounded-md mt-1 inline-block">
+                          <span className="text-tiny mt-2 font-black text-muted-foreground uppercase tracking-widest bg-muted/80 px-1.5 py-0.5 rounded-md mt-3 inline-block">
                             {getCategoryLabel(product.p_cat)}
                           </span>
                         </div>
 
                         {/* Middle: Price */}
                         <div className="px-4 border-r border-border/40 text-left">
-                          <p className="text-[11px] font-black text-foreground whitespace-nowrap">
+                          <p className="text-small font-black text-foreground whitespace-nowrap">
                             {Number(product.p_cost).toLocaleString()}{" "}
-                            <span className="text-[8px] text-primary">ج.س</span>
+                            <span className="text-tiny text-primary">ج.س</span>
                           </p>
                         </div>
 
@@ -570,7 +645,7 @@ export default function OfferForm({
 
             {/* Modal Footer */}
             <div className="p-4 border-t border-border bg-muted/5 flex items-center justify-between">
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+              <p className="text-tiny font-black text-muted-foreground uppercase tracking-widest">
                 تم اختيار{" "}
                 <span className="text-primary">{selectedProducts.length}</span>{" "}
                 منتجات

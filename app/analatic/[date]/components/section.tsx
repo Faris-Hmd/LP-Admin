@@ -14,16 +14,16 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function SectionCards() {
   const { data, error, isLoading } = useSWR("/api/stats", fetcher, {
-    refreshInterval: 60000,
+    refreshInterval: 60000, // Refresh every 60 seconds
+    revalidateOnFocus: false,
+    revalidateOnReconnect: true,
+    shouldRetryOnError: true,
+    errorRetryCount: 3,
+    errorRetryInterval: 5000,
+    fallbackData: { orders: 0, products: 0, customers: 0, revenue: 0 },
   });
 
-  if (error)
-    return (
-      <div className="p-4 text-xs text-destructive font-mono">
-        خطأ: فشل الجلب
-      </div>
-    );
-
+  // Always show stats, even if there's an error (will show zeros from fallback)
   const stats = data || { orders: 0, products: 0, customers: 0, revenue: 0 };
 
   return (

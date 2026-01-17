@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import useSWR from "swr";
 import { getOrder, upOrder } from "@/services/ordersServices";
 import { getDrivers } from "@/services/driversServices";
+import { getOffer } from "@/services/offersServices";
 import {
   ChevronLeft,
   Package,
@@ -22,6 +23,7 @@ import {
   Copy,
   Check,
   ChevronDown,
+  Printer,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -40,6 +42,11 @@ export default function OrderDetailsPage() {
   const { data: drivers, isLoading: driversLoading } = useSWR(
     "drivers",
     getDrivers,
+  );
+
+  const { data: offerData, isLoading: offerLoading } = useSWR(
+    order?.isOffer && order?.offerId ? `offer-${order.offerId}` : null,
+    () => getOffer(order?.offerId || ""),
   );
 
   const handleCopy = (text: string, type: "id" | "ref") => {
@@ -137,6 +144,7 @@ export default function OrderDetailsPage() {
   return (
     <div className="min-h-screen bg-transparent pb-32">
       {/* Header */}
+      {/* Header */}
       <header className="bg-card border-b border-border sticky top-0 z-100">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-2.5">
           <div className="flex items-center gap-4">
@@ -149,30 +157,39 @@ export default function OrderDetailsPage() {
             <div className="flex-1">
               <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase tracking-[0.2em]">
                 <Hash size={10} />
-                الطلب {order.id.slice(-8).toUpperCase()}
+                الطلب {order?.id?.slice(-8).toUpperCase()}
                 <button
-                  onClick={() => handleCopy(order.id, "id")}
+                  onClick={() => handleCopy(order?.id || "", "id")}
                   className="p-1 hover:bg-primary/10 rounded transition-colors"
                 >
                   {copiedId ? (
-                    <Check size={10} className="text-success" />
+                    <Check size={14} className="text-success" />
                   ) : (
-                    <Copy size={10} className="text-muted-foreground" />
+                    <Copy size={14} className="text-muted-foreground" />
                   )}
                 </button>
               </div>
-              <h1 className="text-xl font-black text-foreground uppercase tracking-tight leading-tight">
+              <h1 className="text-xl md:text-3xl font-black text-foreground uppercase tracking-tight leading-tight pt-1">
                 تفاصيل <span className="text-primary">الطلب</span>
               </h1>
             </div>
             <div
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded ${currentStatus.bg} ${currentStatus.color} border ${currentStatus.border}`}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded ${currentStatus?.bg} ${currentStatus?.color} border ${currentStatus?.border}`}
             >
-              <StatusIcon size={14} />
-              <span className="text-[10px] font-black uppercase tracking-widest">
-                {currentStatus.label}
+              <StatusIcon size={16} />
+              <span className="text-xs font-black uppercase tracking-widest pt-0.5">
+                {currentStatus?.label}
               </span>
             </div>
+            <button
+              onClick={() => window.print()}
+              className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-muted text-muted-foreground hover:text-foreground rounded border border-border transition-colors print:hidden"
+            >
+              <Printer size={18} />
+              <span className="text-xs font-black uppercase tracking-widest pt-1">
+                طباعة
+              </span>
+            </button>
           </div>
         </div>
       </header>
@@ -186,42 +203,103 @@ export default function OrderDetailsPage() {
               <div className="px-3 py-1.5 border-b border-border flex items-center justify-between bg-muted/10">
                 <div className="flex items-center gap-2">
                   <ShoppingBag size={16} className="text-primary" />
-                  <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest">
+                  <h2 className="text-xs font-black text-foreground uppercase tracking-widest pt-0.5">
                     محتويات الطلب
                   </h2>
                 </div>
-                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest px-3 py-1 bg-muted rounded">
+                <span className="text-xs font-black text-muted-foreground uppercase tracking-widest px-3 py-1 bg-muted rounded pt-1.5">
                   {order.productsList.length} منتجات
                 </span>
               </div>
 
               <div className="divide-y divide-border/50">
-                {order.productsList.map((product, idx) => (
-                  <div
-                    key={idx}
-                    className="px-4 py-2.5 hover:bg-muted/10 transition-colors"
-                  >
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="min-w-0">
-                        <h4 className="text-sm font-black text-foreground uppercase truncate">
-                          {product.p_name}
-                        </h4>
-                        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
-                          {product.p_cat}
-                        </p>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <p className="text-sm font-black text-foreground">
-                          {Number(product.p_cost).toLocaleString()}{" "}
-                          <span className="text-[10px] text-primary">ج.س</span>
-                        </p>
-                        <p className="text-[9px] text-muted-foreground font-black uppercase tracking-tighter">
-                          QTY: {product.p_qu || 1}
-                        </p>
+                {order.isOffer ? (
+                  <>
+                    {/* Offer Header Info */}
+                    <div className="p-4 bg-primary/5 border-b border-primary/10 flex items-center gap-4">
+                      {order.offerImage && (
+                        <img
+                          src={order.offerImage}
+                          alt="Offer"
+                          className="w-16 h-16 rounded-lg object-cover border border-primary/20"
+                        />
+                      )}
+                      <div>
+                        <h3 className="text-xl font-black text-foreground uppercase">
+                          {order.offerTitle}
+                        </h3>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="px-2 py-0.5 rounded text-xs font-black uppercase bg-primary text-primary-foreground">
+                            عرض خاص
+                          </span>
+                          {offerLoading && (
+                            <span className="text-xs text-muted-foreground animate-pulse">
+                              جاري تحميل المحتويات...
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+
+                    {/* Constituents */}
+                    {offerData?.products?.map((product, idx) => (
+                      <div
+                        key={idx}
+                        className="px-4 py-3 hover:bg-muted/10 transition-colors"
+                      >
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="min-w-0">
+                            <h4 className="text-base font-black text-foreground uppercase truncate flex items-center gap-2">
+                              {product.p_name}
+                              <span className="px-1.5 py-0.5 rounded bg-muted text-[10px] text-muted-foreground uppercase tracking-widest border border-border">
+                                ضمن العرض
+                              </span>
+                            </h4>
+                            <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">
+                              {product.p_cat}
+                            </p>
+                          </div>
+                          <div className="text-right shrink-0">
+                            {/* Hide price for constituents as it's part of offer */}
+                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">
+                              Included
+                            </p>
+                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">
+                              QTY: {product.p_qu || 1}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  order.productsList.map((product, idx) => (
+                    <div
+                      key={idx}
+                      className="px-4 py-3 hover:bg-muted/10 transition-colors"
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="min-w-0">
+                          <h4 className="text-base font-black text-foreground uppercase truncate">
+                            {product.p_name}
+                          </h4>
+                          <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">
+                            {product.p_cat}
+                          </p>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <p className="text-base font-black text-foreground">
+                            {Number(product.p_cost).toLocaleString()}{" "}
+                            <span className="text-xs text-primary">ج.س</span>
+                          </p>
+                          <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">
+                            QTY: {product.p_qu || 1}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
 
               <div className="px-3 py-2 bg-muted/20 border-t border-border">
@@ -239,46 +317,46 @@ export default function OrderDetailsPage() {
 
             {/* Client Data & Transaction Info - Now Uncollapsible */}
             <section className="bg-card rounded border border-border overflow-hidden shadow-sm">
-              <div className="px-3 py-1.5 border-b border-border bg-muted/10">
+              <div className="px-3 py-3 border-b border-border bg-muted/10">
                 <div className="flex items-center gap-2">
                   <User size={16} className="text-foreground" />
-                  <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest">
+                  <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest pt-0.5">
                     بيانات العميل والمعادلة
                   </h2>
                 </div>
               </div>
 
-              <div className="p-2 space-y-2">
+              <div className="p-5 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <div className="flex items-center justify-between py-1.5 px-2 bg-muted/30 rounded border border-border">
-                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
+                  <div className="flex items-center justify-between py-2 px-3 bg-muted/30 rounded border border-border">
+                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
                       الاسم الكامل
                     </span>
-                    <span className="text-[11px] font-black text-foreground uppercase truncate ml-2">
+                    <span className="text-xs font-black text-foreground uppercase truncate ml-2">
                       {order.customer_name || "N/A"}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between py-1.5 px-2 bg-muted/30 rounded border border-border">
-                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
+                  <div className="flex items-center justify-between py-2 px-3 bg-muted/30 rounded border border-border">
+                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
                       رقم التواصل
                     </span>
-                    <span className="text-[11px] font-black text-foreground ml-2">
+                    <span className="text-xs font-black text-foreground ml-2">
                       {order.shippingInfo?.phone || "N/A"}
                     </span>
                   </div>
                 </div>
 
                 {order.shippingInfo && (
-                  <div className="p-2 bg-primary/5 border border-primary/10 rounded flex gap-2.5">
+                  <div className="p-3 bg-primary/5 border border-primary/10 rounded flex gap-2.5">
                     <MapPin
-                      size={14}
+                      size={16}
                       className="text-primary mt-0.5 shrink-0"
                     />
                     <div>
-                      <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-0.5">
+                      <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-0.5">
                         عنوان التوصيل
                       </p>
-                      <p className="text-[11px] font-bold text-foreground leading-tight">
+                      <p className="text-xs font-bold text-foreground leading-tight">
                         {order.shippingInfo.address}, {order.shippingInfo.city}
                       </p>
                     </div>
@@ -296,11 +374,11 @@ export default function OrderDetailsPage() {
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-1.5 px-2 bg-card rounded border border-border relative group">
-                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
+                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
                       المرجع
                     </span>
                     <div className="flex items-center gap-1.5 ml-2 min-w-0">
-                      <span className="text-[11px] font-mono font-bold text-foreground truncate">
+                      <span className="text-xs font-mono font-bold text-foreground truncate">
                         {order.transactionReference || "N/A"}
                       </span>
                       {order.transactionReference && (
@@ -331,8 +409,8 @@ export default function OrderDetailsPage() {
           {/* Sidebar */}
           <div className="space-y-4">
             <section className="bg-card rounded border border-border overflow-hidden shadow-sm">
-              <div className="px-3 py-1.5 border-b border-border bg-muted/10">
-                <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest">
+              <div className="px-3 py-3 border-b border-border bg-muted/10">
+                <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest pt-0.5">
                   حالة الطلب
                 </h2>
               </div>
@@ -364,11 +442,11 @@ export default function OrderDetailsPage() {
 
             <section className="bg-card rounded border border-border overflow-hidden shadow-sm">
               <div className="px-4 py-3 border-b border-border bg-muted/10">
-                <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest">
+                <h2 className="text-xs font-black text-foreground uppercase tracking-widest pt-0.5">
                   اللوجستيات والعمليات
                 </h2>
               </div>
-              <div className="p-3 space-y-3">
+              <div className="p-5 space-y-4">
                 {assignedDriver && (
                   <div className="p-2.5 bg-success/5 rounded border border-success/10">
                     <div className="flex items-center gap-2 mb-2.5">
@@ -379,7 +457,7 @@ export default function OrderDetailsPage() {
                         <p className="text-[11px] font-black text-foreground uppercase truncate">
                           {assignedDriver.name}
                         </p>
-                        <p className="text-[9px] text-success font-bold uppercase tracking-tighter">
+                        <p className="text-[11px] text-success font-bold uppercase tracking-tighter">
                           {assignedDriver.vehicle}
                         </p>
                       </div>
@@ -387,7 +465,7 @@ export default function OrderDetailsPage() {
                     <div className="grid grid-cols-2 gap-1.5">
                       <a
                         href={`tel:${assignedDriver.phone}`}
-                        className="flex items-center justify-center gap-1.5 py-2 bg-card rounded text-[9px] font-black uppercase text-foreground border border-border hover:bg-muted transition-colors"
+                        className="flex items-center justify-center gap-1.5 py-2 bg-card rounded text-[11px] font-black uppercase text-foreground border border-border hover:bg-muted transition-colors"
                       >
                         <Phone size={12} /> اتصال
                       </a>

@@ -8,12 +8,12 @@ import {
   Clock,
   DollarSign,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 export default function ShippedOrdersList({ orders }: { orders: any[] }) {
   const [sortBy, setSortBy] = useState<"date" | "price">("date");
 
-  // Memoized sorting logic handling ISO Date Strings
+  // Memoized sorting logic handling milliseconds timestamps
   const sortedOrders = useMemo(() => {
     const list = [...orders];
 
@@ -21,11 +21,10 @@ export default function ShippedOrdersList({ orders }: { orders: any[] }) {
       return list.sort((a, b) => b.totalAmount - a.totalAmount);
     }
 
-    // Default: Sort by ISO Date String (Newest first)
+    // Default: Sort by Date (Newest first)
     return list.sort((a, b) => {
-      // deliveredAt: "2025-12-31T22:20:07.756Z"
-      const dateA = a.deliveredAt ? new Date(a.deliveredAt).getTime() : 0;
-      const dateB = b.deliveredAt ? new Date(b.deliveredAt).getTime() : 0;
+      const dateA = a.deliveredAt || 0;
+      const dateB = b.deliveredAt || 0;
       return dateB - dateA;
     });
   }, [orders, sortBy]);
@@ -100,12 +99,8 @@ export default function ShippedOrdersList({ orders }: { orders: any[] }) {
               <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-black justify-end uppercase tracking-widest mt-1">
                 <Calendar size={12} />
                 <span>
-                  {/* Formats the ISO string to a readable date */}
-                  {new Date(order.deliveredAt).toLocaleDateString("ar-EG", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}
+                  {/* Formats the milliseconds timestamp to a readable date */}
+                  {formatDate(order.deliveredAt)}
                 </span>
               </div>
             </div>
