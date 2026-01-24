@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Plus, Tag, Sparkles, ShieldCheck, Trash2, Edit } from "lucide-react";
 import { getOffers } from "@/services/offersServices";
 import Image from "next/image";
-
+export const dynamic = "force-dynamic";
 export default async function OffersTable() {
   const offers = await getOffers();
 
