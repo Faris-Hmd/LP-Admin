@@ -153,14 +153,14 @@ export default function ChartPieInteractive() {
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-xl font-black"
+                          className="fill-foreground text-2xl font-black"
                         >
                           {data[activeIndex]?.quantity.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 14}
-                          className="fill-muted-foreground text-[8px] font-black uppercase tracking-[0.2em]"
+                          y={(viewBox.cy || 0) + 16}
+                          className="fill-muted-foreground text-[10px] font-black uppercase tracking-[0.2em]"
                         >
                           وحدة
                         </tspan>
@@ -176,11 +176,11 @@ export default function ChartPieInteractive() {
 
       {/* Controls Column */}
       <div className="flex flex-col justify-center gap-2">
-        <label className="text-[9px] font-black uppercase text-muted-foreground tracking-widest">
+        <label className="text-xs font-black uppercase text-muted-foreground tracking-widest">
           الفئة المختارة
         </label>
         <Select value={activeCategory} onValueChange={setActiveCategory}>
-          <SelectTrigger className="h-9 w-full text-[10px] font-bold rounded-lg bg-card border-border text-foreground shadow-sm focus:ring-2 focus:ring-primary/10 outline-none">
+          <SelectTrigger className="h-10 w-full text-sm font-bold rounded-lg bg-card border-border text-foreground shadow-sm focus:ring-2 focus:ring-primary/10 outline-none">
             <SelectValue placeholder="اختر الفئة" />
           </SelectTrigger>
           <SelectContent className="rounded-lg border-border max-h-[220px]">
@@ -190,7 +190,7 @@ export default function ChartPieInteractive() {
                 <SelectItem
                   key={item.category}
                   value={item.category}
-                  className="text-[10px] font-bold py-2 cursor-pointer"
+                  className="text-sm font-bold py-2 cursor-pointer"
                 >
                   <div className="flex items-center gap-2 w-full">
                     <span
@@ -209,7 +209,7 @@ export default function ChartPieInteractive() {
         </Select>
 
         <div className="mt-2 p-2 rounded-lg bg-muted/10 border border-border/50">
-          <div className="flex items-center justify-between text-[10px]">
+          <div className="flex items-center justify-between text-xs">
             <span className="font-bold text-muted-foreground">النسبة:</span>
             <span className="font-black text-primary">
               {data.length > 0 && activeIndex >= 0

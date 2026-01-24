@@ -1,7 +1,16 @@
 "use server";
 
 import { db } from "@/lib/firebase";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  collection,
+  getDocs,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { revalidatePath } from "next/cache";
 import { UserData } from "@/types/userTypes";
 
@@ -52,5 +61,27 @@ export async function upUser(
   } catch (error) {
     console.error("Error updating user data:", error);
     return { success: false, error: "Failed to update profile" };
+  }
+}
+
+/**
+ * GET: Returns all users
+ */
+
+export async function getUsers(): Promise<UserData[]> {
+  try {
+    const q = query(collection(db, COL));
+    const snap = await getDocs(q);
+
+    return snap.docs.map(
+      (doc) =>
+        ({
+          ...doc.data(),
+          email: doc.id,
+        }) as UserData,
+    );
+  } catch (error) {
+    // console.error("Error fetching users:", error);
+    return [];
   }
 }

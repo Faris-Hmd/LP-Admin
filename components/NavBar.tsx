@@ -1,7 +1,15 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { BarChart3, Users, ClipboardList, Tag, Package } from "lucide-react";
+import {
+  BarChart3,
+  Users,
+  ClipboardList,
+  Tag,
+  Package,
+  Truck,
+} from "lucide-react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { ModeToggle } from "@/components/ModeToggle";
 import Link from "next/link";
@@ -41,9 +49,16 @@ const ADMIN_LINKS = [
     bg: "bg-primary/10",
   },
   {
+    title: "المستخدمين",
+    href: "/users",
+    icon: Users,
+    color: "text-primary",
+    bg: "bg-primary/10",
+  },
+  {
     title: "السائقين",
     href: "/drivers",
-    icon: Users,
+    icon: Truck,
     color: "text-primary",
     bg: "bg-primary/10",
   },
