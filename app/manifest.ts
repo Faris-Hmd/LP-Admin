@@ -10,7 +10,7 @@ export default function manifest(): MetadataRoute.Manifest {
     // Matches your Slate-950 dark theme background
     background_color: "#020617",
     // Matches your Blue-600 primary brand color
-    theme_color: "#fa6363",
+    theme_color: "#800020",
     icons: [
       {
         src: "/logo.png", // Ensure this path is correct or use /icon.png
