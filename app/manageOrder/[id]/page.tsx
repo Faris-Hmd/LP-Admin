@@ -262,10 +262,7 @@ export default function OrderDetailsPage() {
                           <div className="text-right shrink-0">
                             {/* Hide price for constituents as it's part of offer */}
                             <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">
-                              Included
-                            </p>
-                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">
-                              QTY: {product.p_qu || 1}
+                              الكمية: {product.p_qu || 1}
                             </p>
                           </div>
                         </div>
@@ -293,7 +290,7 @@ export default function OrderDetailsPage() {
                             <span className="text-xs text-primary">ج.س</span>
                           </p>
                           <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">
-                            QTY: {product.p_qu || 1}
+                            الكمية: {product.p_qu || 1}
                           </p>
                         </div>
                       </div>

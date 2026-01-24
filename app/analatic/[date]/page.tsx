@@ -5,6 +5,7 @@ import { DailySalesData } from "@/types/productsTypes";
 import { getOrdersWh } from "@/services/ordersServices";
 import { ShieldCheck } from "lucide-react";
 import DateSelector from "@/components/DataPicker";
+import OffersPerformance from "@/components/analytics/OffersPerformance";
 
 export const revalidate = 60;
 
@@ -138,11 +139,14 @@ export default async function OverviewPage({ params }: PageProps) {
                 كلي
               </div>
             </div>
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col  items-center justify-center">
               <ChartPieInteractive />
             </div>
           </div>
         </div>
+
+        {/* Offers Performance Section */}
+        <OffersPerformance />
       </main>
 
       {/* Decorative System Footer */}

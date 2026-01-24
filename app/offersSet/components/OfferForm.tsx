@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ProductType } from "@/types/productsTypes";
 import { Offer } from "@/types/offerTypes";
 import {
@@ -76,14 +76,28 @@ export default function OfferForm({
     file?: File;
   } | null>(initialData?.image ? { url: initialData.image } : null);
 
-  // Auto-calculate price when products or quantities change
-  useEffect(() => {
-    const total = selectedProducts.reduce(
-      (sum, p) => sum + Number(p.p_cost || 0) * (productQuantities[p.id] || 1),
+  // Calculate total cost of selected products with quantities
+  const totalCost = selectedProducts.reduce(
+    (sum, p) => sum + Number(p.p_cost || 0) * (productQuantities[p.id] || 1),
+    0,
+  );
+
+  const savings = totalCost - price;
+
+  // Auto-calculate price only when adding products if it matches the total (fresh state)
+  // or we could optionaly keep it. The user requirement is to "adjust" it.
+  // Existing behavior: resets price to total cost on change.
+  // We will keep this behavior for now as it ensures the price reflects the content,
+  // but now the user can easily re-apply savings using the new field.
+  const calculateTotal = (
+    products: ProductType[],
+    quantities: Record<string, number>,
+  ) => {
+    return products.reduce(
+      (sum, p) => sum + Number(p.p_cost || 0) * (quantities[p.id] || 1),
       0,
     );
-    setPrice(total);
-  }, [selectedProducts, productQuantities]);
+  };
 
   const filteredProducts = availableProducts.filter((p) => {
     const nameMatch = p.p_name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -96,36 +110,41 @@ export default function OfferForm({
   });
 
   const toggleProduct = (product: ProductType) => {
-    setSelectedProducts((prev) => {
-      const isSelected = prev.some((p) => p.id === product.id);
-      if (isSelected) {
-        // Remove product and its quantity
-        setProductQuantities((q) => {
-          const newQ = { ...q };
-          delete newQ[product.id];
-          return newQ;
-        });
-        return prev.filter((p) => p.id !== product.id);
-      } else {
-        // Add product with default quantity of 1
-        setProductQuantities((q) => ({ ...q, [product.id]: 1 }));
-        return [...prev, product];
-      }
-    });
+    let newProducts = [...selectedProducts];
+    let newQuantities = { ...productQuantities };
+
+    const isSelected = newProducts.some((p) => p.id === product.id);
+
+    if (isSelected) {
+      // Remove product
+      newProducts = newProducts.filter((p) => p.id !== product.id);
+      delete newQuantities[product.id];
+    } else {
+      // Add product
+      newProducts.push(product);
+      newQuantities[product.id] = 1;
+    }
+
+    setSelectedProducts(newProducts);
+    setProductQuantities(newQuantities);
+    setPrice(calculateTotal(newProducts, newQuantities));
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
     if (quantity < 1) return;
-    setProductQuantities((prev) => ({ ...prev, [productId]: quantity }));
+    const newQuantities = { ...productQuantities, [productId]: quantity };
+    setProductQuantities(newQuantities);
+    setPrice(calculateTotal(selectedProducts, newQuantities));
   };
 
   const removeProduct = (productId: string) => {
-    setSelectedProducts((prev) => prev.filter((p) => p.id !== productId));
-    setProductQuantities((q) => {
-      const newQ = { ...q };
-      delete newQ[productId];
-      return newQ;
-    });
+    const newProducts = selectedProducts.filter((p) => p.id !== productId);
+    const newQuantities = { ...productQuantities };
+    delete newQuantities[productId];
+
+    setSelectedProducts(newProducts);
+    setProductQuantities(newQuantities);
+    setPrice(calculateTotal(newProducts, newQuantities));
   };
 
   async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -339,27 +358,63 @@ export default function OfferForm({
                     className="w-full px-3 py-2.5 bg-muted/20 border border-border rounded-xl text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20 transition-all shadow-inner"
                   />
                 </div>
+              </div>
+            </div>
+
+            {/* Price & Savings Calculation Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-border pt-4 mt-4">
+              <div className="relative">
+                <label className="text-small font-black uppercase text-muted-foreground tracking-wider mb-1 block">
+                  القيمة الإجمالية
+                  <span className="text-primary/60 mr-1">(الأصلية)</span>
+                </label>
+                <div className="w-full px-3 py-2.5 bg-muted/10 border border-border rounded-xl text-sm font-black text-muted-foreground cursor-not-allowed shadow-inner flex items-center justify-between">
+                  <span>{totalCost.toLocaleString()}</span>
+                  <span className="text-[10px] text-muted-foreground/60">
+                    ج.س
+                  </span>
+                </div>
+              </div>
+
+              <div className="relative">
+                <label className="text-small font-black uppercase text-muted-foreground tracking-wider mb-1 block">
+                  قيمة التوفير
+                  <span className="text-green-600 mr-1 text-[10px]">(خصم)</span>
+                </label>
                 <div className="relative">
-                  <label className="text-small font-black uppercase text-muted-foreground tracking-wider mb-1 block">
-                    سعر العرض
-                    <span className="text-primary/60 mr-1">
-                      (محسوب تلقائياً)
-                    </span>
-                  </label>
-                  <div className="relative">
-                    <input
-                      name="price"
-                      type="number"
-                      value={price}
-                      onChange={(e) => setPrice(Number(e.target.value))}
-                      required
-                      className="w-full px-3 py-2.5 bg-muted/20 border border-border rounded-xl text-sm font-black outline-none focus:ring-2 focus:ring-primary/20 pr-8 shadow-inner"
-                    />
-                    <Calculator
-                      size={14}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-primary/40"
-                    />
-                  </div>
+                  <input
+                    type="number"
+                    value={savings}
+                    onChange={(e) => {
+                      const newSavings = Number(e.target.value);
+                      setPrice(totalCost - newSavings);
+                    }}
+                    className="w-full px-3 py-2.5 bg-green-500/5 border border-green-500/20 rounded-xl text-sm font-black outline-none focus:ring-2 focus:ring-green-500/20 pr-8 shadow-inner text-green-700"
+                  />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-green-600 font-bold text-xs">
+                    -
+                  </span>
+                </div>
+              </div>
+
+              <div className="relative">
+                <label className="text-small font-black uppercase text-muted-foreground tracking-wider mb-1 block">
+                  سعر العرض
+                  <span className="text-primary/60 mr-1">(النهائي)</span>
+                </label>
+                <div className="relative">
+                  <input
+                    name="price"
+                    type="number"
+                    value={price}
+                    onChange={(e) => setPrice(Number(e.target.value))}
+                    required
+                    className="w-full px-3 py-2.5 bg-muted/20 border border-border rounded-xl text-sm font-black outline-none focus:ring-2 focus:ring-primary/20 pr-8 shadow-inner"
+                  />
+                  <Calculator
+                    size={14}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-primary/40"
+                  />
                 </div>
               </div>
             </div>

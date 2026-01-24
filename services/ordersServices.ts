@@ -11,20 +11,53 @@ import {
   where,
   WhereFilterOp,
   QueryConstraint,
-  orderBy,
-  Timestamp,
 } from "firebase/firestore";
 import { ordersRef } from "@/lib/firebase";
 import { revalidatePath, unstable_cache } from "next/cache";
 import { OrderData } from "@/types/productsTypes";
+import { log } from "console";
 
 const toMillis = (val: any): number => {
   if (!val) return 0;
   if (typeof val === "number") return val;
-  if (val.toMillis) return val.toMillis();
-  if (val.toDate) return val.toDate().getTime();
-  if (val instanceof Date) return val.getTime();
+  // Firestore Timestamp
+  if (val.toMillis && typeof val.toMillis === "function") return val.toMillis();
+  // JS Date
+  if (val.getTime && typeof val.getTime === "function") return val.getTime();
+  // Check for { seconds, nanoseconds } object (serialized timestamp)
+  if (typeof val.seconds === "number" && typeof val.nanoseconds === "number") {
+    return val.seconds * 1000 + val.nanoseconds / 1000000;
+  }
+  // Fallback to string parsing
   return new Date(val).getTime() || 0;
+};
+
+const sanitizeOrder = (docId: string, data: any): OrderData => {
+  // Deep clean to ensure all Firestore types are converted
+  const cleanData = { ...data };
+
+  // 1. Convert Top-level Dates
+  cleanData.createdAt = toMillis(cleanData.createdAt);
+  if (cleanData.deliveredAt) {
+    cleanData.deliveredAt = toMillis(cleanData.deliveredAt);
+  }
+
+  // 2. Convert Dates in Products List
+  if (Array.isArray(cleanData.productsList)) {
+    cleanData.productsList = cleanData.productsList.map((p: any) => {
+      const cleanProduct = { ...p };
+      if (cleanProduct.createdAt) {
+        cleanProduct.createdAt = toMillis(cleanProduct.createdAt);
+      }
+      return cleanProduct;
+    });
+  }
+
+  // 3. Ensure ID is attached
+  cleanData.id = docId;
+
+  // 4. Final Safety: JSON cycle to strip any hidden non-serializable prototypes
+  return JSON.parse(JSON.stringify(cleanData)) as OrderData;
 };
 
 /**
@@ -34,15 +67,7 @@ export async function getAllOrders(): Promise<OrderData[]> {
   // console.log("get all orders from server");
   try {
     const snap = await getDocs(ordersRef);
-    return snap.docs.map((d) => {
-      const data = d.data();
-      return {
-        ...data,
-        id: d.id,
-        createdAt: toMillis(data.createdAt),
-        deliveredAt: toMillis(data.deliveredAt),
-      };
-    }) as OrderData[];
+    return snap.docs.map((d) => sanitizeOrder(d.id, d.data()));
   } catch (error) {
     console.error("Error fetching all orders:", error);
     return [];
@@ -63,15 +88,7 @@ export const getOrdersWh = async (filters: OrderFilter[]) => {
         const q = query(ordersRef, ...constraints);
         const snap = await getDocs(q);
 
-        return snap.docs.map((d) => {
-          const data = d.data();
-          return {
-            ...data,
-            id: d.id,
-            createdAt: toMillis(data.createdAt),
-            deliveredAt: toMillis(data.deliveredAt),
-          };
-        }) as OrderData[];
+        return snap.docs.map((d) => sanitizeOrder(d.id, d.data()));
       } catch (error) {
         console.error("Firestore Query Error:", error);
         return [];
@@ -91,16 +108,8 @@ export const getOrdersWh = async (filters: OrderFilter[]) => {
 export async function getOrder(id: string): Promise<OrderData | null> {
   const snap = await getDoc(doc(ordersRef, id));
   if (!snap.exists()) return null;
-  if (!snap.exists()) return null;
-  const data = snap.data();
-  // console.log("get order from server ", id);
-
-  return {
-    ...data,
-    id: snap.id,
-    createdAt: toMillis(data.createdAt),
-    deliveredAt: toMillis(data.deliveredAt),
-  } as OrderData;
+  console.log("get order from server", snap.data());
+  return sanitizeOrder(snap.id, snap.data());
 }
 
 /**
@@ -146,6 +155,51 @@ export async function delOrder(id: string): Promise<void> {
 /**
  * QUERY: Returns an array of typed OrderData
  */
+/**
+ * ANALYTICS: Get aggregated stats for offers
+ */
+export async function getOfferStats() {
+  try {
+    // Query only delivered offer orders for accurate revenue stats
+    // We can also include all orders if we just want "popularity" regardless of delivery status
+    // For now, let's fetch ALL orders that are offers to check popularity
+    const q = query(ordersRef, where("isOffer", "==", true));
+    const snap = await getDocs(q);
+
+    const statsMap: Record<
+      string,
+      { title: string; count: number; revenue: number }
+    > = {};
+
+    snap.forEach((doc) => {
+      const data = doc.data() as OrderData;
+      const offerId = data.offerId || "unknown";
+      const offerTitle = data.offerTitle || "عرض غير معروف";
+      const amount = Number(data.totalAmount) || 0;
+
+      if (!statsMap[offerId]) {
+        statsMap[offerId] = { title: offerTitle, count: 0, revenue: 0 };
+      }
+
+      statsMap[offerId].count += 1;
+      statsMap[offerId].revenue += amount;
+    });
+
+    // Convert to array and sort by count desc
+    return Object.entries(statsMap)
+      .map(([id, stats]) => ({
+        offerId: id,
+        offerTitle: stats.title,
+        count: stats.count,
+        revenue: stats.revenue,
+      }))
+      .sort((a, b) => b.count - a.count);
+  } catch (error) {
+    console.error("Error fetching offer stats:", error);
+    return [];
+  }
+}
+
 type OrderFilter = {
   field: keyof OrderData;
   op: WhereFilterOp;

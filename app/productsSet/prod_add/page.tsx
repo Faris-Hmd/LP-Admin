@@ -91,6 +91,7 @@ export default function ProductImgUpload() {
           p_cost: Number(formData.get("p_cost")),
           p_details: formData.get("p_details") as string,
           p_imgs: productImgsUrl,
+          createdAt: Date.now(),
         });
 
         imgs.forEach((img) => URL.revokeObjectURL(img.url));
