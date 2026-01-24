@@ -13,7 +13,7 @@ import {
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function SectionCards() {
-  const { data, error, isLoading } = useSWR("/api/stats", fetcher, {
+  const { data, error, isLoading } = useSWR("/api/stats/section", fetcher, {
     refreshInterval: 60000, // Refresh every 60 seconds
     revalidateOnFocus: false,
     revalidateOnReconnect: true,

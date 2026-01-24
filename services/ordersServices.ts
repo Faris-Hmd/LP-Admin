@@ -163,7 +163,11 @@ export async function getOfferStats() {
     // Query only delivered offer orders for accurate revenue stats
     // We can also include all orders if we just want "popularity" regardless of delivery status
     // For now, let's fetch ALL orders that are offers to check popularity
-    const q = query(ordersRef, where("isOffer", "==", true));
+    const q = query(
+      ordersRef,
+      where("isOffer", "==", true),
+      where("status", "==", "Delivered"),
+    );
     const snap = await getDocs(q);
 
     const statsMap: Record<

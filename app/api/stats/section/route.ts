@@ -4,13 +4,14 @@ import {
   getCountFromServer,
   getAggregateFromServer,
   sum,
+  query,
+  where,
 } from "firebase/firestore";
 
 export const revalidate = 60; // Cache for 60 seconds
 
 export async function GET() {
   try {
-    // Fetch counts with individual error handling
     const stats = {
       orders: 0,
       products: 0,
@@ -18,15 +19,18 @@ export async function GET() {
       revenue: 0,
     };
 
-    // Try to get orders count
+    // Filter only Delivered orders for accuracy
+    const deliveredQuery = query(ordersRef, where("status", "==", "Delivered"));
+
+    // 1. Orders Count (Delivered)
     try {
-      const ordersSnap = await getCountFromServer(ordersRef);
+      const ordersSnap = await getCountFromServer(deliveredQuery);
       stats.orders = ordersSnap.data().count;
     } catch (err) {
       console.error("Error fetching orders count:", err);
     }
 
-    // Try to get products count
+    // 2. Products Count
     try {
       const productsSnap = await getCountFromServer(productsRef);
       stats.products = productsSnap.data().count;
@@ -34,7 +38,7 @@ export async function GET() {
       console.error("Error fetching products count:", err);
     }
 
-    // Try to get customers count
+    // 3. Customers Count
     try {
       const usersSnap = await getCountFromServer(usersRef);
       stats.customers = usersSnap.data().count;
@@ -42,9 +46,9 @@ export async function GET() {
       console.error("Error fetching customers count:", err);
     }
 
-    // Try to get revenue sum
+    // 4. Revenue Sum (Delivered)
     try {
-      const revenueSnap = await getAggregateFromServer(ordersRef, {
+      const revenueSnap = await getAggregateFromServer(deliveredQuery, {
         totalRevenue: sum("totalAmount"),
       });
       stats.revenue = revenueSnap.data().totalRevenue || 0;
@@ -58,21 +62,10 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("Stats API Error:", error);
-    // Return default values instead of error
+    console.error("Section Stats API Error:", error);
     return NextResponse.json(
-      {
-        orders: 0,
-        products: 0,
-        customers: 0,
-        revenue: 0,
-      },
-      {
-        status: 200, // Return 200 with zeros instead of 500
-        headers: {
-          "Cache-Control": "public, s-maxage=10, stale-while-revalidate=30",
-        },
-      },
+      { orders: 0, products: 0, customers: 0, revenue: 0 },
+      { status: 200 },
     );
   }
 }

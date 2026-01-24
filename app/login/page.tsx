@@ -12,7 +12,7 @@ export default function AdminLoginPage() {
   // Redirect to dated analytics (admin default) if already authenticated
   useEffect(() => {
     if (status === "authenticated") {
-      router.push("/analatic/2026-01" as any);
+      router.push("/analatic" as any);
     }
   }, [status, router]);
 

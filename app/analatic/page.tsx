@@ -1,17 +1,8 @@
 import Chart from "./components/chart";
 import ChartPieInteractive from "./components/pie";
 import SectionCards from "./components/section";
-import { DailySalesData } from "@/types/productsTypes";
-import { getOrdersWh } from "@/services/ordersServices";
 import { ShieldCheck } from "lucide-react";
-import DateSelector from "@/components/DataPicker";
 import OffersPerformance from "@/components/analytics/OffersPerformance";
-
-export const revalidate = 60;
-
-export async function generateStaticParams() {
-  return [{ date: "2025-12" }, { date: "2025-11" }, { date: "2026-01" }];
-}
 
 interface PageProps {
   params: Promise<{ date: string }>;
@@ -19,72 +10,10 @@ interface PageProps {
 
 export default async function OverviewPage({ params }: PageProps) {
   const { date } = await params;
-  const normalizedDate = date.replace("/", "-");
-  const [year, month] = normalizedDate.split("-").map(Number);
-
-  const startDate = new Date(year, month - 1, 1);
-  const endDate = new Date(year, month, 0, 23, 59, 59);
-
-  // Convert to milliseconds for comparison
-  const startMillis = startDate.getTime();
-  const endMillis = endDate.getTime();
-
-  console.log("Date range (millis):", startMillis, endMillis);
-
-  // 1. Fetch Global Counts
-
-  // 3. Typed Fetch for Sales Data
-  async function getSalesData(): Promise<DailySalesData[]> {
-    const deliveredOrders = await getOrdersWh([
-      { field: "status", op: "==", val: "Delivered" },
-      { field: "deliveredAt", op: ">=", val: startMillis },
-      { field: "deliveredAt", op: "<=", val: endMillis },
-    ]);
-
-    const statsMap: Record<number, { sales: number; orders: number }> = {};
-    deliveredOrders.forEach((order) => {
-      let d: Date | null = null;
-      if (order.deliveredAt) {
-        // Now it's a number (millis)
-        d = new Date(order.deliveredAt);
-      }
-
-      if (!d) return;
-      const day = d.getDate();
-
-      const orderTotal = (order.productsList || []).reduce(
-        (sum: number, item) =>
-          sum + (Number(item.p_cost) * Number(item.p_qu) || 0),
-        0,
-      );
-
-      if (!statsMap[day]) {
-        statsMap[day] = { sales: 0, orders: 0 };
-      }
-
-      statsMap[day].sales += orderTotal;
-      statsMap[day].orders += 1;
-    });
-
-    const daysInMonth = new Date(year, month, 0).getDate();
-    const finalData: DailySalesData[] = [];
-
-    for (let i = 1; i <= daysInMonth; i++) {
-      finalData.push({
-        month: date,
-        day: i,
-        sales: statsMap[i]?.sales || 0,
-        orders: statsMap[i]?.orders || 0,
-      });
-    }
-    return finalData;
-  }
-
-  const [salesData] = await Promise.all([getSalesData()]);
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-500 pb-20">
-      {/* Sticky Compact Header - Consistent with Add/Update forms */}
+      {/* Sticky Compact Header */}
       <header className="sticky top-0 z-100 bg-card md:bg-card/80 md:backdrop-blur-md border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-2">
           <div className="flex justify-between items-center">
@@ -120,7 +49,7 @@ export default async function OverviewPage({ params }: PageProps) {
               </div>
             </div>
             <div className="w-full">
-              <Chart salesData={salesData} date={date} />
+              <Chart initialDate={date} />
             </div>
           </div>
 

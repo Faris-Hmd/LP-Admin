@@ -14,7 +14,6 @@ const ADMIN_NAV = [
   {
     title: "التحليلات",
     href: "/analatic",
-    defaultSlug: `/${currentMonthSlug}`,
     icon: BarChart3,
   },
   { title: "الطلبات", href: "/manageOrder", icon: ClipboardList },
@@ -39,9 +38,7 @@ export default function AdminBtmNav() {
         const isActive = pathname.startsWith(item.href);
 
         // For the Link href: use specific default slug for analytics, or just the href for others
-        const destination = item.defaultSlug
-          ? `${item.href}${item.defaultSlug}`
-          : item.href;
+        const destination = item.href;
 
         return (
           <Link

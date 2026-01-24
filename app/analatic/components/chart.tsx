@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import useSWR from "swr";
 import {
   AreaChart,
   Area,
@@ -15,7 +16,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Card, CardTitle } from "@/components/ui/card";
-import { TrendingUp, Activity } from "lucide-react";
+import { TrendingUp, Activity, Loader2 } from "lucide-react";
 import DateSelector from "@/components/DataPicker";
 
 type DaySales = {
@@ -31,13 +32,28 @@ const chartConfig = {
   orders: { label: "الطلبات", color: "#10b981" },
 };
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export default function RevenueAnalytics({
-  salesData = [],
-  date,
+  initialDate,
 }: {
-  salesData: DaySales[];
-  date: string;
+  initialDate?: string;
 }) {
+  const [selectedDate, setSelectedDate] = useState(() => {
+    if (initialDate) return initialDate;
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  });
+
+  const {
+    data: salesData = [],
+    isLoading,
+    error,
+  } = useSWR<DaySales[]>(`/api/stats/sales?date=${selectedDate}`, fetcher, {
+    revalidateOnFocus: false,
+    refreshInterval: 60 * 1000,
+  });
+
   const { totalSales, totalOrders } = useMemo(() => {
     return salesData.reduce(
       (acc, curr) => ({
@@ -49,7 +65,6 @@ export default function RevenueAnalytics({
   }, [salesData]);
 
   return (
-    /* min-w-0 is critical here to prevent flex-basis overgrowth */
     <Card className="w-full border-none shadow-none bg-transparent min-w-0 overflow-visible">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 px-2 mb-6">
         <div className="space-y-1">
@@ -77,21 +92,29 @@ export default function RevenueAnalytics({
         </div>
 
         <div className="self-end md:self-auto">
-          <DateSelector currentMonth={date} />
+          <DateSelector
+            currentMonth={selectedDate}
+            onDateChange={setSelectedDate}
+          />
         </div>
       </div>
 
-      {/* CHART WRAPPER: Fixed height and relative positioning */}
       <div className="relative w-full h-[150px] sm:h-[250px] px-0 overflow-hidden">
-        {salesData.length === 0 ? (
+        {isLoading ? (
+          <div className="absolute inset-0 flex flex-col items-center justify-center border-2 border-dashed border-border rounded-3xl">
+            <Loader2 className="animate-spin text-primary mb-2" size={24} />
+            <span className="text-[10px] font-black uppercase text-muted-foreground">
+              جاري تحميل البيانات...
+            </span>
+          </div>
+        ) : error || salesData.length === 0 ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center border-2 border-dashed border-border rounded-3xl">
             <Activity className="text-muted-foreground mb-2" />
             <span className="text-[10px] font-black uppercase text-muted-foreground">
-              بانتظار البيانات...
+              لا توجد بيانات لهذا الشهر
             </span>
           </div>
         ) : (
-          /* aspect-auto overrides the default shadcn aspect-video */
           <ChartContainer
             config={chartConfig}
             className="h-full w-full aspect-auto"
@@ -102,7 +125,6 @@ export default function RevenueAnalytics({
                 margin={{ left: 0, right: 10, top: 10, bottom: 0 }}
               >
                 <defs>
-                  {/* Revenue Gradient */}
                   <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop
                       offset="5%"
@@ -116,7 +138,6 @@ export default function RevenueAnalytics({
                     />
                   </linearGradient>
 
-                  {/* Orders Gradient - Added this */}
                   <linearGradient id="ordersGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
                     <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
@@ -153,7 +174,6 @@ export default function RevenueAnalytics({
                   }
                 />
 
-                {/* EXISTING: Revenue Area */}
                 <Area
                   type="monotone"
                   dataKey="sales"
@@ -168,14 +188,13 @@ export default function RevenueAnalytics({
                   }}
                 />
 
-                {/* Hidden Orders Area - This makes it show in the Tooltip only */}
                 <Area
                   type="monotone"
                   dataKey="orders"
                   stroke="transparent"
                   fill="transparent"
                   strokeWidth={0}
-                  activeDot={false} // Prevents a dot from appearing on the hidden line
+                  activeDot={false}
                   animationDuration={0}
                 />
               </AreaChart>

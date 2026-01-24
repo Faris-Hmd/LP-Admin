@@ -1,15 +1,26 @@
 "use client";
 
 import useSWR from "swr";
-import { getOfferStats } from "@/services/ordersServices";
 import { Loader2, TrendingUp, ShoppingBag, BadgePercent } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// SWR fetcher wrapper for server action
-const fetcher = () => getOfferStats();
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function OffersPerformance() {
-  const { data: offers, error, isLoading } = useSWR("offers-stats", fetcher);
+  const {
+    data: offers,
+    error,
+    isLoading,
+  } = useSWR("/api/stats/offers", fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateIfStale: false,
+    refreshInterval: 60 * 1000,
+    refreshWhenHidden: false,
+    refreshWhenOffline: false,
+    errorRetryCount: 3,
+    errorRetryInterval: 5 * 1000,
+  });
 
   if (isLoading) {
     return (
@@ -61,7 +72,7 @@ export default function OffersPerformance() {
 
       {/* Compact List */}
       <div className="divide-y divide-border/50">
-        {offers.map((offer, index) => (
+        {offers.map((offer: any, index: number) => (
           <div
             key={offer.offerId}
             className="flex items-center gap-3 p-3 hover:bg-muted/20 transition-colors group"

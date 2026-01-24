@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import useSWR from "swr";
 import { getOrder, upOrder } from "@/services/ordersServices";
 import { getDrivers } from "@/services/driversServices";
 import { getOffer } from "@/services/offersServices";
+import { getCategoryLabel } from "@/data/categoryMapping";
 import {
   ChevronLeft,
   Package,
@@ -34,20 +35,34 @@ export default function OrderDetailsPage() {
   const [copiedId, setCopiedId] = useState(false);
   const [copiedRef, setCopiedRef] = useState(false);
 
+  // Fetch Order
   const {
     data: order,
     isLoading: orderLoading,
     mutate: mutateOrder,
   } = useSWR(id ? `order-${id}` : null, () => getOrder(id as string));
+
+  // Fetch Drivers
   const { data: drivers, isLoading: driversLoading } = useSWR(
     "drivers",
     getDrivers,
   );
 
+  // Fetch Offer if applicable
   const { data: offerData, isLoading: offerLoading } = useSWR(
     order?.isOffer && order?.offerId ? `offer-${order.offerId}` : null,
     () => getOffer(order?.offerId || ""),
   );
+
+  // Calculate Real Total & Savings for Offers
+  const offerRealTotal = useMemo(() => {
+    if (!offerData?.products) return 0;
+    return offerData.products.reduce((acc: number, curr: any) => {
+      return acc + (Number(curr.p_cost) || 0) * (Number(curr.p_qu) || 1);
+    }, 0);
+  }, [offerData]);
+
+  const savings = Math.max(0, offerRealTotal - (order?.totalAmount || 0));
 
   const handleCopy = (text: string, type: "id" | "ref") => {
     navigator.clipboard.writeText(text);
@@ -97,7 +112,9 @@ export default function OrderDetailsPage() {
     try {
       await upOrder(id as string, { status });
       toast.success(
-        `تم تحديث الحالة إلى ${statusConfig[status as keyof typeof statusConfig].label}`,
+        `تم تحديث الحالة إلى ${
+          statusConfig[status as keyof typeof statusConfig].label
+        }`,
       );
       mutateOrder();
     } catch (error) {
@@ -143,7 +160,6 @@ export default function OrderDetailsPage() {
 
   return (
     <div className="min-h-screen bg-transparent pb-32">
-      {/* Header */}
       {/* Header */}
       <header className="bg-card border-b border-border sticky top-0 z-100">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-2.5">
@@ -207,8 +223,11 @@ export default function OrderDetailsPage() {
                     محتويات الطلب
                   </h2>
                 </div>
-                <span className="text-xs font-black text-muted-foreground uppercase tracking-widest px-3 py-1 bg-muted rounded pt-1.5">
-                  {order.productsList.length} منتجات
+                <span className="text-sm font-black text-muted-foreground uppercase tracking-widest px-3 py-1 bg-muted rounded pt-1.5">
+                  {order.isOffer
+                    ? offerData?.products?.length || 0
+                    : order.productsList.length}{" "}
+                  منتجات
                 </span>
               </div>
 
@@ -221,15 +240,15 @@ export default function OrderDetailsPage() {
                         <img
                           src={order.offerImage}
                           alt="Offer"
-                          className="w-16 h-16 rounded-lg object-cover border border-primary/20"
+                          className="w-20 h-20 rounded-lg object-cover border border-primary/20"
                         />
                       )}
                       <div>
-                        <h3 className="text-xl font-black text-foreground uppercase">
+                        <h3 className="text-2xl font-black text-foreground uppercase">
                           {order.offerTitle}
                         </h3>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="px-2 py-0.5 rounded text-xs font-black uppercase bg-primary text-primary-foreground">
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="px-2.5 py-1 rounded text-xs font-black uppercase bg-primary text-primary-foreground">
                             عرض خاص
                           </span>
                           {offerLoading && (
@@ -242,10 +261,10 @@ export default function OrderDetailsPage() {
                     </div>
 
                     {/* Constituents */}
-                    {offerData?.products?.map((product, idx) => (
+                    {offerData?.products?.map((product: any, idx: number) => (
                       <div
                         key={idx}
-                        className="px-4 py-3 hover:bg-muted/10 transition-colors"
+                        className="px-4 py-4 hover:bg-muted/10 transition-colors"
                       >
                         <div className="flex items-center justify-between gap-4">
                           <div className="min-w-0">
@@ -255,41 +274,50 @@ export default function OrderDetailsPage() {
                                 ضمن العرض
                               </span>
                             </h4>
-                            <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">
-                              {product.p_cat}
+                            <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">
+                              {getCategoryLabel(product.p_cat)}
                             </p>
                           </div>
                           <div className="text-right shrink-0">
-                            {/* Hide price for constituents as it's part of offer */}
-                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">
-                              الكمية: {product.p_qu || 1}
+                            <p className="text-sm font-black text-foreground">
+                              {(
+                                Number(product.p_cost) *
+                                (Number(product.p_qu) || 1)
+                              ).toLocaleString()}{" "}
+                              <span className="text-xs text-primary">ج.س</span>
                             </p>
+                            <div className="flex flex-col items-end">
+                              <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-tighter">
+                                {Number(product.p_cost).toLocaleString()} ×{" "}
+                                {product.p_qu || 1}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
                     ))}
                   </>
                 ) : (
-                  order.productsList.map((product, idx) => (
+                  order.productsList.map((product: any, idx: number) => (
                     <div
                       key={idx}
-                      className="px-4 py-3 hover:bg-muted/10 transition-colors"
+                      className="px-4 py-4 hover:bg-muted/10 transition-colors"
                     >
                       <div className="flex items-center justify-between gap-4">
                         <div className="min-w-0">
-                          <h4 className="text-base font-black text-foreground uppercase truncate">
+                          <h4 className="text-lg font-black text-foreground uppercase truncate">
                             {product.p_name}
                           </h4>
-                          <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">
-                            {product.p_cat}
+                          <p className="text-sm text-muted-foreground font-bold uppercase tracking-widest mt-1">
+                            {getCategoryLabel(product.p_cat)}
                           </p>
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="text-base font-black text-foreground">
+                          <p className="text-lg font-black text-foreground">
                             {Number(product.p_cost).toLocaleString()}{" "}
                             <span className="text-xs text-primary">ج.س</span>
                           </p>
-                          <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">
+                          <p className="text-xs text-muted-foreground font-black uppercase tracking-tighter">
                             الكمية: {product.p_qu || 1}
                           </p>
                         </div>
@@ -299,20 +327,43 @@ export default function OrderDetailsPage() {
                 )}
               </div>
 
-              <div className="px-3 py-2 bg-muted/20 border-t border-border">
+              <div className="px-4 py-4 bg-muted/20 border-t border-border space-y-2">
+                {order.isOffer && (
+                  <>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">
+                        القيمة الحقيقية
+                      </span>
+                      <span className="text-sm font-black text-muted-foreground line-through decoration-destructive/50">
+                        {offerRealTotal.toLocaleString()}{" "}
+                        <span className="text-[10px]">ج.س</span>
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-black text-emerald-600 uppercase tracking-widest">
+                        إجمالي التوفير
+                      </span>
+                      <span className="text-sm font-black text-emerald-600">
+                        {savings.toLocaleString()}-{" "}
+                        <span className="text-[10px]">ج.س</span>
+                      </span>
+                    </div>
+                    <div className="h-px bg-border/50 my-2" />
+                  </>
+                )}
                 <div className="flex justify-between items-center">
-                  <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                    الإجمالي الصافي
+                  <span className="text-xs font-black text-foreground uppercase tracking-widest">
+                    الإجمالي النهائي
                   </span>
-                  <span className="text-lg font-black text-primary tracking-tighter">
+                  <span className="text-2xl font-black text-primary tracking-tighter">
                     {order.totalAmount.toLocaleString()}{" "}
-                    <span className="text-[10px]">ج.س</span>
+                    <span className="text-sm">ج.س</span>
                   </span>
                 </div>
               </div>
             </section>
 
-            {/* Client Data & Transaction Info - Now Uncollapsible */}
+            {/* Client Data & Transaction Info */}
             <section className="bg-card rounded border border-border overflow-hidden shadow-sm">
               <div className="px-3 py-3 border-b border-border bg-muted/10">
                 <div className="flex items-center gap-2">
@@ -469,7 +520,10 @@ export default function OrderDetailsPage() {
                       <button
                         onClick={() =>
                           window.open(
-                            `https://wa.me/${assignedDriver.phone.replace(/[^0-9]/g, "")}`,
+                            `https://wa.me/${assignedDriver.phone.replace(
+                              /[^0-9]/g,
+                              "",
+                            )}`,
                             "_blank",
                           )
                         }
@@ -489,8 +543,8 @@ export default function OrderDetailsPage() {
                   >
                     <option value="">[ تعيين سائق ]</option>
                     {drivers
-                      ?.filter((d) => d.status === "Active")
-                      .map((driver) => (
+                      ?.filter((d: any) => d.status === "Active")
+                      .map((driver: any) => (
                         <option key={driver.id} value={driver.id}>
                           {driver.name.toUpperCase()}
                         </option>

@@ -12,10 +12,20 @@ import { CalendarDays } from "lucide-react";
 
 export default function DateSelector({
   currentMonth, // e.g., "2026-01"
+  onDateChange,
 }: {
   currentMonth: string;
+  onDateChange?: (date: string) => void;
 }) {
   const router = useRouter();
+
+  const handleValueChange = (value: string) => {
+    if (onDateChange) {
+      onDateChange(value);
+    } else {
+      router.push(value);
+    }
+  };
 
   // 1. Generate the combined options dynamically
   const years = [2024, 2025, 2026];
@@ -46,10 +56,7 @@ export default function DateSelector({
 
   return (
     <div className="flex items-center gap-2">
-      <Select
-        value={currentMonth}
-        onValueChange={(value) => router.push(value as any)}
-      >
+      <Select value={currentMonth} onValueChange={handleValueChange}>
         <SelectTrigger className="w-[180px] h-10 rounded-xl bg-card border-border text-foreground font-bold focus:ring-primary">
           <div className="flex items-center gap-2">
             <CalendarDays size={16} className="opacity-70 text-primary" />
