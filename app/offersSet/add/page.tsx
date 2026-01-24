@@ -1,4 +1,4 @@
-import { getProducts } from "@/data/productsData";
+import { getProducts } from "@/services/productsServices";
 import OfferForm from "../components/OfferForm";
 
 export default async function AddOfferPage() {

@@ -17,20 +17,20 @@ export async function addOffer(data: Omit<Offer, "id">): Promise<string> {
     ...data,
     createdAt: Date.now(),
   });
-  revalidatePath("/offersSet");
+  revalidatePath("/offersSet", "page");
   return res.id;
 }
 
 export async function upOffer(id: string, data: Partial<Offer>): Promise<void> {
   await updateDoc(doc(offersRef, id), data as any);
-  revalidatePath("/offersSet");
+  revalidatePath("/offersSet", "page");
 }
 
 export async function deleteOffer(id: string): Promise<void> {
   try {
     const docRef = doc(offersRef, id);
     await deleteDoc(docRef);
-    revalidatePath("/offersSet");
+    revalidatePath("/offersSet", "page");
   } catch (error) {
     console.error("Error deleting offer:", error);
     throw new Error("Failed to delete offer.");
@@ -40,6 +40,8 @@ export async function deleteOffer(id: string): Promise<void> {
 export const getOffers = unstable_cache(
   async (): Promise<Offer[]> => {
     try {
+      console.log("getOffers");
+
       const snap = await getDocs(offersRef);
       return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Offer);
     } catch (err) {

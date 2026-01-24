@@ -1,4 +1,4 @@
-import { getProducts } from "@/data/productsData";
+import { getProducts } from "@/services/productsServices";
 import { getOffer } from "@/services/offersServices";
 import OfferForm from "../components/OfferForm";
 import { notFound } from "next/navigation";

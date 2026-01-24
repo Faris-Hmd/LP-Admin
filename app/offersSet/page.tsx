@@ -4,7 +4,6 @@ import { getOffers } from "@/services/offersServices";
 import Image from "next/image";
 import DeleteOfferBtn from "@/components/offers/DeleteOfferBtn";
 import SeedOffersButton from "@/components/offers/SeedOffersButton";
-export const dynamic = "force-dynamic";
 export default async function OffersTable() {
   const offers = await getOffers();
 

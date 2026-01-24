@@ -1,4 +1,4 @@
-import { getProduct } from "@/data/productsData";
+import { getProduct } from "@/services/productsServices";
 import UpdateForm from "./components/updateform";
 import { ShieldCheck } from "lucide-react";
 
