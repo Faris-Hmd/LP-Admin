@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/chart";
 import { Card, CardTitle } from "@/components/ui/card";
 import { TrendingUp, Activity } from "lucide-react";
+import DateSelector from "@/components/DataPicker";
 
 type DaySales = {
   month: string;
@@ -26,14 +27,16 @@ type DaySales = {
 };
 
 const chartConfig = {
-  sales: { label: "Revenue", color: "#2563eb" },
-  orders: { label: "Orders", color: "#10b981" },
+  sales: { label: "الإيرادات", color: "var(--primary)" },
+  orders: { label: "الطلبات", color: "#10b981" },
 };
 
 export default function RevenueAnalytics({
   salesData = [],
+  date,
 }: {
   salesData: DaySales[];
+  date: string;
 }) {
   const { totalSales, totalOrders } = useMemo(() => {
     return salesData.reduce(
@@ -48,27 +51,33 @@ export default function RevenueAnalytics({
   return (
     /* min-w-0 is critical here to prevent flex-basis overgrowth */
     <Card className="w-full border-none shadow-none bg-transparent min-w-0 overflow-visible">
-      <div className="flex items-center w-full justify-between gap-2 px-2 mb-6">
-        <div className="space-y-1 w-full">
-          <CardTitle className="text-xl font-black text-foreground tracking-tight uppercase">
-            تحليلات <span className="text-primary">الإيرادات</span>
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 px-2 mb-6">
+        <div className="space-y-1">
+          <CardTitle className="text-xl font-black text-foreground tracking-tight uppercase flex items-center gap-3">
+            <span>
+              تحليلات <span className="text-primary">الإيرادات</span>
+            </span>
           </CardTitle>
-          <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-black text-[10px] uppercase tracking-[0.2em]">
-            <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <TrendingUp className="w-3 h-3" />
-            {totalOrders.toLocaleString()} تم تنفيذها بنجاح
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-black text-[10px] uppercase tracking-[0.2em]">
+              <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <TrendingUp className="w-3 h-3" />
+              {totalOrders.toLocaleString()} طلب ناجح
+            </div>
+            <span className="text-border/60">|</span>
+            <div className="flex items-baseline gap-1 text-primary font-black">
+              <span className="text-lg font-mono leading-none">
+                {totalSales.toLocaleString()}
+              </span>
+              <span className="text-[10px] opacity-70 uppercase tracking-tighter">
+                SDG
+              </span>
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-baseline gap-1 bg-primary text-primary-foreground font-black px-5 py-1.5 rounded-xl shadow shadow-primary/20">
-            <span className="text-lg font-mono">
-              {totalSales.toLocaleString()}
-            </span>
-            <span className="text-[10px] opacity-70 uppercase tracking-tighter">
-              SDG
-            </span>
-          </div>
+        <div className="self-end md:self-auto">
+          <DateSelector currentMonth={date} />
         </div>
       </div>
 
@@ -95,8 +104,16 @@ export default function RevenueAnalytics({
                 <defs>
                   {/* Revenue Gradient */}
                   <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                    <stop
+                      offset="5%"
+                      stopColor="var(--primary)"
+                      stopOpacity={0.3}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--primary)"
+                      stopOpacity={0}
+                    />
                   </linearGradient>
 
                   {/* Orders Gradient - Added this */}
@@ -124,7 +141,7 @@ export default function RevenueAnalytics({
 
                 <ChartTooltip
                   cursor={{
-                    stroke: "#ef4444",
+                    stroke: "var(--primary)",
                     strokeWidth: 2,
                     strokeDasharray: "4 4",
                   }}
@@ -140,11 +157,15 @@ export default function RevenueAnalytics({
                 <Area
                   type="monotone"
                   dataKey="sales"
-                  stroke="#ef4444"
+                  stroke="var(--primary)"
                   strokeWidth={4}
                   fill="url(#salesGrad)"
                   animationDuration={1500}
-                  activeDot={{ r: 6, strokeWidth: 0, fill: "#ef4444" }}
+                  activeDot={{
+                    r: 6,
+                    strokeWidth: 0,
+                    fill: "var(--primary)",
+                  }}
                 />
 
                 {/* Hidden Orders Area - This makes it show in the Tooltip only */}

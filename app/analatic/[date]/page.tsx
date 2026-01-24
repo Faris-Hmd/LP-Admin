@@ -97,8 +97,6 @@ export default async function OverviewPage({ params }: PageProps) {
                 نظرة عامة على <span className="text-primary">المتجر</span>
               </h1>
             </div>
-
-            <DateSelector currentMonth={date} />
           </div>
         </div>
       </header>
@@ -120,33 +118,29 @@ export default async function OverviewPage({ params }: PageProps) {
                   مقاييس الإيرادات
                 </h3>
               </div>
-              <span className="text-[10px] font-bold text-muted-foreground font-mono tracking-tighter">
-                {date}
-              </span>
             </div>
             <div className="w-full">
-              <Chart salesData={salesData} />
+              <Chart salesData={salesData} date={date} />
             </div>
           </div>
 
-          {/* Inventory Distribution - Secondary Panel */}
-          <div className="bg-card p-4 rounded shadow-sm border border-border lg:col-span-1">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">
-                توزيع المخزون
-              </h3>
-              <div className="px-2 py-0.5 rounded bg-muted text-[9px] font-black text-muted-foreground uppercase tracking-tighter">
-                كلي
-              </div>
-            </div>
-            <div className="flex flex-col  items-center justify-center">
-              <ChartPieInteractive />
-            </div>
+          {/* Offers Performance - Secondary Panel */}
+          <div className="lg:col-span-1">
+            <OffersPerformance />
           </div>
         </div>
 
-        {/* Offers Performance Section */}
-        <OffersPerformance />
+        {/* Inventory Distribution Section */}
+        <section className="bg-card p-4 rounded shadow-sm border border-border">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">
+              توزيع المخزون
+            </h3>
+          </div>
+          <div className="max-w-md mx-auto">
+            <ChartPieInteractive />
+          </div>
+        </section>
       </main>
 
       {/* Decorative System Footer */}

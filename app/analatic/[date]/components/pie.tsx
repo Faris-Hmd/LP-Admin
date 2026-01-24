@@ -101,26 +101,15 @@ export default function ChartPieInteractive() {
     );
 
   return (
-    <Card
-      data-chart={id}
-      className="flex flex-col rounded-xl border-none shadow-none w-full bg-transparent"
-    >
+    <div data-chart={id} className="w-full grid grid-cols-2 gap-4 items-center">
       <ChartStyle id={id} config={chartConfig} />
 
-      <CardHeader className="p-0 pb-4">
-        <CardTitle className="text-sm font-black text-foreground uppercase tracking-widest">
-          توزيع المخزون
-        </CardTitle>
-        <CardDescription className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">
-          مستويات المخزون الحالية لكل فئة
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent className="flex flex-1 items-center justify-center p-0">
+      {/* Chart Column */}
+      <div className="flex items-center justify-center relative min-h-[140px]">
         <ChartContainer
           id={id}
           config={chartConfig}
-          className="aspect-square h-[160px]"
+          className="aspect-square h-[140px] w-[140px]"
         >
           <PieChart>
             <ChartTooltip
@@ -131,23 +120,22 @@ export default function ChartPieInteractive() {
               data={data}
               dataKey="quantity"
               nameKey="category"
-              innerRadius={55}
-              strokeWidth={8}
+              innerRadius={45}
+              strokeWidth={4}
               stroke="transparent"
               activeIndex={activeIndex}
               activeShape={({ outerRadius = 0, ...props }: any) => (
                 <g>
-                  <Sector {...props} outerRadius={outerRadius + 8} />
+                  <Sector {...props} outerRadius={outerRadius + 6} />
                   <Sector
                     {...props}
-                    outerRadius={outerRadius + 15}
-                    innerRadius={outerRadius + 10}
+                    outerRadius={outerRadius + 12}
+                    innerRadius={outerRadius + 8}
                     opacity={0.3}
                   />
                 </g>
               )}
             >
-              {/* This maps the specific colors to the cells */}
               {data.map((entry: any, index: number) => (
                 <Cell key={`cell-${index}`} fill={entry.fill} />
               ))}
@@ -165,16 +153,16 @@ export default function ChartPieInteractive() {
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-2xl font-black"
+                          className="fill-foreground text-xl font-black"
                         >
                           {data[activeIndex]?.quantity.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 18}
-                          className="fill-muted-foreground text-[10px] font-black uppercase tracking-[0.2em]"
+                          y={(viewBox.cy || 0) + 14}
+                          className="fill-muted-foreground text-[8px] font-black uppercase tracking-[0.2em]"
                         >
-                          وحدات
+                          وحدة
                         </tspan>
                       </text>
                     );
@@ -184,30 +172,34 @@ export default function ChartPieInteractive() {
             </Pie>
           </PieChart>
         </ChartContainer>
-      </CardContent>
+      </div>
 
-      <div className="pt-6">
+      {/* Controls Column */}
+      <div className="flex flex-col justify-center gap-2">
+        <label className="text-[9px] font-black uppercase text-muted-foreground tracking-widest">
+          الفئة المختارة
+        </label>
         <Select value={activeCategory} onValueChange={setActiveCategory}>
-          <SelectTrigger className="h-11 w-full text-xs font-bold rounded-xl bg-card border-border text-foreground shadow-sm focus:ring-4 focus:ring-primary/10 outline-none">
+          <SelectTrigger className="h-9 w-full text-[10px] font-bold rounded-lg bg-card border-border text-foreground shadow-sm focus:ring-2 focus:ring-primary/10 outline-none">
             <SelectValue placeholder="اختر الفئة" />
           </SelectTrigger>
-          <SelectContent className="rounded-xl border-border max-h-[300px]">
+          <SelectContent className="rounded-lg border-border max-h-[220px]">
             {data.map((item: any) => {
               const config = (chartConfig as any)[item.category];
               return (
                 <SelectItem
                   key={item.category}
                   value={item.category}
-                  className="text-xs font-bold py-2.5 cursor-pointer"
+                  className="text-[10px] font-bold py-2 cursor-pointer"
                 >
-                  <div className="flex items-center gap-2.5 w-full">
+                  <div className="flex items-center gap-2 w-full">
                     <span
-                      className="h-3 w-3 rounded-md shrink-0"
+                      className="h-2 w-2 rounded-full shrink-0"
                       style={{ backgroundColor: config?.color || "#cbd5e1" }}
                     />
                     <span>{config?.label || item.category}</span>
-                    <span className="ml-auto text-[10px] opacity-50 font-mono">
-                      ({item.quantity})
+                    <span className="ml-auto opacity-50 font-mono">
+                      {item.quantity}
                     </span>
                   </div>
                 </SelectItem>
@@ -215,7 +207,22 @@ export default function ChartPieInteractive() {
             })}
           </SelectContent>
         </Select>
+
+        <div className="mt-2 p-2 rounded-lg bg-muted/10 border border-border/50">
+          <div className="flex items-center justify-between text-[10px]">
+            <span className="font-bold text-muted-foreground">النسبة:</span>
+            <span className="font-black text-primary">
+              {data.length > 0 && activeIndex >= 0
+                ? Math.round(
+                    (data[activeIndex].quantity /
+                      data.reduce((a: any, b: any) => a + b.quantity, 0)) *
+                      100,
+                  ) + "%"
+                : "0%"}
+            </span>
+          </div>
+        </div>
       </div>
-    </Card>
+    </div>
   );
 }
