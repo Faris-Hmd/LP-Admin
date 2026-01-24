@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { BarChart3, Settings, Users, ClipboardList, Tag } from "lucide-react";
+import { BarChart3, Users, ClipboardList, Tag, Package } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { ModeToggle } from "@/components/ModeToggle";
 import Link from "next/link";
@@ -29,7 +29,7 @@ const ADMIN_LINKS = [
   {
     title: "المخزون",
     href: "/productsSet",
-    icon: Settings,
+    icon: Package,
     color: "text-primary",
     bg: "bg-primary/10",
   },
@@ -56,7 +56,7 @@ export default function Navbar() {
   if (!session?.user) return null;
 
   return (
-    <nav className="sticky top-0 z-50 transition-all duration-300 bg-card md:bg-card/80 py-3 border-b border-border md:backdrop-blur-md">
+    <nav className="sticky top-0 z-10 transition-all duration-300 bg-card md:bg-card/80 py-3 border-b border-border md:backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
         {/* --- BRAND --- */}
         <div className="flex items-center gap-8">

@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, ClipboardList, Settings, Users, Tag } from "lucide-react";
+import { BarChart3, ClipboardList, Users, Tag, Package } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 
@@ -18,7 +18,7 @@ const ADMIN_NAV = [
     icon: BarChart3,
   },
   { title: "الطلبات", href: "/manageOrder", icon: ClipboardList },
-  { title: "المخزون", href: "/productsSet", icon: Settings },
+  { title: "المخزون", href: "/productsSet", icon: Package },
   { title: "العروض", href: "/offersSet", icon: Tag },
   { title: "السائقين", href: "/drivers", icon: Users },
 ];

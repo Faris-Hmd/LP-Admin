@@ -9,7 +9,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { offersRef } from "@/lib/firebase";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
 import { Offer } from "@/types/offerTypes";
 
 export async function addOffer(data: Omit<Offer, "id">): Promise<string> {
@@ -37,15 +37,22 @@ export async function deleteOffer(id: string): Promise<void> {
   }
 }
 
-export async function getOffers(): Promise<Offer[]> {
-  try {
-    const snap = await getDocs(offersRef);
-    return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Offer);
-  } catch (err) {
-    console.error("getOffers error:", err);
-    return [];
-  }
-}
+export const getOffers = unstable_cache(
+  async (): Promise<Offer[]> => {
+    try {
+      const snap = await getDocs(offersRef);
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Offer);
+    } catch (err) {
+      console.error("getOffers error:", err);
+      return [];
+    }
+  },
+  ["all-offers"],
+  {
+    revalidate: 10,
+    tags: ["offers"],
+  },
+);
 
 export async function getOffer(id: string): Promise<Offer | null> {
   try {
