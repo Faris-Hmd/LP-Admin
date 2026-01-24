@@ -11,7 +11,7 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
 import { UserData } from "@/types/userTypes";
 
 const COL = "users";
@@ -68,20 +68,31 @@ export async function upUser(
  * GET: Returns all users
  */
 
-export async function getUsers(): Promise<UserData[]> {
-  try {
-    const q = query(collection(db, COL));
-    const snap = await getDocs(q);
+const fetchUsersCached = unstable_cache(
+  async (): Promise<UserData[]> => {
+    try {
+      console.log("👥 FETCHING USERS FROM FIREBASE");
+      const q = query(collection(db, COL));
+      const snap = await getDocs(q);
 
-    return snap.docs.map(
-      (doc) =>
-        ({
-          ...doc.data(),
-          email: doc.id,
-        }) as UserData,
-    );
-  } catch (error) {
-    // console.error("Error fetching users:", error);
-    return [];
-  }
+      return snap.docs.map(
+        (doc) =>
+          ({
+            ...doc.data(),
+            email: doc.id,
+          }) as UserData,
+      );
+    } catch (error) {
+      return [];
+    }
+  },
+  ["users-list-cache"],
+  {
+    revalidate: 3600,
+    tags: ["users"],
+  },
+);
+
+export async function getUsers(): Promise<UserData[]> {
+  return fetchUsersCached();
 }

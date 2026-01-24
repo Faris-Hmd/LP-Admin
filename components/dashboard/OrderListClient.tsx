@@ -181,7 +181,7 @@ export default function OrderListClient({
   }
 
   return (
-    <div className="grid gap-3 relative">
+    <div className="grid gap-2 relative">
       {sortedOrders.map((order) => {
         const isExpanded = expandedOrders[order.id];
         const totalItems = order.productsList.reduce(
@@ -199,10 +199,10 @@ export default function OrderListClient({
                 : "border-border",
             )}
           >
-            <div className="p-4 flex items-center gap-4">
+            <div className="p-2.5 flex items-center gap-3">
               <div
                 className={cn(
-                  "p-2.5 rounded-xl shrink-0",
+                  "p-2 rounded-lg shrink-0",
                   isExpanded
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground",
@@ -213,7 +213,7 @@ export default function OrderListClient({
 
               <div className="flex-1 min-w-0">
                 {/* Top Row: Badges */}
-                <div className="flex flex-wrap items-center gap-2 mb-2">
+                <div className="flex flex-wrap items-center gap-2 mb-1">
                   <span
                     className={cn(
                       "text-sm font-black uppercase tracking-widest px-2 py-1 rounded-md border",
@@ -235,7 +235,7 @@ export default function OrderListClient({
                 </div>
 
                 {/* Middle: Amount */}
-                <p className="text-xl font-black text-foreground mb-1 leading-none">
+                <p className="text-xl font-black text-foreground mb-0.5 leading-none">
                   {order.totalAmount.toLocaleString()}{" "}
                   <span className="text-sm text-primary">SDG</span>
                 </p>
@@ -255,7 +255,7 @@ export default function OrderListClient({
               <div className="flex items-center gap-3">
                 <Link
                   href={`/manageOrder/${order.id}` as any}
-                  className="p-2.5 bg-muted text-muted-foreground rounded-xl hover:bg-primary hover:text-primary-foreground transition-all"
+                  className="p-2 bg-muted text-muted-foreground rounded-lg hover:bg-primary hover:text-primary-foreground transition-all"
                 >
                   <Settings2 size={16} />
                 </Link>
@@ -273,10 +273,10 @@ export default function OrderListClient({
             </div>
 
             {isExpanded && (
-              <div className="px-4 pb-4 bg-muted/20 border-t border-border">
-                <div className="py-4 space-y-2">
+              <div className="px-3 pb-3 bg-muted/20 border-t border-border">
+                <div className="py-2.5 space-y-1.5">
                   {order.isOffer ? (
-                    <div className="bg-card p-3 rounded-xl border border-primary/20 bg-primary/5 flex justify-between items-center shadow-sm">
+                    <div className="bg-card p-2 rounded-lg border border-primary/20 bg-primary/5 flex justify-between items-center shadow-sm">
                       <div className="flex items-center gap-3">
                         {order.offerImage && (
                           <div className="w-10 h-10 rounded-md overflow-hidden bg-muted relative">
@@ -302,7 +302,7 @@ export default function OrderListClient({
                     order.productsList.map((p: any) => (
                       <div
                         key={p.id}
-                        className="bg-card p-3 rounded-xl border border-border flex justify-between items-center shadow-sm"
+                        className="bg-card p-2 rounded-lg border border-border flex justify-between items-center shadow-sm"
                       >
                         <div className="min-w-0">
                           <p className="text-sm font-black text-foreground uppercase truncate">
@@ -320,7 +320,7 @@ export default function OrderListClient({
                     ))
                   )}
                 </div>
-                <div className="flex items-center justify-between pt-3 border-t border-border">
+                <div className="flex items-center justify-between pt-2 border-t border-border">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();

@@ -17,29 +17,29 @@ import { Driver } from "@/types/userTypes";
 /**
  * GET ALL DRIVERS
  */
-export const getDrivers = async (): Promise<Driver[]> => {
-  const cachedFetch = unstable_cache(
-    async () => {
-      try {
-        console.log("🚚 FIREBASE FETCH: Drivers List"); // Only logs on cache miss
-        const snap = await getDocs(driversRef);
-        return snap.docs.map((d) => ({
-          ...d.data(),
-          id: d.id,
-        })) as Driver[];
-      } catch (error) {
-        console.error("Error fetching drivers:", error);
-        return [];
-      }
-    },
-    ["drivers-list-cache"], // Static unique key
-    {
-      revalidate: 3600, // Optional: Cache for 1 hour
-      tags: ["drivers"], // Tag for manual revalidation
-    },
-  );
+const fetchDriversCached = unstable_cache(
+  async () => {
+    try {
+      console.log("🚚 FIREBASE FETCH: Drivers List"); // Only logs on cache miss
+      const snap = await getDocs(driversRef);
+      return snap.docs.map((d) => ({
+        ...d.data(),
+        id: d.id,
+      })) as Driver[];
+    } catch (error) {
+      console.error("Error fetching drivers:", error);
+      return [];
+    }
+  },
+  ["drivers-list-cache"], // Static unique key
+  {
+    revalidate: 3600, // Optional: Cache for 1 hour
+    tags: ["drivers"], // Tag for manual revalidation
+  },
+);
 
-  return cachedFetch();
+export const getDrivers = async (): Promise<Driver[]> => {
+  return fetchDriversCached();
 };
 
 /**

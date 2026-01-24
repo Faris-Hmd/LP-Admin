@@ -73,33 +73,34 @@ export async function getAllOrders(): Promise<OrderData[]> {
     return [];
   }
 }
+const fetchOrdersCached = unstable_cache(
+  async (filterKey: string): Promise<OrderData[]> => {
+    console.log("📡 FETCHING ORDERS FROM FIREBASE");
+    try {
+      const filters = JSON.parse(filterKey) as OrderFilter[];
+      const constraints: QueryConstraint[] = filters.map((f) =>
+        where(f.field as string, f.op, f.val),
+      );
+
+      const q = query(ordersRef, ...constraints);
+      const snap = await getDocs(q);
+
+      return snap.docs.map((d) => sanitizeOrder(d.id, d.data()));
+    } catch (error) {
+      console.error("Firestore Query Error:", error);
+      return [];
+    }
+  },
+  ["orders-list-cache"],
+  {
+    revalidate: 60,
+    tags: ["orders"],
+  },
+);
+
 export const getOrdersWh = async (filters: OrderFilter[]) => {
-  // Generate a unique cache key based on the filter values
   const filterKey = JSON.stringify(filters);
-  return unstable_cache(
-    async (): Promise<OrderData[]> => {
-      console.log("get orders where from server");
-
-      try {
-        const constraints: QueryConstraint[] = filters.map((f) =>
-          where(f.field as string, f.op, f.val),
-        );
-
-        const q = query(ordersRef, ...constraints);
-        const snap = await getDocs(q);
-
-        return snap.docs.map((d) => sanitizeOrder(d.id, d.data()));
-      } catch (error) {
-        console.error("Firestore Query Error:", error);
-        return [];
-      }
-    },
-    ["orders-where", filterKey], // Unique key: identifier + specific filter string
-    {
-      revalidate: 30, // Cache for 1 hour by default
-      tags: ["orders"], // Generic tag for global revalidation
-    },
-  )();
+  return fetchOrdersCached(filterKey);
 };
 
 /**

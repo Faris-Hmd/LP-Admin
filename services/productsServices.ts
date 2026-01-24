@@ -43,44 +43,44 @@ export async function getProduct(id: string): Promise<ProductType | null> {
   }
 }
 
+const fetchProductsCached = unstable_cache(
+  async (key: string, value: string, size: number) => {
+    const constraints: QueryConstraint[] = [];
+
+    if (key === "p_name" && value) {
+      constraints.push(orderBy("p_name"));
+      constraints.push(startAt(value));
+      constraints.push(endAt(value + "\uf8ff"));
+    }
+
+    if (key === "p_cat" && value) {
+      constraints.push(where("p_cat", "==", value));
+    }
+
+    constraints.push(limit(size));
+
+    try {
+      console.log(`📡 FIREBASE DATABASE HIT: ${key} = ${value}`);
+      const snap = await getDocs(query(productsRef, ...constraints));
+      return snap.docs.map((d) => mapProduct(d.id, d.data()));
+    } catch (err) {
+      console.error("getProducts error:", err);
+      return [];
+    }
+  },
+  [`products-list-cache`],
+  {
+    revalidate: 60,
+    tags: ["products"],
+  },
+);
+
 export const getProducts = async (
   filterKey: ProductFilterKey = "all",
   filterValue = "",
   pageSize = 100,
 ): Promise<ProductType[]> => {
-  const cachedFetch = unstable_cache(
-    async (key: string, value: string, size: number) => {
-      const constraints: QueryConstraint[] = [];
-
-      if (key === "p_name" && value) {
-        constraints.push(orderBy("p_name"));
-        constraints.push(startAt(value));
-        constraints.push(endAt(value + "\uf8ff"));
-      }
-
-      if (key === "p_cat" && value) {
-        constraints.push(where("p_cat", "==", value));
-      }
-
-      constraints.push(limit(size));
-
-      try {
-        console.log(`📡 FIREBASE DATABASE HIT: ${key} = ${value}`);
-        const snap = await getDocs(query(productsRef, ...constraints));
-        return snap.docs.map((d) => mapProduct(d.id, d.data()));
-      } catch (err) {
-        console.error("getProducts error:", err);
-        return [];
-      }
-    },
-    [`products-cache`],
-    {
-      revalidate: 30,
-      tags: ["products-list"],
-    },
-  );
-
-  return cachedFetch(filterKey, filterValue, pageSize);
+  return fetchProductsCached(filterKey, filterValue, pageSize);
 };
 
 export async function addProduct(
