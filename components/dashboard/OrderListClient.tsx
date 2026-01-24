@@ -35,6 +35,16 @@ export default function OrderListClient({
     {},
   );
 
+  const isFirstLoad = React.useRef(true);
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // Create audio instance with Base64 to avoid network blocks
+    audioRef.current = new Audio(
+      "data:audio/mp3;base64,//uQRAAAAWMSLwUIYAAsYkXgoQwAEaYLWfkWgAI0wWs/ItAAAGDgYtAgAyN+QWaAAihwMWm4G8QQRDiMcCBcH3Cc+CDv/7cZb/96633/u//53f//juhb4Yd1F5/97/+976qxr757//p3vV6q9575///53v/75////9//93//52f/47///47////47wY7/+973///973///973/3vf/3vf/3vf/3v/////3ve9///3ve9//ve9//ve9///3ve9//ve9///////73ve////3ve9//ve9//ve9//ve9//ve9//ve9//ve9///////73ve////3ve9//ve9//ve9//ve9//ve9//ve9//ve9///////73ve////3ve9//ve9//ve9//ve9//ve9//ve9//ve9///////73ve",
+    );
+  }, []);
+
   // Initialize Firebase App for this client component instance
   const db = useMemo(() => {
     if (!firebaseConfig) return null;
@@ -62,16 +72,6 @@ export default function OrderListClient({
     );
 
     console.log("Starting listener on orders...");
-
-    const isFirstLoad = React.useRef(true);
-    const audioRef = React.useRef<HTMLAudioElement | null>(null);
-
-    useEffect(() => {
-      // Create audio instance once
-      audioRef.current = new Audio(
-        "https://cdn.freesound.org/previews/536/536108_10214844-lq.mp3",
-      );
-    }, []);
 
     const unsubscribe = onSnapshot(
       q,
