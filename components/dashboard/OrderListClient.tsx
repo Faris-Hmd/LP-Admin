@@ -1,32 +1,108 @@
 "use client";
-
-import React, { useState, useTransition } from "react";
+import React, { useState, useTransition, useEffect, useMemo } from "react";
 import {
   Package,
   ChevronDown,
   ChevronUp,
   Settings2,
-  RefreshCcw,
   BadgePercent,
+  Loader2,
 } from "lucide-react";
-import { cn, formatDate } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { delOrder } from "@/services/ordersServices";
+import {
+  onSnapshot,
+  query,
+  where,
+  Timestamp,
+  getFirestore,
+  collection,
+} from "firebase/firestore";
+import { getApps, getApp, initializeApp } from "firebase/app";
 
 export default function OrderListClient({
-  initialOrders,
+  firebaseConfig,
 }: {
-  initialOrders: any[];
+  firebaseConfig: any;
 }) {
-  const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [orders, setOrders] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [expandedOrders, setExpandedOrders] = useState<Record<string, boolean>>(
     {},
   );
 
-  const sortedOrders = [...initialOrders].sort((a, b) => {
+  // Initialize Firebase App for this client component instance
+  const db = useMemo(() => {
+    if (!firebaseConfig) return null;
+    try {
+      const app =
+        getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+      return getFirestore(app);
+    } catch (e) {
+      console.error("Firebase init error", e);
+      return null;
+    }
+  }, [firebaseConfig]);
+
+  useEffect(() => {
+    if (!db) {
+      setError("فشل تهيئة الاتصال بقاعدة البيانات");
+      setIsLoading(false);
+      return;
+    }
+
+    const ordersRef = collection(db, "orders");
+    const q = query(ordersRef, where("status", "!=", "Delivered"));
+
+    console.log("Starting listener on orders...");
+
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const updatedOrders = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            ...data,
+            id: doc.id,
+            createdAt:
+              data.createdAt instanceof Timestamp
+                ? data.createdAt.toMillis()
+                : typeof data.createdAt === "number"
+                  ? data.createdAt
+                  : 0,
+            deliveredAt:
+              data.deliveredAt instanceof Timestamp
+                ? data.deliveredAt.toMillis()
+                : typeof data.deliveredAt === "number"
+                  ? data.deliveredAt
+                  : 0,
+          };
+        });
+        setOrders(updatedOrders);
+        console.log("Orders updated:", updatedOrders.length);
+        setIsLoading(false);
+        setError(null);
+      },
+      (err) => {
+        console.error("Firestore subscription error:", err);
+        setError(
+          "فشل في تحميل البيانات. " +
+            (err.code === "permission-denied"
+              ? "ليس لديك صلاحية الوصول."
+              : "خطأ في الاتصال."),
+        );
+        setIsLoading(false);
+      },
+    );
+
+    return () => unsubscribe();
+  }, [db]);
+
+  const sortedOrders = [...orders].sort((a, b) => {
     return (b.createdAt || 0) - (a.createdAt || 0);
   });
 
@@ -41,14 +117,56 @@ export default function OrderListClient({
       try {
         await delOrder(orderId);
         toast.success("تم حذف الطلب بنجاح");
-        router.refresh(); // Tells Next.js to re-run the server fetch
+        // No need to refresh router as onSnapshot will update the list
       } catch (err) {
         toast.error("فشلت العملية");
       }
     });
   };
 
-  if (!initialOrders || initialOrders.length === 0) {
+  const formatDateArabic = (date: any) => {
+    if (!date) return "";
+    let d: Date;
+    if (date && typeof date.toDate === "function") {
+      d = date.toDate();
+    } else if (typeof date === "string" || typeof date === "number") {
+      d = new Date(date);
+    } else if (date instanceof Date) {
+      d = date;
+    } else {
+      return "";
+    }
+
+    if (isNaN(d.getTime())) return "";
+
+    return new Intl.DateTimeFormat("ar-EG", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    }).format(d);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-20 bg-destructive/10 rounded-3xl border-2 border-dashed border-destructive/20">
+        <Package size={40} className="mx-auto text-destructive mb-4" />
+        <p className="text-sm font-bold text-destructive">{error}</p>
+      </div>
+    );
+  }
+
+  if (!orders || orders.length === 0) {
     return (
       <div className="text-center py-20 bg-card rounded-3xl border-2 border-dashed border-border">
         <Package size={40} className="mx-auto text-muted-foreground mb-4" />
@@ -61,14 +179,6 @@ export default function OrderListClient({
 
   return (
     <div className="grid gap-3 relative">
-      {/* Floating Refresh (Since we are in server mode) */}
-      <button
-        onClick={() => router.refresh()}
-        className="fixed bottom-20 right-10 z-50 p-4 bg-primary text-primary-foreground rounded-full shadow-2xl hover:scale-110 transition-transform active:rotate-180"
-      >
-        <RefreshCcw size={24} className={cn(isPending && "animate-spin")} />
-      </button>
-
       {sortedOrders.map((order) => {
         const isExpanded = expandedOrders[order.id];
         const totalItems = order.productsList.reduce(
@@ -134,7 +244,7 @@ export default function OrderListClient({
                   </span>
                   <span className="w-1 h-1 rounded-full bg-border" />
                   <span className="text-[10px] font-bold uppercase tracking-tight">
-                    {formatDate(order.createdAt)}
+                    {formatDateArabic(order.createdAt)}
                   </span>
                 </div>
               </div>
