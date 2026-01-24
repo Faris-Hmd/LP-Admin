@@ -63,9 +63,39 @@ export default function OrderListClient({
 
     console.log("Starting listener on orders...");
 
+    const isFirstLoad = React.useRef(true);
+    const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+    useEffect(() => {
+      // Create audio instance once
+      audioRef.current = new Audio(
+        "https://cdn.freesound.org/previews/536/536108_10214844-lq.mp3",
+      );
+    }, []);
+
     const unsubscribe = onSnapshot(
       q,
       (snapshot) => {
+        // Check for new additions
+        if (!isFirstLoad.current) {
+          snapshot.docChanges().forEach((change) => {
+            if (change.type === "added") {
+              const newOrder = change.doc.data();
+              toast.success(`طلب جديد: ${newOrder.totalAmount} SDG`, {
+                duration: 5000,
+                icon: <Package className="text-primary" />,
+              });
+
+              // Play sound
+              if (audioRef.current) {
+                audioRef.current
+                  .play()
+                  .catch((e) => console.log("Audio play failed", e));
+              }
+            }
+          });
+        }
+
         const updatedOrders = snapshot.docs.map((doc) => {
           const data = doc.data();
           return {
@@ -89,6 +119,7 @@ export default function OrderListClient({
         console.log("Orders updated:", updatedOrders.length);
         setIsLoading(false);
         setError(null);
+        isFirstLoad.current = false;
       },
       (err) => {
         console.error("Firestore subscription error:", err);
