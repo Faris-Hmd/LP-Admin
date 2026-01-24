@@ -193,7 +193,7 @@ export default function OrderListClient({
           <div
             key={order.id}
             className={cn(
-              "bg-card border rounded-2xl transition-all duration-200 overflow-hidden",
+              "bg-card border rounded transition-all duration-200 overflow-hidden",
               isExpanded
                 ? "ring-2 ring-primary/20 border-primary/50 shadow-xl"
                 : "border-border",

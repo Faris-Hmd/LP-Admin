@@ -49,7 +49,7 @@ export default function ManageOrdersPage() {
         </div>
       </header>
 
-      <div className="max-w-5xl mx-auto px-2 py-4">
+      <div className="max-w-5xl mx-auto px-4 py-4">
         <OrderListClient firebaseConfig={firebaseConfig} />
       </div>
     </div>
