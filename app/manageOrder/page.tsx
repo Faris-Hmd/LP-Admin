@@ -1,4 +1,4 @@
-import { History } from "lucide-react";
+import { History, XCircle } from "lucide-react";
 import Link from "next/link";
 import OrderListClient from "@/components/dashboard/OrderListClient";
 
@@ -23,7 +23,7 @@ export default function ManageOrdersPage() {
                 إدارة <span className="text-primary">الطلبات</span>
               </h1>
               <span className="h-4 w-px bg-border hidden md:block" />
-              <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider hidden md:block">
+              <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider hidden md:block">
                 الخدمات اللوجستية والتنفيذ
               </p>
             </div>
@@ -32,10 +32,17 @@ export default function ManageOrdersPage() {
                 href={
                   `/manageOrder/shipped/${new Date().toISOString().slice(0, 7)}` as any
                 }
-                className="flex items-center gap-2 px-4 py-2.5 bg-primary/10 text-primary rounded text-[11px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all border border-primary/20"
+                className="flex items-center gap-2 px-4 py-2.5 bg-primary/10 text-primary rounded text-sm font-black uppercase tracking-widest hover:bg-primary/20 transition-all border border-primary/20"
               >
                 <History size={16} />
                 <span className="hidden md:inline">السجلات</span>
+              </Link>
+              <Link
+                href={`/manageOrder/cancelled` as any}
+                className="flex items-center gap-2 px-4 py-2.5 bg-destructive/10 text-destructive rounded text-sm font-black uppercase tracking-widest hover:bg-destructive/20 transition-all border border-destructive/20"
+              >
+                <XCircle size={16} />
+                <span className="hidden md:inline">الملغية</span>
               </Link>
             </div>
           </div>

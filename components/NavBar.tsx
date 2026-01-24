@@ -90,7 +90,7 @@ export default function Navbar() {
               <span className="text-xl font-black text-foreground tracking-tight">
                 ليبر<span className="text-primary">بيتزا</span>
               </span>
-              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-0.5">
+              <span className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mt-0.5">
                 لوحة التحكم
               </span>
             </div>
@@ -114,7 +114,7 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={destination as any}
-                  className={`px-4 py-2 rounded text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-2 ${
+                  className={`px-4 py-2 rounded text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 ${
                     isActive
                       ? `${item.color} ${item.bg}`
                       : "text-muted-foreground hover:bg-muted"
@@ -137,10 +137,10 @@ export default function Navbar() {
           {/* Admin Identity */}
           <div className="flex items-center gap-3">
             <div className="hidden md:flex flex-col items-end leading-none">
-              <span className="text-[10px] font-black uppercase text-foreground">
+              <span className="text-xs font-black uppercase text-foreground">
                 المشرف
               </span>
-              <span className="text-[9px] font-bold text-success uppercase">
+              <span className="text-xs font-bold text-success uppercase">
                 النظام متصل
               </span>
             </div>

@@ -20,7 +20,7 @@ export default function AdminLoginPage() {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen gap-4 bg-background">
         <Loader2 className="animate-spin text-primary" size={40} />
-        <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.3em]">
+        <p className="text-muted-foreground text-xs font-black uppercase tracking-[0.3em]">
           جاري تهيئة النظام...
         </p>
       </div>
@@ -52,7 +52,7 @@ export default function AdminLoginPage() {
             <h1 className="text-3xl font-black text-foreground uppercase tracking-tighter text-center leading-none">
               لوحة <span className="text-primary">التحكم</span>
             </h1>
-            <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.3em] mt-3">
+            <p className="text-muted-foreground text-xs font-black uppercase tracking-[0.3em] mt-3">
               منطقة محظورة
             </p>
           </div>
@@ -62,7 +62,7 @@ export default function AdminLoginPage() {
             <div className="flex items-start gap-4">
               <ShieldAlert size={20} className="text-destructive shrink-0" />
               <div>
-                <p className="text-[11px] text-destructive font-black uppercase tracking-wider mb-1">
+                <p className="text-xs text-destructive font-black uppercase tracking-wider mb-1">
                   تطلّب صلاحيات
                 </p>
                 <p className="text-xs text-muted-foreground font-bold leading-relaxed">
@@ -82,7 +82,7 @@ export default function AdminLoginPage() {
               size={20}
               className="group-hover:translate-x-1 transition-transform"
             />
-            <span className="text-[11px] font-black uppercase tracking-[0.15em]">
+            <span className="text-xs font-black uppercase tracking-[0.15em]">
               تسجيل الدخول عبر Google
             </span>
           </button>
@@ -91,11 +91,11 @@ export default function AdminLoginPage() {
           <div className="mt-10 pt-6 border-t border-border flex flex-col items-center">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
+              <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">
                 النظام متصل
               </span>
             </div>
-            <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-[0.4em]">
+            <p className="text-xs text-muted-foreground font-bold uppercase tracking-[0.4em]">
               ليبر بيتزا • V2.0.4 • 2026
             </p>
           </div>

@@ -63,7 +63,7 @@ export default function AdminBtmNav() {
             </div>
             <span
               className={cn(
-                "text-[10px] font-black uppercase tracking-tighter transition-all",
+                "text-xs font-black uppercase tracking-tighter transition-all",
                 isActive ? "opacity-100" : "opacity-60",
               )}
             >

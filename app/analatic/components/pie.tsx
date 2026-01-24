@@ -86,7 +86,7 @@ export default function ChartPieInteractive() {
     return (
       <div className="flex flex-col items-center justify-center h-[200px] w-full gap-4">
         <div className="h-32 w-32 rounded-full border-8 border-border border-t-primary animate-spin" />
-        <p className="text-[10px] font-black uppercase text-muted-foreground animate-pulse">
+        <p className="text-xs font-black uppercase text-muted-foreground animate-pulse">
           جاري تحليل المخزون...
         </p>
       </div>
@@ -95,7 +95,7 @@ export default function ChartPieInteractive() {
 
   if (error || !data || data.length === 0)
     return (
-      <div className="text-destructive text-[10px] font-black uppercase p-10 text-center">
+      <div className="text-destructive text-xs font-black uppercase p-10 text-center">
         بيانات مفقودة: فشل تحميل المخزون
       </div>
     );
@@ -160,7 +160,7 @@ export default function ChartPieInteractive() {
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 16}
-                          className="fill-muted-foreground text-[10px] font-black uppercase tracking-[0.2em]"
+                          className="fill-muted-foreground text-xs font-black uppercase tracking-[0.2em]"
                         >
                           وحدة
                         </tspan>

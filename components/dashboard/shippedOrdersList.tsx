@@ -37,7 +37,7 @@ export default function ShippedOrdersList({ orders }: { orders: any[] }) {
           <div className="p-1.5 bg-primary/10 rounded-lg text-primary">
             <ArrowUpDown size={14} />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
             تصفية الأرشيف
           </span>
         </div>
@@ -46,7 +46,7 @@ export default function ShippedOrdersList({ orders }: { orders: any[] }) {
           <button
             onClick={() => setSortBy("date")}
             className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 text-[9px] font-black uppercase rounded-lg transition-all",
+              "flex items-center gap-1.5 px-3 py-1.5 text-xs font-black uppercase rounded-lg transition-all",
               sortBy === "date"
                 ? "bg-card text-primary shadow-sm"
                 : "text-muted-foreground hover:text-primary",
@@ -58,7 +58,7 @@ export default function ShippedOrdersList({ orders }: { orders: any[] }) {
           <button
             onClick={() => setSortBy("price")}
             className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 text-[9px] font-black uppercase rounded-lg transition-all",
+              "flex items-center gap-1.5 px-3 py-1.5 text-xs font-black uppercase rounded-lg transition-all",
               sortBy === "price"
                 ? "bg-card text-primary shadow-sm"
                 : "text-muted-foreground hover:text-primary",
@@ -85,7 +85,7 @@ export default function ShippedOrdersList({ orders }: { orders: any[] }) {
                 <p className="font-bold text-foreground leading-none mb-1 text-sm lg:text-base group-hover:text-primary transition-colors">
                   {order.customer_email}
                 </p>
-                <p className="text-[10px] text-muted-foreground font-black tracking-tight uppercase">
+                <p className="text-xs text-muted-foreground font-black tracking-tight uppercase">
                   المرجع: {order.id.slice(0, 16).toUpperCase()}
                 </p>
               </div>
@@ -94,9 +94,9 @@ export default function ShippedOrdersList({ orders }: { orders: any[] }) {
             <div className="text-right">
               <p className="text-lg font-black text-foreground leading-none mb-1 transition-colors">
                 {order.totalAmount.toLocaleString()}{" "}
-                <span className="text-[10px] text-muted-foreground">ج.س</span>
+                <span className="text-xs text-muted-foreground">ج.س</span>
               </p>
-              <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-black justify-end uppercase tracking-widest mt-1">
+              <div className="flex items-center gap-1 text-xs text-muted-foreground font-black justify-end uppercase tracking-widest mt-1">
                 <Calendar size={12} />
                 <span>
                   {/* Formats the milliseconds timestamp to a readable date */}

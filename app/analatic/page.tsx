@@ -18,7 +18,7 @@ export default async function OverviewPage({ params }: PageProps) {
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-2">
           <div className="flex justify-between items-center">
             <div>
-              <div className="flex items-center gap-2 text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-0.5">
+              <div className="flex items-center gap-2 text-xs font-black text-primary uppercase tracking-[0.2em] mb-0.5">
                 <ShieldCheck size={10} />
                 تحليلات النظام
               </div>
@@ -43,7 +43,7 @@ export default async function OverviewPage({ params }: PageProps) {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 <div className="w-1 h-4 bg-primary rounded" />
-                <h3 className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">
+                <h3 className="text-xs font-black text-muted-foreground uppercase tracking-widest">
                   مقاييس الإيرادات
                 </h3>
               </div>
@@ -62,7 +62,7 @@ export default async function OverviewPage({ params }: PageProps) {
         {/* Inventory Distribution Section */}
         <section className="bg-card p-4 rounded shadow-sm border border-border">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">
+            <h3 className="text-xs font-black text-muted-foreground uppercase tracking-widest">
               توزيع المخزون
             </h3>
           </div>
@@ -74,7 +74,7 @@ export default async function OverviewPage({ params }: PageProps) {
 
       {/* Decorative System Footer */}
       <footer className="mt-12 text-center">
-        <p className="text-[8px] font-black text-muted-foreground/30 uppercase tracking-[0.5em] select-none">
+        <p className="text-xs font-black text-muted-foreground/30 uppercase tracking-[0.5em] select-none">
           نظام التحليل المؤسسي الإصدار 2.0
         </p>
       </footer>

@@ -77,7 +77,7 @@ export default async function ShippedOrdersPage({
               </div>
               <Link
                 href={`/manageOrder` as any}
-                className="flex items-center gap-2 px-4 py-2.5 bg-primary/10 text-primary rounded-xl text-small font-black uppercase tracking-widest hover:bg-primary/20 transition-all border border-primary/20 whitespace-nowrap"
+                className="flex items-center gap-2 px-4 py-2.5 bg-primary/10 text-primary rounded-xl text-xs font-black uppercase tracking-widest hover:bg-primary/20 transition-all border border-primary/20 whitespace-nowrap"
               >
                 <Package size={16} />
                 <span className="hidden md:inline">قائمة الانتظار</span>
@@ -106,7 +106,7 @@ export default async function ShippedOrdersPage({
                     <div className="p-1 bg-white/10 backdrop-blur-sm rounded-md">
                       <CheckCircle2 size={12} className="text-white" />
                     </div>
-                    <p className="text-tiny font-black uppercase text-white/70 tracking-[0.1em]">
+                    <p className="text-xs font-black uppercase text-white/70 tracking-[0.1em]">
                       الإيرادات الشهرية
                     </p>
                   </div>
@@ -116,7 +116,7 @@ export default async function ShippedOrdersPage({
                   <p className="text-xl md:text-2xl font-black text-white tracking-tight leading-none">
                     {totalSalesVolume.toLocaleString()}
                   </p>
-                  <p className="text-tiny font-bold text-white/60 mt-0.5">
+                  <p className="text-xs font-bold text-white/60 mt-0.5">
                     جنيه سوداني
                   </p>
                 </div>
@@ -143,7 +143,7 @@ export default async function ShippedOrdersPage({
                     <div className="p-1 bg-primary/10 rounded-md">
                       <Package size={12} className="text-primary" />
                     </div>
-                    <p className="text-tiny font-black uppercase text-muted-foreground tracking-[0.1em]">
+                    <p className="text-xs font-black uppercase text-muted-foreground tracking-[0.1em]">
                       إجمالي الشحنات
                     </p>
                   </div>
@@ -153,7 +153,7 @@ export default async function ShippedOrdersPage({
                   <p className="text-xl md:text-2xl font-black text-foreground tracking-tight leading-none">
                     {totalOrderCount}
                   </p>
-                  <p className="text-tiny font-bold text-muted-foreground mt-0.5">
+                  <p className="text-xs font-bold text-muted-foreground mt-0.5">
                     طلب مكتمل
                   </p>
                 </div>
@@ -175,14 +175,14 @@ export default async function ShippedOrdersPage({
                 size={48}
                 className="mx-auto text-muted-foreground mb-4"
               />
-              <p className="text-muted-foreground font-black uppercase tracking-[0.3em] text-[10px]">
+              <p className="text-muted-foreground font-black uppercase tracking-[0.3em] text-xs">
                 لا توجد إيرادات مسجلة لشهر {monthName}
               </p>
             </div>
           )}
         </div>
 
-        <footer className="mt-16 text-center text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em]">
+        <footer className="mt-16 text-center text-xs font-black text-muted-foreground uppercase tracking-[0.4em]">
           تاريخ: {new Date().toLocaleDateString("ar-EG")} • قناة الإدارة الآمنة
           2026
         </footer>

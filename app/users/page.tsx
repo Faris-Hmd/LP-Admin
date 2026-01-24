@@ -17,7 +17,7 @@ export default async function UsersPage() {
               <Users size={20} strokeWidth={2.5} />
             </div>
             <div>
-              <div className="flex items-center gap-2 text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-0.5">
+              <div className="flex items-center gap-2 text-xs font-black text-primary uppercase tracking-[0.2em] mb-0.5">
                 <ShieldCheck size={10} />
                 بوابة الإدارة
               </div>

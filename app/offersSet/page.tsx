@@ -14,7 +14,7 @@ export default async function OffersTable() {
         <div className="max-w-4xl mx-auto p-3 md:p-4">
           <div className="flex justify-between items-center">
             <div>
-              <div className="flex items-center gap-2 text-tiny font-black text-primary uppercase tracking-[0.2em] mb-0.5">
+              <div className="flex items-center gap-2 text-xs font-black text-primary uppercase tracking-[0.2em] mb-0.5">
                 <ShieldCheck size={10} />
                 إدارة العروض
               </div>
@@ -22,7 +22,7 @@ export default async function OffersTable() {
                 <h1 className="text-xl font-black text-foreground uppercase tracking-tight">
                   قائمة <span className="text-primary">العروض</span>
                 </h1>
-                <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-tiny font-black border border-primary/20">
+                <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-xs font-black border border-primary/20">
                   {offers?.length || 0}
                 </span>
               </div>
@@ -75,32 +75,32 @@ export default async function OffersTable() {
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         {offer.badge && (
-                          <span className="mb-1 inline-block px-1.5 py-0.5 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest rounded border border-primary/20">
+                          <span className="mb-1 inline-block px-1.5 py-0.5 bg-primary/10 text-primary text-xs font-black uppercase tracking-widest rounded border border-primary/20">
                             {offer.badge}
                           </span>
                         )}
                         <h3 className="text-sm md:text-base font-black text-foreground truncate group-hover:text-primary transition-colors">
                           {offer.title}
                         </h3>
-                        <p className="text-[10px] md:text-xs text-muted-foreground font-medium line-clamp-2 mt-1">
+                        <p className="text-xs text-muted-foreground font-medium line-clamp-2 mt-1">
                           {offer.description}
                         </p>
                       </div>
                       <div className="flex flex-col items-end shrink-0">
                         <span className="text-sm font-black text-primary">
-                          {offer.price} <span className="text-[9px]">ج.س</span>
+                          {offer.price} <span className="text-xs">ج.س</span>
                         </span>
                         {savings > 0 && (
-                          <span className="text-[10px] text-green-600 font-bold">
+                          <span className="text-xs text-green-600 font-bold">
                             وفر {savings.toFixed(0)}{" "}
-                            <span className="text-[8px]">ج.س</span>
+                            <span className="text-xs">ج.س</span>
                           </span>
                         )}
                       </div>
                     </div>
 
                     <div className="pt-2 border-t border-border/50 flex items-center justify-between mt-auto">
-                      <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-tighter">
+                      <span className="text-xs text-muted-foreground font-bold uppercase tracking-tighter">
                         {offer.products?.length || 0} منتجات
                       </span>
                       <div className="flex items-center gap-2">
@@ -123,7 +123,7 @@ export default async function OffersTable() {
                 size={40}
                 className="mx-auto text-muted-foreground/30 mb-4"
               />
-              <p className="text-tiny font-black text-muted-foreground uppercase tracking-[0.4em]">
+              <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.4em]">
                 لا توجد عروض حالياً
               </p>
             </div>
@@ -132,7 +132,7 @@ export default async function OffersTable() {
 
         {/* Footer Meta */}
         <footer className="mt-12 text-center">
-          <p className="text-tiny font-black text-muted-foreground uppercase tracking-[0.5em]">
+          <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.5em]">
             نهاية القائمة
           </p>
         </footer>

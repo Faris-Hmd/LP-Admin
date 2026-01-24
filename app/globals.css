@@ -201,13 +201,19 @@
 
   html {
     scroll-behavior: smooth;
-    font-size: 16px;
+    font-size: 14px;
+  }
+
+  @media (min-width: 768px) {
+    html {
+      font-size: 12px;
+    }
   }
 
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
-    line-height: 1.5;
+    line-height: 1.2;
     -webkit-font-smoothing: subpixel-antialiased;
     -moz-osx-font-smoothing: auto;
     text-rendering: optimizeLegibility;

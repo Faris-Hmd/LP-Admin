@@ -94,7 +94,7 @@ function MetricCard({
       </div>
 
       <div className="min-w-0">
-        <p className="text-[7px] font-black text-muted-foreground uppercase tracking-[0.1em] truncate">
+        <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.1em] truncate">
           {label}
         </p>
         <h4

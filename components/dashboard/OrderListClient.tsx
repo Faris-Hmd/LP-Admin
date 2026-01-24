@@ -56,7 +56,10 @@ export default function OrderListClient({
     }
 
     const ordersRef = collection(db, "orders");
-    const q = query(ordersRef, where("status", "!=", "Delivered"));
+    const q = query(
+      ordersRef,
+      where("status", "in", ["Processing", "Shipped"]),
+    );
 
     console.log("Starting listener on orders...");
 
@@ -170,7 +173,7 @@ export default function OrderListClient({
     return (
       <div className="text-center py-20 bg-card rounded-3xl border-2 border-dashed border-border">
         <Package size={40} className="mx-auto text-muted-foreground mb-4" />
-        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]">
+        <p className="text-sm font-black text-muted-foreground uppercase tracking-[0.3em]">
           قائمة الانتظار فارغة
         </p>
       </div>
@@ -213,7 +216,7 @@ export default function OrderListClient({
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <span
                     className={cn(
-                      "text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md border",
+                      "text-sm font-black uppercase tracking-widest px-2 py-1 rounded-md border",
                       order.status === "Processing"
                         ? "bg-blue-500/10 text-blue-500 border-blue-500/20"
                         : "bg-warning/10 text-warning border-warning/20",
@@ -224,7 +227,7 @@ export default function OrderListClient({
                       : "تم الشحن"}
                   </span>
                   {order.isOffer && (
-                    <span className="text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md border bg-primary/10 text-primary border-primary/20 flex items-center gap-1">
+                    <span className="text-sm font-black uppercase tracking-widest px-2 py-1 rounded-md border bg-primary/10 text-primary border-primary/20 flex items-center gap-1">
                       <BadgePercent size={12} />
                       عرض خاص
                     </span>
@@ -234,16 +237,16 @@ export default function OrderListClient({
                 {/* Middle: Amount */}
                 <p className="text-xl font-black text-foreground mb-1 leading-none">
                   {order.totalAmount.toLocaleString()}{" "}
-                  <span className="text-[10px] text-primary">SDG</span>
+                  <span className="text-sm text-primary">SDG</span>
                 </p>
 
                 {/* Bottom Row: Metadata (ID & Date) */}
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <span className="text-[10px] font-bold uppercase tracking-wider bg-muted/50 px-1.5 py-0.5 rounded">
+                  <span className="text-sm font-bold uppercase tracking-wider bg-muted/50 px-1.5 py-0.5 rounded">
                     #{order.id.slice(-6).toUpperCase()}
                   </span>
                   <span className="w-1 h-1 rounded-full bg-border" />
-                  <span className="text-[10px] font-bold uppercase tracking-tight">
+                  <span className="text-sm font-bold uppercase tracking-tight">
                     {formatDateArabic(order.createdAt)}
                   </span>
                 </div>
@@ -285,10 +288,10 @@ export default function OrderListClient({
                           </div>
                         )}
                         <div className="min-w-0">
-                          <p className="text-xs font-black text-foreground uppercase truncate">
+                          <p className="text-sm font-black text-foreground uppercase truncate">
                             {order.offerTitle}
                           </p>
-                          <p className="text-[10px] text-primary/80 font-bold uppercase tracking-widest flex items-center gap-1">
+                          <p className="text-sm text-primary/80 font-bold uppercase tracking-widest flex items-center gap-1">
                             <BadgePercent size={10} />
                             عرض توفير خاص
                           </p>
@@ -302,15 +305,15 @@ export default function OrderListClient({
                         className="bg-card p-3 rounded-xl border border-border flex justify-between items-center shadow-sm"
                       >
                         <div className="min-w-0">
-                          <p className="text-xs font-black text-foreground uppercase truncate">
+                          <p className="text-sm font-black text-foreground uppercase truncate">
                             {p.p_name}
                           </p>
-                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+                          <p className="text-sm text-muted-foreground font-bold uppercase tracking-widest">
                             الكمية: {p.p_qu} @{" "}
                             {Number(p.p_cost).toLocaleString()}
                           </p>
                         </div>
-                        <p className="text-xs font-black text-primary">
+                        <p className="text-sm font-black text-primary">
                           {(Number(p.p_cost) * Number(p.p_qu)).toLocaleString()}
                         </p>
                       </div>
@@ -323,11 +326,11 @@ export default function OrderListClient({
                       e.stopPropagation();
                       handleDelete(order.id);
                     }}
-                    className="text-[10px] font-black uppercase tracking-[0.2em] text-destructive hover:scale-105 transition-transform"
+                    className="text-sm font-black uppercase tracking-[0.2em] text-destructive hover:scale-105 transition-transform"
                   >
                     {isPending ? "جاري الحذف..." : "[ حذف الطلب ]"}
                   </button>
-                  <p className="text-[10px] font-black text-muted-foreground uppercase">
+                  <p className="text-sm font-black text-muted-foreground uppercase">
                     معاملة مصرح بها
                   </p>
                 </div>

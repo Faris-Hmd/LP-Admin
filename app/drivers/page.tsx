@@ -14,7 +14,7 @@ export default async function DriversPage() {
           </h1>
           <Link
             href={"/drivers/add" as any}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20"
           >
             <Plus size={14} /> إضافة سائق
           </Link>
@@ -40,7 +40,7 @@ function DriverCard({ driver }: { driver: Driver }) {
     >
       <div className="p-4 flex justify-between items-center bg-muted/50 border-b border-border">
         <span
-          className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md border ${
+          className={`text-xs font-black uppercase px-2 py-0.5 rounded-md border ${
             driver.status === "Active"
               ? "bg-success/10 text-success border-success/20"
               : "bg-muted text-muted-foreground border-border"
@@ -66,17 +66,17 @@ function DriverCard({ driver }: { driver: Driver }) {
           <h3 className="text-sm font-black uppercase text-foreground truncate">
             {driver.name}
           </h3>
-          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+          <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">
             {driver.vehicle}
           </p>
         </div>
       </div>
 
       <div className="px-5 pb-5 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-[11px] font-bold text-muted-foreground">
+        <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground">
           <Phone size={12} /> {driver.phone}
         </div>
-        <span className="text-[10px] font-black text-primary">
+        <span className="text-xs font-black text-primary">
           {driver.currentOrders?.length || 0} مهام
         </span>
       </div>

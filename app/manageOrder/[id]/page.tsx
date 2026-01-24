@@ -141,7 +141,7 @@ export default function OrderDetailsPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <Loader2 className="animate-spin text-primary" size={40} />
-        <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.3em]">
+        <p className="text-muted-foreground text-sm font-black uppercase tracking-[0.3em]">
           جاري مزامنة البيانات...
         </p>
       </div>
@@ -171,7 +171,7 @@ export default function OrderDetailsPage() {
               <ChevronLeft size={18} />
             </button>
             <div className="flex-1">
-              <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase tracking-[0.2em]">
+              <div className="flex items-center gap-2 text-sm font-black text-primary uppercase tracking-[0.2em]">
                 <Hash size={10} />
                 الطلب {order?.id?.slice(-8).toUpperCase()}
                 <button
@@ -189,12 +189,23 @@ export default function OrderDetailsPage() {
                 تفاصيل <span className="text-primary">الطلب</span>
               </h1>
             </div>
-            <div
-              className={`flex items-center gap-2 px-3 py-1.5 rounded ${currentStatus?.bg} ${currentStatus?.color} border ${currentStatus?.border}`}
-            >
-              <StatusIcon size={16} />
-              <span className="text-xs font-black uppercase tracking-widest pt-0.5">
-                {currentStatus?.label}
+            <div className="flex flex-col items-end gap-1 shrink-0">
+              <div
+                className={`flex items-center gap-2 px-3 py-1.5 rounded ${currentStatus?.bg} ${currentStatus?.color} border ${currentStatus?.border}`}
+              >
+                <StatusIcon size={16} />
+                <span className="text-sm font-black uppercase tracking-widest pt-0.5">
+                  {currentStatus?.label}
+                </span>
+              </div>
+              <span className="text-sm font-black text-muted-foreground/60 uppercase tracking-widest">
+                {new Date(order.createdAt).toLocaleString("ar-EG", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </span>
             </div>
             <button
@@ -202,7 +213,7 @@ export default function OrderDetailsPage() {
               className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-muted text-muted-foreground hover:text-foreground rounded border border-border transition-colors print:hidden"
             >
               <Printer size={18} />
-              <span className="text-xs font-black uppercase tracking-widest pt-1">
+              <span className="text-sm font-black uppercase tracking-widest pt-1">
                 طباعة
               </span>
             </button>
@@ -219,7 +230,7 @@ export default function OrderDetailsPage() {
               <div className="px-3 py-1.5 border-b border-border flex items-center justify-between bg-muted/10">
                 <div className="flex items-center gap-2">
                   <ShoppingBag size={16} className="text-primary" />
-                  <h2 className="text-xs font-black text-foreground uppercase tracking-widest pt-0.5">
+                  <h2 className="text-sm font-black text-foreground uppercase tracking-widest pt-0.5">
                     محتويات الطلب
                   </h2>
                 </div>
@@ -248,11 +259,11 @@ export default function OrderDetailsPage() {
                           {order.offerTitle}
                         </h3>
                         <div className="flex items-center gap-2 mt-2">
-                          <span className="px-2.5 py-1 rounded text-xs font-black uppercase bg-primary text-primary-foreground">
+                          <span className="px-2.5 py-1 rounded text-sm font-black uppercase bg-primary text-primary-foreground">
                             عرض خاص
                           </span>
                           {offerLoading && (
-                            <span className="text-xs text-muted-foreground animate-pulse">
+                            <span className="text-sm text-muted-foreground animate-pulse">
                               جاري تحميل المحتويات...
                             </span>
                           )}
@@ -270,11 +281,11 @@ export default function OrderDetailsPage() {
                           <div className="min-w-0">
                             <h4 className="text-base font-black text-foreground uppercase truncate flex items-center gap-2">
                               {product.p_name}
-                              <span className="px-1.5 py-0.5 rounded bg-muted text-[10px] text-muted-foreground uppercase tracking-widest border border-border">
+                              <span className="px-1.5 py-0.5 rounded bg-muted text-sm text-muted-foreground uppercase tracking-widest border border-border">
                                 ضمن العرض
                               </span>
                             </h4>
-                            <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">
+                            <p className="text-sm text-muted-foreground font-bold uppercase tracking-widest mt-1">
                               {getCategoryLabel(product.p_cat)}
                             </p>
                           </div>
@@ -284,10 +295,10 @@ export default function OrderDetailsPage() {
                                 Number(product.p_cost) *
                                 (Number(product.p_qu) || 1)
                               ).toLocaleString()}{" "}
-                              <span className="text-xs text-primary">ج.س</span>
+                              <span className="text-sm text-primary">ج.س</span>
                             </p>
                             <div className="flex flex-col items-end">
-                              <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-tighter">
+                              <p className="text-sm text-muted-foreground font-bold uppercase tracking-tighter">
                                 {Number(product.p_cost).toLocaleString()} ×{" "}
                                 {product.p_qu || 1}
                               </p>
@@ -315,9 +326,9 @@ export default function OrderDetailsPage() {
                         <div className="text-right shrink-0">
                           <p className="text-lg font-black text-foreground">
                             {Number(product.p_cost).toLocaleString()}{" "}
-                            <span className="text-xs text-primary">ج.س</span>
+                            <span className="text-sm text-primary">ج.س</span>
                           </p>
-                          <p className="text-xs text-muted-foreground font-black uppercase tracking-tighter">
+                          <p className="text-sm text-muted-foreground font-black uppercase tracking-tighter">
                             الكمية: {product.p_qu || 1}
                           </p>
                         </div>
@@ -331,28 +342,28 @@ export default function OrderDetailsPage() {
                 {order.isOffer && (
                   <>
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">
+                      <span className="text-sm font-black text-muted-foreground uppercase tracking-widest">
                         القيمة الحقيقية
                       </span>
                       <span className="text-sm font-black text-muted-foreground line-through decoration-destructive/50">
                         {offerRealTotal.toLocaleString()}{" "}
-                        <span className="text-[10px]">ج.س</span>
+                        <span className="text-sm">ج.س</span>
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-black text-emerald-600 uppercase tracking-widest">
+                      <span className="text-sm font-black text-emerald-600 uppercase tracking-widest">
                         إجمالي التوفير
                       </span>
                       <span className="text-sm font-black text-emerald-600">
                         {savings.toLocaleString()}-{" "}
-                        <span className="text-[10px]">ج.س</span>
+                        <span className="text-sm">ج.س</span>
                       </span>
                     </div>
                     <div className="h-px bg-border/50 my-2" />
                   </>
                 )}
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-black text-foreground uppercase tracking-widest">
+                  <span className="text-sm font-black text-foreground uppercase tracking-widest">
                     الإجمالي النهائي
                   </span>
                   <span className="text-2xl font-black text-primary tracking-tighter">
@@ -368,7 +379,7 @@ export default function OrderDetailsPage() {
               <div className="px-3 py-3 border-b border-border bg-muted/10">
                 <div className="flex items-center gap-2">
                   <User size={16} className="text-foreground" />
-                  <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest pt-0.5">
+                  <h2 className="text-sm font-black text-foreground uppercase tracking-widest pt-0.5">
                     بيانات العميل والمعادلة
                   </h2>
                 </div>
@@ -377,18 +388,18 @@ export default function OrderDetailsPage() {
               <div className="p-5 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   <div className="flex items-center justify-between py-2 px-3 bg-muted/30 rounded border border-border">
-                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                    <span className="text-sm font-black text-muted-foreground uppercase tracking-widest">
                       الاسم الكامل
                     </span>
-                    <span className="text-xs font-black text-foreground uppercase truncate ml-2">
+                    <span className="text-sm font-black text-foreground uppercase truncate ml-2">
                       {order.customer_name || "N/A"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-2 px-3 bg-muted/30 rounded border border-border">
-                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                    <span className="text-sm font-black text-muted-foreground uppercase tracking-widest">
                       رقم التواصل
                     </span>
-                    <span className="text-xs font-black text-foreground ml-2">
+                    <span className="text-sm font-black text-foreground ml-2">
                       {order.shippingInfo?.phone || "N/A"}
                     </span>
                   </div>
@@ -401,10 +412,10 @@ export default function OrderDetailsPage() {
                       className="text-primary mt-0.5 shrink-0"
                     />
                     <div>
-                      <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-0.5">
+                      <p className="text-sm font-black text-primary uppercase tracking-widest mb-0.5">
                         عنوان التوصيل
                       </p>
-                      <p className="text-xs font-bold text-foreground leading-tight">
+                      <p className="text-sm font-bold text-foreground leading-tight">
                         {order.shippingInfo.address}, {order.shippingInfo.city}
                       </p>
                     </div>
@@ -414,19 +425,19 @@ export default function OrderDetailsPage() {
                 {/* Transaction Info Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2 border-t border-dashed border-border">
                   <div className="flex items-center justify-between py-1.5 px-2 bg-card rounded border border-border">
-                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
+                    <span className="text-sm font-black text-muted-foreground uppercase tracking-widest">
                       طريقة الدفع
                     </span>
-                    <span className="text-[11px] font-black text-foreground uppercase ml-2">
+                    <span className="text-sm font-black text-foreground uppercase ml-2">
                       {order.paymentMethod || "COD"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-1.5 px-2 bg-card rounded border border-border relative group">
-                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                    <span className="text-sm font-black text-muted-foreground uppercase tracking-widest">
                       المرجع
                     </span>
                     <div className="flex items-center gap-1.5 ml-2 min-w-0">
-                      <span className="text-xs font-mono font-bold text-foreground truncate">
+                      <span className="text-sm font-mono font-bold text-foreground truncate">
                         {order.transactionReference || "N/A"}
                       </span>
                       {order.transactionReference && (
@@ -458,7 +469,7 @@ export default function OrderDetailsPage() {
           <div className="space-y-4">
             <section className="bg-card rounded border border-border overflow-hidden shadow-sm">
               <div className="px-3 py-3 border-b border-border bg-muted/10">
-                <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest pt-0.5">
+                <h2 className="text-sm font-black text-foreground uppercase tracking-widest pt-0.5">
                   حالة الطلب
                 </h2>
               </div>
@@ -468,7 +479,7 @@ export default function OrderDetailsPage() {
                     value={order.status}
                     onChange={(e) => handleUpdateStatus(e.target.value)}
                     disabled={updating}
-                    className="w-full appearance-none px-4 py-2.5 bg-muted/50 border border-border rounded text-foreground text-[10px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
+                    className="w-full appearance-none px-4 py-2.5 bg-muted/50 border border-border rounded text-foreground text-sm font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
                   >
                     {[
                       { key: "Processing", label: "قيد المعالجة" },
@@ -490,7 +501,7 @@ export default function OrderDetailsPage() {
 
             <section className="bg-card rounded border border-border overflow-hidden shadow-sm">
               <div className="px-4 py-3 border-b border-border bg-muted/10">
-                <h2 className="text-xs font-black text-foreground uppercase tracking-widest pt-0.5">
+                <h2 className="text-sm font-black text-foreground uppercase tracking-widest pt-0.5">
                   اللوجستيات والعمليات
                 </h2>
               </div>
@@ -502,10 +513,10 @@ export default function OrderDetailsPage() {
                         <Truck size={14} />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-[11px] font-black text-foreground uppercase truncate">
+                        <p className="text-sm font-black text-foreground uppercase truncate">
                           {assignedDriver.name}
                         </p>
-                        <p className="text-[11px] text-success font-bold uppercase tracking-tighter">
+                        <p className="text-sm text-success font-bold uppercase tracking-tighter">
                           {assignedDriver.vehicle}
                         </p>
                       </div>
@@ -513,7 +524,7 @@ export default function OrderDetailsPage() {
                     <div className="grid grid-cols-2 gap-1.5">
                       <a
                         href={`tel:${assignedDriver.phone}`}
-                        className="flex items-center justify-center gap-1.5 py-2 bg-card rounded text-[11px] font-black uppercase text-foreground border border-border hover:bg-muted transition-colors"
+                        className="flex items-center justify-center gap-1.5 py-2 bg-card rounded text-sm font-black uppercase text-foreground border border-border hover:bg-muted transition-colors"
                       >
                         <Phone size={12} /> اتصال
                       </a>
@@ -527,7 +538,7 @@ export default function OrderDetailsPage() {
                             "_blank",
                           )
                         }
-                        className="flex items-center justify-center gap-1.5 py-2 bg-success rounded text-[9px] font-black uppercase text-success-foreground hover:bg-success/90 transition-colors"
+                        className="flex items-center justify-center gap-1.5 py-2 bg-success rounded text-sm font-black uppercase text-success-foreground hover:bg-success/90 transition-colors"
                       >
                         <MessageSquare size={12} /> محادثة
                       </button>
@@ -539,7 +550,7 @@ export default function OrderDetailsPage() {
                   <select
                     value={order.driverId || ""}
                     onChange={(e) => handleAssignDriver(e.target.value)}
-                    className="w-full appearance-none px-4 py-2.5 bg-muted/50 border border-border rounded text-foreground text-[10px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
+                    className="w-full appearance-none px-4 py-2.5 bg-muted/50 border border-border rounded text-foreground text-sm font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
                   >
                     <option value="">[ تعيين سائق ]</option>
                     {drivers

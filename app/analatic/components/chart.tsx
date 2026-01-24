@@ -74,7 +74,7 @@ export default function RevenueAnalytics({
             </span>
           </CardTitle>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-black text-[10px] uppercase tracking-[0.2em]">
+            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-black text-xs uppercase tracking-[0.2em]">
               <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
               <TrendingUp className="w-3 h-3" />
               {totalOrders.toLocaleString()} طلب ناجح
@@ -84,7 +84,7 @@ export default function RevenueAnalytics({
               <span className="text-lg font-mono leading-none">
                 {totalSales.toLocaleString()}
               </span>
-              <span className="text-[10px] opacity-70 uppercase tracking-tighter">
+              <span className="text-xs opacity-70 uppercase tracking-tighter">
                 SDG
               </span>
             </div>
@@ -103,14 +103,14 @@ export default function RevenueAnalytics({
         {isLoading ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center border-2 border-dashed border-border rounded-3xl">
             <Loader2 className="animate-spin text-primary mb-2" size={24} />
-            <span className="text-[10px] font-black uppercase text-muted-foreground">
+            <span className="text-xs font-black uppercase text-muted-foreground">
               جاري تحميل البيانات...
             </span>
           </div>
         ) : error || salesData.length === 0 ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center border-2 border-dashed border-border rounded-3xl">
             <Activity className="text-muted-foreground mb-2" />
-            <span className="text-[10px] font-black uppercase text-muted-foreground">
+            <span className="text-xs font-black uppercase text-muted-foreground">
               لا توجد بيانات لهذا الشهر
             </span>
           </div>
@@ -156,7 +156,7 @@ export default function RevenueAnalytics({
                   tickLine={false}
                   tickMargin={12}
                   minTickGap={30}
-                  className="text-[10px] font-black text-muted-foreground uppercase"
+                  className="text-xs font-black text-muted-foreground uppercase"
                 />
                 <YAxis hide domain={["auto", "auto"]} />
 
