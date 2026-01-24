@@ -226,7 +226,7 @@ export default function OrderListClient({
             className={cn(
               "bg-card border rounded transition-all duration-200 overflow-hidden",
               isExpanded
-                ? "ring-2 ring-primary/20 border-primary/50 shadow-xl"
+                ? "ring-2 ring-primary/20 border-primary/50 shadow"
                 : "border-border",
             )}
           >
@@ -307,7 +307,7 @@ export default function OrderListClient({
               <div className="px-3 pb-3 bg-muted/20 border-t border-border">
                 <div className="py-2.5 space-y-1.5">
                   {order.isOffer ? (
-                    <div className="bg-card p-2 rounded-lg border border-primary/20 bg-primary/5 flex justify-between items-center shadow-sm">
+                    <div className="bg-card p-2 rounded-lg border border-primary/20 bg-primary/5 flex justify-between items-center shadow">
                       <div className="flex items-center gap-3">
                         {order.offerImage && (
                           <div className="w-10 h-10 rounded-md overflow-hidden bg-muted relative">
@@ -333,7 +333,7 @@ export default function OrderListClient({
                     order.productsList.map((p: any) => (
                       <div
                         key={p.id}
-                        className="bg-card p-2 rounded-lg border border-border flex justify-between items-center shadow-sm"
+                        className="bg-card p-2 rounded-lg border border-border flex justify-between items-center shadow"
                       >
                         <div className="min-w-0">
                           <p className="text-sm font-black text-foreground uppercase truncate">

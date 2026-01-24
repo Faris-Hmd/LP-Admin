@@ -16,11 +16,11 @@ export default async function ProductTable({
   return (
     <div className="min-h-screen bg-background transition-colors pb-20">
       {/* Sticky Compact Header */}
-      <header className=" sticky top-0 z-100 bg-card md:bg-card/80 md:backdrop-blur-md border-b border-border shadow-sm">
+      <header className=" sticky top-0 z-100 bg-card md:bg-card/80 md:backdrop-blur-md border-b border-border shadow">
         <div className="max-w-4xl mx-auto p-3 md:p-4">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <div className="flex items-center gap-2 text-tiny font-black text-primary uppercase tracking-[0.2em] mb-0.5">
+              <div className="flex items-center gap-2 text-sm font-black text-primary uppercase tracking-[0.2em] mb-0.5">
                 <ShieldCheck size={10} />
                 مخزون النظام
               </div>
@@ -28,14 +28,14 @@ export default async function ProductTable({
                 <h1 className="text-xl font-black text-foreground uppercase tracking-tight">
                   كتالوج <span className="text-primary">المنتجات</span>
                 </h1>
-                <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-tiny font-black border border-primary/20">
+                <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-sm font-black border border-primary/20">
                   {products?.length || 0}
                 </span>
               </div>
             </div>
             <Link
               href={"/productsSet/prod_add" as any}
-              className="flex items-center gap-2 bg-primary text-primary-foreground font-black py-2 px-4 rounded text-tiny uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-primary/20"
+              className="flex items-center gap-2 bg-primary text-primary-foreground font-black py-2 px-4 rounded text-sm uppercase tracking-widest transition-all active:scale-95 shadow shadow-primary/20"
             >
               <Plus size={14} strokeWidth={3} />
               إضافة
@@ -52,7 +52,7 @@ export default async function ProductTable({
             products.map((row) => (
               <div
                 key={row.id}
-                className="group bg-card border border-border rounded p-4 flex items-center justify-between hover:border-primary/50 transition-all shadow-sm"
+                className="group bg-card border border-border rounded p-4 flex items-center justify-between hover:border-primary/50 transition-all shadow"
               >
                 <div className="flex items-center gap-4 min-w-0">
                   {/* Item Icon */}
@@ -82,13 +82,13 @@ export default async function ProductTable({
                       )}
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-tiny text-muted-foreground font-black uppercase tracking-widest">
+                      <span className="text-sm text-muted-foreground font-black uppercase tracking-widest">
                         {getCategoryLabel(row.p_cat)}
                       </span>
                       <span className="w-1 h-1 rounded bg-border" />
-                      <span className="text-tiny font-black text-primary">
+                      <span className="text-sm font-black text-primary">
                         {Number(row.p_cost).toLocaleString()}{" "}
-                        <span className="text-tiny">SDG</span>
+                        <span className="text-sm">SDG</span>
                       </span>
                     </div>
                   </div>
@@ -102,7 +102,7 @@ export default async function ProductTable({
             ))
           ) : (
             <div className="py-20 text-center border-2 border-dashed border-border rounded">
-              <p className="text-tiny font-black text-muted-foreground uppercase tracking-[0.4em]">
+              <p className="text-sm font-black text-muted-foreground uppercase tracking-[0.4em]">
                 الكتالوج فارغ
               </p>
             </div>
@@ -111,7 +111,7 @@ export default async function ProductTable({
 
         {/* Footer Meta */}
         <footer className="mt-12 text-center">
-          <p className="text-tiny font-black text-muted-foreground uppercase tracking-[0.5em]">
+          <p className="text-sm font-black text-muted-foreground uppercase tracking-[0.5em]">
             نهاية القائمة
           </p>
         </footer>

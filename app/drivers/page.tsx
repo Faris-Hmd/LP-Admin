@@ -14,7 +14,7 @@ export default async function DriversPage() {
           </h1>
           <Link
             href={"/drivers/add" as any}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-black text-xs uppercase tracking-widest shadow shadow-primary/20"
           >
             <Plus size={14} /> إضافة سائق
           </Link>

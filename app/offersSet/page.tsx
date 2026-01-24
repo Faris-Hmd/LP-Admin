@@ -10,11 +10,11 @@ export default async function OffersTable() {
   return (
     <div className="min-h-screen bg-background transition-colors pb-20">
       {/* Sticky Compact Header */}
-      <header className="sticky top-0 z-20 bg-card md:bg-card/80 md:backdrop-blur-md border-b border-border shadow-sm">
+      <header className="sticky top-0 z-100 bg-card md:bg-card/80 md:backdrop-blur-md border-b border-border shadow">
         <div className="max-w-4xl mx-auto p-3 md:p-4">
           <div className="flex justify-between items-center">
             <div>
-              <div className="flex items-center gap-2 text-xs font-black text-primary uppercase tracking-[0.2em] mb-0.5">
+              <div className="flex items-center gap-2 text-sm font-black text-primary uppercase tracking-[0.2em] mb-0.5">
                 <ShieldCheck size={10} />
                 إدارة العروض
               </div>
@@ -31,7 +31,7 @@ export default async function OffersTable() {
               {process.env.NODE_ENV === "development" && <SeedOffersButton />}
               <Link
                 href={"/offersSet/add" as any}
-                className="flex items-center gap-2 bg-primary text-primary-foreground font-black py-2 px-4 rounded text-tiny uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-primary/20"
+                className="flex items-center gap-2 bg-primary text-primary-foreground font-black py-2 px-4 rounded text-sm uppercase tracking-widest transition-all active:scale-95 shadow shadow-primary/20"
               >
                 <Plus size={14} strokeWidth={3} />
                 إضافة عرض
@@ -56,7 +56,7 @@ export default async function OffersTable() {
               return (
                 <div
                   key={offer.id}
-                  className="group bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/50 transition-all shadow-sm flex flex-row h-38 md:h-40"
+                  className="group bg-card border border-border rounded p-4 flex items-center justify-between hover:border-primary/50 transition-all shadow flex flex-row h-38 md:h-40"
                 >
                   <div className="w-32 md:w-48 shrink-0 p-2">
                     <div className="relative w-full h-full rounded-xl overflow-hidden shadow-sm">
@@ -75,7 +75,7 @@ export default async function OffersTable() {
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         {offer.badge && (
-                          <span className="mb-1 inline-block px-1.5 py-0.5 bg-primary/10 text-primary text-xs font-black uppercase tracking-widest rounded border border-primary/20">
+                          <span className="mb-1 inline-block px-1.5 py-0.5 bg-primary/10            text-sm text-destructive font-black uppercase tracking-wider mb-1st rounded border border-primary/20">
                             {offer.badge}
                           </span>
                         )}
@@ -93,14 +93,14 @@ export default async function OffersTable() {
                         {savings > 0 && (
                           <span className="text-xs text-green-600 font-bold">
                             وفر {savings.toFixed(0)}{" "}
-                            <span className="text-xs">ج.س</span>
+                            <span className="text-sm text-primary">SDG</span>
                           </span>
                         )}
                       </div>
                     </div>
 
                     <div className="pt-2 border-t border-border/50 flex items-center justify-between mt-auto">
-                      <span className="text-xs text-muted-foreground font-bold uppercase tracking-tighter">
+                      <span className="text-sm text-muted-foreground font-black uppercase tracking-widest">
                         {offer.products?.length || 0} منتجات
                       </span>
                       <div className="flex items-center gap-2">
@@ -123,7 +123,7 @@ export default async function OffersTable() {
                 size={40}
                 className="mx-auto text-muted-foreground/30 mb-4"
               />
-              <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.4em]">
+              <p className="text-sm font-black text-muted-foreground uppercase tracking-[0.4em]">
                 لا توجد عروض حالياً
               </p>
             </div>
@@ -132,7 +132,7 @@ export default async function OffersTable() {
 
         {/* Footer Meta */}
         <footer className="mt-12 text-center">
-          <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.5em]">
+          <p className="text-sm font-black text-red-500 uppercase tracking-[0.5em]">
             نهاية القائمة
           </p>
         </footer>

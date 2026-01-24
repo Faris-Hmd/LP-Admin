@@ -14,7 +14,7 @@ export default async function OverviewPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-background transition-colors duration-500 pb-20">
       {/* Sticky Compact Header */}
-      <header className="sticky top-0 z-100 bg-card md:bg-card/80 md:backdrop-blur-md border-b border-border shadow-sm">
+      <header className="sticky top-0 z-100 bg-card md:bg-card/80 md:backdrop-blur-md border-b border-border shadow">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-2">
           <div className="flex justify-between items-center">
             <div>
@@ -32,14 +32,14 @@ export default async function OverviewPage({ params }: PageProps) {
 
       <main className="max-w-7xl mx-auto p-4 md:p-8 space-y-8">
         {/* Top Summary Section */}
-        <section className="bg-card p-2 rounded shadow-sm border border-border">
+        <section className="bg-card p-2 rounded shadow border border-border">
           <SectionCards />
         </section>
 
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Revenue Chart - Dominant Panel */}
-          <div className="bg-card p-4 rounded shadow-sm border border-border lg:col-span-2">
+          <div className="bg-card p-4 rounded shadow border border-border lg:col-span-2">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 <div className="w-1 h-4 bg-primary rounded" />
@@ -60,7 +60,7 @@ export default async function OverviewPage({ params }: PageProps) {
         </div>
 
         {/* Inventory Distribution Section */}
-        <section className="bg-card p-4 rounded shadow-sm border border-border">
+        <section className="bg-card p-4 rounded shadow border border-border">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xs font-black text-muted-foreground uppercase tracking-widest">
               توزيع المخزون
